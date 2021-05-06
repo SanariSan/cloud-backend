@@ -1,17 +1,19 @@
 // import { NotFoundError, ApiError, InternalError } from "./core/ApiError";
-import bodyParser from "body-parser";
-import cors from "cors";
 // import { corsUrl, environment } from "./config";
 // import Logger from "./core/Logger";
-import express, { Request, Response, NextFunction } from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import express, { Router, Request, Response, NextFunction } from "express";
 
-const middleware = express();
+const middleware = Router();
 
+middleware.use(cors());
 middleware.use(bodyParser.json({ limit: "10mb" }));
 middleware.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
-// middleware.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
-middleware.use(cors());
+
 export { middleware };
+
+// middleware.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
 // // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // middleware.use((err: Error, req: Request, res: Response, next: NextFunction) => {

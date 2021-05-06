@@ -1,4 +1,4 @@
-import { routesV1 } from "../routes/index.js";
+import { routesV1 } from "../routes";
 import express, { Request, Response, NextFunction } from "express";
 
 const routes = express();
