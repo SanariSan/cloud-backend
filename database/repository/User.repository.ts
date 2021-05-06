@@ -1,0 +1,3 @@
+class UserRepos {}
+
+export { UserRepos };
