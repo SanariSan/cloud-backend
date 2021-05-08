@@ -5,4 +5,3 @@ var Profile = function (req, res, next) {
     res.send("12345");
 };
 exports.Profile = Profile;
-//# sourceMappingURL=profile.routes.js.map

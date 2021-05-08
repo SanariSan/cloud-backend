@@ -6,4 +6,3 @@ var profile_1 = require("./profile");
 var routesV1 = express_1.Router();
 exports.routesV1 = routesV1;
 routesV1.use("/profile", profile_1.Profile);
-//# sourceMappingURL=index.js.map

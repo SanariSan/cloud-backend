@@ -14,4 +14,3 @@ routes.use(function (err, req, res, next) {
     console.log(err);
     return res.status(500).send(err.message);
 });
-//# sourceMappingURL=routes.loader.js.map

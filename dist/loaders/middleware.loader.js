@@ -12,4 +12,3 @@ exports.middleware = middleware;
 middleware.use(cors_1.default());
 middleware.use(body_parser_1.default.json({ limit: "10mb" }));
 middleware.use(body_parser_1.default.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
-//# sourceMappingURL=middleware.loader.js.map

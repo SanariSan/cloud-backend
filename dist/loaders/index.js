@@ -12,4 +12,3 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./middleware.loader"), exports);
 __exportStar(require("./routes.loader"), exports);
-//# sourceMappingURL=index.js.map

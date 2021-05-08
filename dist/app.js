@@ -14,4 +14,3 @@ app.listen(config_1.default.get("port"), function () {
 }).on("error", function (e) {
     console.log(e);
 });
-//# sourceMappingURL=app.js.map

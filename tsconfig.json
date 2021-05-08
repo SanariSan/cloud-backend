@@ -1,40 +1,19 @@
 {
-    "extends": "./tsconfig_add.json",
+    "extends": "./tsconfig-base.json",
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
+        "target": "ES5",
+        "module": "CommonJS",
         "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "forceConsistentCasingInFileNames": true,
         "rootDir": "src",
         "outDir": "dist",
-        "declaration": true,
+        "declaration": false,
         "esModuleInterop": true,
-        "strict": true
-        // "allowSyntheticDefaultImports": false
+        "allowSyntheticDefaultImports": true,
+        "pretty": true
     },
-    "include": ["src"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
 }
-
-// {
-//     "compilerOptions": {
-//         "strict": true,
-//         "target": "ES2020",
-//         "moduleResolution": "Node",
-//         "resolveJsonModule": true,
-//         "lib": ["dom", "dom.iterable", "esnext"],
-//         "allowJs": true,
-//         "skipLibCheck": true,
-//         "esModuleInterop": true, //"allowSyntheticDefaultImports": true,
-//         "forceConsistentCasingInFileNames": true,
-//         "baseUrl": ".",
-//         "outDir": "dist",
-//         "rootDir": "./src",
-//         "pretty": true
-//     },
-//     "include": ["src/**/*"]
-// }
-// "module": "ES2020",
-// "noEmit": true,
-// "isolatedModules": true
-// "declaration": true,
-// "emitDeclarationOnly": true,
