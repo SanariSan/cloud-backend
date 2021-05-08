@@ -1,22 +1,22 @@
-// import Logger from "./core/Logger";
 // import { initializeDbConnection } from "./src";
 // initializeDbConnection();
 import express from "express";
-import { middleware, routes } from "./loaders";
 import config from "config";
+import { Logger } from "./helpers";
+import { settings, routes, errorHandler } from "./loaders";
 
 const app = express();
 
-app.use(middleware);
+app.use(settings);
 app.use(routes);
+app.use(errorHandler);
 
 app.listen(config.get("port"), () => {
-    console.log(`server running on port : ${config.get("port")}`);
+    Logger.warn(`server running on port : ${config.get("port")}`);
 }).on("error", (e: any) => {
-    console.log(e);
+    Logger.error(e);
 });
 
-// process.on("uncaughtException", e => {
-// Logger.error(e);
-// process.exit(1); !!
-// });
+process.on("uncaughtException", (e: Error) => {
+    Logger.error(e);
+});

@@ -1,3 +1,7 @@
 {
-    "port": 3001
+    "environment": "",
+    "corsUrl": "",
+    "apiVersion": "",
+    "logDirectory": "",
+    "port": 0
 }

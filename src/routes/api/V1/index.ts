@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { Profile } from "./profile";
 
-const routesV1 = Router();
-routesV1.use("/profile", Profile);
+const V1 = Router();
+V1.use("/profile", Profile);
 
-export { routesV1 };
+export { V1 };

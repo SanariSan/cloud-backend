@@ -1,0 +1,7 @@
+{
+    "environment": "development",
+    "corsUrl": "localhost",
+    "apiVersion": "V1",
+    "logDirectory": "./logs-dev",
+    "port": 3002
+}
