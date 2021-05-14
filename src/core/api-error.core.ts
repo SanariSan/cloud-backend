@@ -1,4 +1,4 @@
-import { Response } from "express";
+//importing all errors responses
 import {
     AuthFailureResponse,
     AccessTokenErrorResponse,
@@ -7,10 +7,12 @@ import {
     BadRequestResponse,
     ForbiddenResponse,
 } from "../core";
-
+import { Logger } from "../core";
+import { Response } from "express";
 import config from "config";
 const environment = config.get("environment");
 
+//Short statuses to full function issuer names map
 enum ErrorType {
     BAD_TOKEN = "BadTokenError",
     TOKEN_EXPIRED = "TokenExpiredError",
@@ -34,22 +36,30 @@ export class ApiError extends Error {
             case ErrorType.BAD_TOKEN:
             case ErrorType.TOKEN_EXPIRED:
             case ErrorType.UNAUTHORIZED:
+                Logger.error(err.message); //add fields from res such as pwd, token, etc...
                 return new AuthFailureResponse(err.message).send(res);
             case ErrorType.ACCESS_TOKEN:
+                Logger.error(err.message);
                 return new AccessTokenErrorResponse(err.message).send(res);
             case ErrorType.INTERNAL:
+                Logger.error(err.message);
                 return new InternalErrorResponse(err.message).send(res);
             case ErrorType.NOT_FOUND:
             case ErrorType.NO_ENTRY:
             case ErrorType.NO_DATA:
+                Logger.error(err.message);
                 return new NotFoundResponse(err.message).send(res);
             case ErrorType.BAD_REQUEST:
+                Logger.error(err.message);
                 return new BadRequestResponse(err.message).send(res);
             case ErrorType.FORBIDDEN:
+                Logger.error(err.message);
                 return new ForbiddenResponse(err.message).send(res);
             default: {
                 let message = err.message;
-                // Do not send failure message in production as it may send sensitive data
+                Logger.warn(message);
+
+                // Don't send failure message in production as it may contain sensitive data
                 if (environment === "production") message = "Something wrong happened.";
                 return new InternalErrorResponse(message).send(res);
             }
@@ -61,8 +71,6 @@ export class AuthFailureError extends ApiError {
     constructor(message = "Invalid Credentials") {
         super(ErrorType.UNAUTHORIZED, message);
     }
-
-    // [Symbol.toStringTag]: "AuthFailureError";
 }
 
 export class InternalError extends ApiError {

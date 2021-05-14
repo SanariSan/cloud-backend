@@ -14,10 +14,11 @@ errorHandler(app);
 app.listen(config.get("port"), () => {
     Logger.warn(`server running on port : ${config.get("port")}`);
 }).on("error", (e: any) => {
-    Logger.error(e);
+    console.log(false);
+    Logger.warn(e);
 });
 
 process.on("uncaughtException", (e: Error) => {
     console.log(false);
-    Logger.error(e);
+    Logger.warn(e);
 });
