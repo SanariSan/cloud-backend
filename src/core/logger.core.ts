@@ -3,6 +3,16 @@ import config from "config";
 import { createLogger, transports, format } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
+/*
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  verbose: 4,
+  debug: 5,
+  silly: 6
+*/
+
 const environment = <string>config.get("environment");
 const logLevel = environment === "development" ? "debug" : "warn";
 const logDirectory = <string>config.get("logDirectory");

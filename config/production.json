@@ -1,7 +1,7 @@
 {
     "environment": "production",
     "corsUrl": "sitename.ru",
-    "apiVersion": "V1",
+    "apiVersion": "v1",
     "logDirectory": "./logs-prod",
     "port": 3001
 }

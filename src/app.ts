@@ -2,14 +2,14 @@
 // initializeDbConnection();
 import express from "express";
 import config from "config";
-import { Logger } from "./helpers";
+import { Logger } from "./core";
 import { settings, routes, errorHandler } from "./loaders";
 
 const app = express();
 
-app.use(settings);
-app.use(routes);
-app.use(errorHandler);
+settings(app);
+routes(app);
+errorHandler(app);
 
 app.listen(config.get("port"), () => {
     Logger.warn(`server running on port : ${config.get("port")}`);
@@ -18,5 +18,6 @@ app.listen(config.get("port"), () => {
 });
 
 process.on("uncaughtException", (e: Error) => {
+    console.log(false);
     Logger.error(e);
 });

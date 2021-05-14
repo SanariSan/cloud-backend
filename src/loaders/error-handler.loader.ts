@@ -1,16 +1,21 @@
-// import { NotFoundError, ApiError, InternalError } from "./core/ApiError";
-import { NextFunction, Request, Response, Router } from "express";
-import { Logger } from "../helpers";
+import { NotFoundError, ApiError, InternalError } from "../core";
+import { NextFunction, Request, Response } from "express";
+import { Logger } from "../core";
 
-const errorHandler = Router();
+function errorHandler(app) {
+    app.use((req, res, next) => next(new NotFoundError()));
+    app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+        // if (err instanceof ApiError) {
 
-// middleware.use((req, res, next) => next(new NotFoundError()));
-errorHandler.use((req, res, next) => next("not found error"));
-
-errorHandler.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    Logger.error(err); //if error is uncommon (!!)
-    return res.status(500).send(err.message);
-});
+        ApiError.handle(err, res);
+        // } else {
+        //     //!!
+        //     Logger.debug(err);
+        //     // return res.status(500).send(err.message);(dev only?)
+        //     ApiError.handle(new InternalError(), res);
+        // }
+    });
+}
 
 export { errorHandler };
 
