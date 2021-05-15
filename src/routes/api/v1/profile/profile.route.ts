@@ -14,6 +14,12 @@ export const Profile = async (req: Request, res: Response, next: NextFunction) =
     new SuccessResponse("success", { "1": 23 }).send(res);
 };
 export const Profile1 = async (req: Request, res: Response, next: NextFunction) => {
+    if (Math.round(Math.random() * 2) >= 1) {
+        return new SuccessResponse("Login Success", {
+            user: "test",
+            tokens: [123, 456],
+        }).send(res);
+    }
     throw new AuthFailureError("Authentication failure");
 };
 export const Profile2 = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,6 +1,8 @@
 import { Profile, Profile1, Profile2, Profile3, Profile4, Profile5, Profile6, Profile7 } from "./profile.route";
-import { Router } from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import { AsyncHandle } from "../../../../helpers";
+import { validate } from "../../../../helpers";
+import { schema } from "./profile.schema";
 
 const ProfileRouter = Router();
 
@@ -11,7 +13,7 @@ const ProfileRouter = Router();
 //     AsyncHandle(Profile),
 // );
 ProfileRouter.get("/", AsyncHandle(Profile));
-ProfileRouter.get("/1", AsyncHandle(Profile1));
+ProfileRouter.post("/1", validate(schema.userCredential), AsyncHandle(Profile1));
 ProfileRouter.get("/2", AsyncHandle(Profile2));
 ProfileRouter.get("/3", AsyncHandle(Profile3));
 ProfileRouter.get("/4", AsyncHandle(Profile4));
