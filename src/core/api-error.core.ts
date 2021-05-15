@@ -9,29 +9,17 @@ import {
 } from "../core";
 import { Logger } from "../core";
 import { Response } from "express";
+import { ErrorType, THttpCall } from "./types.type";
 import config from "config";
-const environment = config.get("environment");
 
-//Short statuses to full function issuer names map
-enum ErrorType {
-    BAD_TOKEN = "BadTokenError",
-    TOKEN_EXPIRED = "TokenExpiredError",
-    UNAUTHORIZED = "AuthFailureError",
-    ACCESS_TOKEN = "AccessTokenError",
-    INTERNAL = "InternalError",
-    NOT_FOUND = "NotFoundError",
-    NO_ENTRY = "NoEntryError",
-    NO_DATA = "NoDataError",
-    BAD_REQUEST = "BadRequestError",
-    FORBIDDEN = "ForbiddenError",
-}
+const environment = config.get("environment");
 
 export class ApiError extends Error {
     constructor(public type: ErrorType, public message: string = "error") {
         super(type);
     }
 
-    public static handle<T extends ApiError>(err: T, res: Response): Response {
+    public static handle<T extends ApiError>(err: T, res: Response): THttpCall {
         switch (err.type) {
             case ErrorType.BAD_TOKEN:
             case ErrorType.TOKEN_EXPIRED:
