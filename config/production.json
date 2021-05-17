@@ -3,5 +3,22 @@
     "corsUrl": "sitename.ru",
     "apiVersion": "v1",
     "logDirectory": "./logs-prod",
-    "port": 3001
+    "port": 3001,
+    "token": {
+        "accessTokenValidDays": 1,
+        "refreshTokenValidDays": 1,
+        "issuer": "tapeton_prod_server",
+        "audience": "tapeton_user"
+    },
+    "db": {
+        "auth": {
+            "DB_PORT": 5432,
+            "DB_USER": "TOBESET",
+            "DB_PASS": "TOBESET",
+            "DB_NAME": "TOBESET"
+        },
+        "options": {
+            "connectionLifespanMins": 1
+        }
+    }
 }

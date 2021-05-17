@@ -3,5 +3,22 @@
     "corsUrl": "localhost",
     "apiVersion": "v1",
     "logDirectory": "./logs-dev",
-    "port": 3002
+    "port": 3002,
+    "token": {
+        "accessTokenValidDays": 1,
+        "refreshTokenValidDays": 1,
+        "issuer": "tapeton_dev_server",
+        "audience": "tapeton_user"
+    },
+    "db": {
+        "auth": {
+            "DB_PORT": 5432,
+            "DB_USER": "TOBESET",
+            "DB_PASS": "TOBESET",
+            "DB_NAME": "TOBESET"
+        },
+        "options": {
+            "connectionLifespanMins": 1
+        }
+    }
 }

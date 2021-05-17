@@ -13,7 +13,9 @@
         "declaration": false,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "pretty": true
+        "pretty": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]

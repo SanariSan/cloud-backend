@@ -1,3 +1,0 @@
-class UserRepos {}
-
-export { UserRepos };

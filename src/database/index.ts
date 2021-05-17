@@ -1,3 +1,3 @@
 export * from "./model";
 export * from "./repository";
-export * from "./initialize";
+export * from "./connection.database";

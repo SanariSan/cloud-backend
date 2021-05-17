@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
-import { Logger, BadRequestError } from "../core";
+import { Logger, BadRequestError, AuthFailureError } from "../core";
 // import { Types } from "mongoose";
 
 export enum ValidationSource {
@@ -47,4 +47,10 @@ export const validate = (schema: Joi.ObjectSchema, source: ValidationSource = Va
 
         next(new BadRequestError(message));
     }
+};
+
+export const getAccessToken = (authorization?: string) => {
+    if (!authorization) throw new AuthFailureError("Invalid Authorization");
+    if (!authorization.startsWith("Bearer ")) throw new AuthFailureError("Invalid Authorization");
+    return authorization.split(" ")[1];
 };

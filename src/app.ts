@@ -1,5 +1,6 @@
 // import { initializeDbConnection } from "./src";
 // initializeDbConnection();
+import "reflect-metadata";
 import express from "express";
 import config from "config";
 import { Logger } from "./core";
