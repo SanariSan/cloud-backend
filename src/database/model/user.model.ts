@@ -24,16 +24,6 @@ export class User {
     @Column("text")
     updatedAt?: Date;
 
-    // @Column({ name: "keystore" })
     @OneToMany(type => Keystore, keystore => keystore.user)
     keystore?: Keystore[];
 }
-
-// export interface IUser {
-//     name?: string;
-//     email?: string;
-//     password?: string;
-//     profilePicUrl?: string;
-//     createdAt?: Date;
-//     updatedAt?: Date;
-// }

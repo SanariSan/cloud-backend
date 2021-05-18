@@ -17,6 +17,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "/music-src/**/*"],
     "exclude": ["node_modules"]
 }

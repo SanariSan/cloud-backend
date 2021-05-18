@@ -13,9 +13,14 @@ class UserRepository {
         }
     }
 
-    public static async findById(connection: Connection, id: number): Promise<Object> {
+    public static async findById(connection: Connection, id: number, relations?: Array<string>): Promise<User> {
         try {
-            const user: User = <User>await UserRepository.getRepository(connection).findOne(id);
+            const user: User = <User>await UserRepository.getRepository(connection).findOne({
+                where: {
+                    id,
+                },
+                relations,
+            });
             return user;
         } catch (err) {
             Logger.warn("Not performed(findById-user), problems with connection");

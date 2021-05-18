@@ -5,7 +5,6 @@ import {
     InternalErrorResponse,
     NotFoundResponse,
     BadRequestResponse,
-    ForbiddenResponse,
 } from "../core";
 import { Logger } from "../core";
 import { Response } from "express";
@@ -34,15 +33,11 @@ export class ApiError extends Error {
                 return new InternalErrorResponse(err.message).send(res);
             case ErrorType.NOT_FOUND:
             case ErrorType.NO_ENTRY:
-            case ErrorType.NO_DATA:
                 Logger.error(err.message);
                 return new NotFoundResponse(err.message).send(res);
             case ErrorType.BAD_REQUEST:
                 Logger.error(err.message);
                 return new BadRequestResponse(err.message).send(res);
-            case ErrorType.FORBIDDEN:
-                Logger.error(err.message);
-                return new ForbiddenResponse(err.message).send(res);
             default: {
                 let message = err.message;
                 Logger.warn(message);
@@ -78,13 +73,7 @@ export class NotFoundError extends ApiError {
         super(ErrorType.NOT_FOUND, message);
     }
 }
-
-export class ForbiddenError extends ApiError {
-    constructor(message = "Permission denied") {
-        super(ErrorType.FORBIDDEN, message);
-    }
-}
-
+//for user info/songo info
 export class NoEntryError extends ApiError {
     constructor(message = "Entry don't exists") {
         super(ErrorType.NO_ENTRY, message);
@@ -100,12 +89,6 @@ export class BadTokenError extends ApiError {
 export class TokenExpiredError extends ApiError {
     constructor(message = "Token is expired") {
         super(ErrorType.TOKEN_EXPIRED, message);
-    }
-}
-
-export class NoDataError extends ApiError {
-    constructor(message = "No data available") {
-        super(ErrorType.NO_DATA, message);
     }
 }
 

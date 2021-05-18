@@ -9,7 +9,7 @@ export const Schema = {
     refreshToken: Joi.object().keys({
         refreshToken: Joi.string().required().min(1),
     }),
-    login: Joi.object()
+    auth: Joi.object()
         .keys({
             authorization: JoiBearerHeader().required(),
         })

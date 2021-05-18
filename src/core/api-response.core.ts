@@ -54,11 +54,26 @@ class StreamApiResponse extends ApiResponse {
     }
 
     protected prepare<T extends ApiResponse>(res: Response, newResponseData: T): THttpCall {
-        return res.status(<number>this.status).write(ApiResponse.sanitize<T>(newResponseData));
+        res.status(<number>this.status);
+        //@ts-ignore
+        if (!newResponseData.last) {
+            res.write(StreamApiResponse.sanitize<T>(newResponseData));
+        } else {
+            res.end();
+        }
+
+        return res;
     }
 
     public send(res: Response): THttpCall {
         return this.prepare<ApiResponse>(res, this);
+    }
+
+    protected static sanitize<T extends ApiResponse>(newResponseData: T): T {
+        // const clone: T = <T>{};
+        // Object.assign(clone, newResponseData);
+        //@ts-ignore
+        return newResponseData.data;
     }
 }
 
@@ -81,12 +96,6 @@ export class NotFoundResponse extends SingleApiResponse {
         // including path we could not find
         if (res.req) this.url = res.req.originalUrl;
         return super.prepare<NotFoundResponse>(res, this);
-    }
-}
-
-export class ForbiddenResponse extends SingleApiResponse {
-    constructor(message = "Forbidden") {
-        super(StatusCode.FAILURE, ResponseStatus.FORBIDDEN, message);
     }
 }
 

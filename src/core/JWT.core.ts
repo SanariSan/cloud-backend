@@ -28,7 +28,7 @@ export class JWT {
     }
 
     // get payload even if expired
-    public static async vlidateNoExp(token: string): Promise<JwtPayload> {
+    public static async validateNoExp(token: string): Promise<JwtPayload> {
         const secret = config.get("jwt.secret");
 
         try {

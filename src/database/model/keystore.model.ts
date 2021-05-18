@@ -25,10 +25,3 @@ export class Keystore {
     @JoinColumn({ name: "userId" })
     user!: User;
 }
-
-// export interface IKeystore {
-//     accessTokenKey?: string;
-//     refreshTokenKey?: string;
-//     createdAt?: Date;
-//     updatedAt?: Date;
-// }

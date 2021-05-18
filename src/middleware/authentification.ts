@@ -1,20 +1,17 @@
-import express, { Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../types";
 import { UserRepository, KeystoreRepository, DBManager, User, Keystore } from "../database";
 import { JWT, AuthFailureError, AccessTokenError, TokenExpiredError, InternalError } from "../core";
-import { asyncHandle, validate, ValidationSource, getAccessToken, validateTokenData } from "../helpers";
+import { getToken, validateTokenData } from "../helpers";
 import { ConnectionOptions } from "typeorm";
-import schema from "./schema";
 import config from "config";
 
-const Authentificate = express.Router();
-
-const Auth = async (req: ProtectedRequest, res: Response, next: NextFunction): Promise<any> => {
-    const accessToken = getAccessToken(req.headers.authorization);
+const Authentificate = async (req: ProtectedRequest, res: Response, next: NextFunction): Promise<any> => {
+    const accessToken = getToken(req.headers.authorization);
 
     try {
-        const payload = await JWT.validate(accessToken);
-        validateTokenData(payload);
+        const accessTokenPayload = await JWT.validate(accessToken);
+        validateTokenData(accessTokenPayload);
 
         const options: ConnectionOptions = config.get("db.auth");
         const dbManager: DBManager = new DBManager(options, [User, Keystore]);
@@ -22,7 +19,7 @@ const Auth = async (req: ProtectedRequest, res: Response, next: NextFunction): P
 
         let user;
         try {
-            user = await UserRepository.findById(connection, payload.sub);
+            user = await UserRepository.findById(connection, accessTokenPayload.sub);
         } catch (err) {
             throw new InternalError();
         }
@@ -30,7 +27,7 @@ const Auth = async (req: ProtectedRequest, res: Response, next: NextFunction): P
 
         let keystore;
         try {
-            keystore = await KeystoreRepository.findByToken(connection, payload.prm);
+            keystore = await KeystoreRepository.findByToken(connection, accessTokenPayload.prm);
         } catch (err) {
             throw new InternalError();
         }
@@ -46,7 +43,5 @@ const Auth = async (req: ProtectedRequest, res: Response, next: NextFunction): P
         throw e;
     }
 };
-
-Authentificate.use(validate(schema.auth, ValidationSource.HEADER), asyncHandle(Auth));
 
 export { Authentificate };

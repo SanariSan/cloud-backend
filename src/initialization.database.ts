@@ -1,16 +1,12 @@
-import { ConnectionOptions } from "typeorm";
+import { Connection, ConnectionOptions } from "typeorm";
 import { DBManager, Keystore, KeystoreRepository, User, UserRepository } from "./database";
-import config from "config";
 import { Logger } from "./core";
+import config from "config";
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-async function initializeDb() {
+async function testUser(connection: Connection): Promise<void> {
     try {
-        const options: ConnectionOptions = config.get("db.auth");
-        const dbManager: DBManager = new DBManager(options, [User, Keystore]);
-        const connection = (await dbManager.createConnection()).getConnection();
-
         const accessTokenKey = "test_token";
         const refreshTokenKey = "test_refresh_token";
         const { user: createdUser, keystore } = await UserRepository.create(
@@ -25,20 +21,36 @@ async function initializeDb() {
             refreshTokenKey,
         );
 
+        await KeystoreRepository.save(connection, keystore);
         await UserRepository.save(connection, createdUser);
 
         console.log(await UserRepository.findById(connection, createdUser.id));
         console.log(await KeystoreRepository.findByToken(connection, accessTokenKey));
 
-        await KeystoreRepository.remove(connection, createdUser.id);
+        await KeystoreRepository.remove(connection, keystore.id);
         await UserRepository.remove(connection, createdUser.id);
 
         console.log(await UserRepository.findById(connection, createdUser.id));
         console.log(await KeystoreRepository.findByToken(connection, accessTokenKey));
     } catch (err) {
-        Logger.warn("PROBLEMS WITH DATABASE", err);
+        Logger.warn("PROBLEMS WITH DATABASE TEST USER", err);
         process.exit(1);
     }
 }
 
-export { initializeDb };
+async function initializeDb(): Promise<Connection> {
+    try {
+        const options: ConnectionOptions = config.get("db.auth");
+        const dbManager: DBManager = new DBManager(options, [User, Keystore]);
+        const connection = (await dbManager.createConnection()).getConnection();
+
+        await connection.synchronize();
+
+        return connection;
+    } catch (err) {
+        Logger.warn("PROBLEMS WITH DATABASE SYNC", err);
+        process.exit(1);
+    }
+}
+
+export { initializeDb, testUser };

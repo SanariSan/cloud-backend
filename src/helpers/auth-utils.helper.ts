@@ -19,6 +19,12 @@ export const validateTokenData = (payload: JwtPayload): boolean => {
     return true;
 };
 
+export const getToken = (authorization?: string) => {
+    if (!authorization) throw new AuthFailureError("Invalid Authorization");
+    if (!authorization.startsWith("Bearer ")) throw new AuthFailureError("Invalid Authorization");
+    return authorization.split(" ")[1];
+};
+
 export const createTokens = async (user: User, accessTokenKey: string, refreshTokenKey: string): Promise<Tokens> => {
     const accessToken = await JWT.encode(
         new JwtPayload(issuer, audience, user.id, accessTokenKey, accessTokenValidDays),

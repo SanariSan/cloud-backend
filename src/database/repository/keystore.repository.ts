@@ -13,26 +13,44 @@ class KeystoreRepository {
     }
 
     public static async remove(connection: Connection, id: number): Promise<DeleteResult> {
-        // return connection.createQueryBuilder().delete().from(User).where("userId = :id", { id }).execute();
         try {
             const keystoreRepos: Repository<Keystore> = KeystoreRepository.getRepository(connection);
-            return await keystoreRepos.delete({ userId: id });
+            // return await keystoreRepos.delete({ userId: id });
+            return await keystoreRepos.delete(id);
         } catch (err) {
             Logger.warn("Not performed(delete-keystore), problems with connection", err);
             throw new Error("Not performed(delete-keystore), problems with connection");
         }
     }
 
-    public static async findByToken(connection: Connection, token: string): Promise<Keystore> {
+    public static async findByToken(connection: Connection, accessTokenKey: string): Promise<Keystore> {
         try {
             const keystoreRepos: Repository<Keystore> = await KeystoreRepository.getRepository(connection);
             const tokenPair: Keystore = <Keystore>await keystoreRepos.findOne({
-                where: [{ accessTokenKey: token }, { refreshTokenKey: token }],
+                where: [{ accessTokenKey }],
             });
 
             return tokenPair;
         } catch (err) {
-            Logger.warn("Not performed(findOne-keystore), problems with connection", err);
+            Logger.warn("Not performed(findOneByToken-keystore), problems with connection", err);
+            throw new Error("Not performed(findOne-keystore), problems with connection");
+        }
+    }
+
+    public static async findByBothTokens(
+        connection: Connection,
+        accessTokenKey: string,
+        refreshTokenKey: string,
+    ): Promise<Keystore> {
+        try {
+            const keystoreRepos: Repository<Keystore> = await KeystoreRepository.getRepository(connection);
+            const tokenPair: Keystore = <Keystore>await keystoreRepos.findOne({
+                where: [{ accessTokenKey, refreshTokenKey }],
+            });
+
+            return tokenPair;
+        } catch (err) {
+            Logger.warn("Not performed(findOneByBothTokens-keystore), problems with connection", err);
             throw new Error("Not performed(findOne-keystore), problems with connection");
         }
     }

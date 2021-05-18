@@ -12,7 +12,7 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     const dbManager: DBManager = new DBManager(options, [User, Keystore]);
     const connection = (await dbManager.createConnection()).getConnection();
 
-    let user;
+    let user: User;
     try {
         user = await UserRepository.findByEmail(connection, req.body.email, ["keystore"]);
     } catch (err) {
@@ -31,7 +31,7 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
     const keystore: Keystore = await KeystoreRepository.create(accessTokenKey, refreshTokenKey);
     await KeystoreRepository.save(connection, keystore);
 
-    user.keystore.push(keystore);
+    user.keystore?.push(keystore);
     await UserRepository.save(connection, user);
 
     const tokens = await createTokens(user, accessTokenKey, refreshTokenKey);
