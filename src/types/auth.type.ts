@@ -2,11 +2,10 @@
 // import Keystore from '../database/model/Keystore';
 import { Request } from "express";
 
-// URGH
 export interface ProtectedRequest extends Request {
-    user: any;
-    accessToken: string;
-    keystore: any;
+    user?: any;
+    accessToken?: string;
+    keystore?: any;
 }
 
 export interface Tokens {

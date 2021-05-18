@@ -1,25 +1,30 @@
-// import { initializeDbConnection } from "./src";
-// initializeDbConnection();
 import "reflect-metadata";
 import express from "express";
 import config from "config";
 import { Logger } from "./core";
 import { settings, routes, errorHandler } from "./loaders";
+import { initializeDb } from "./initialization.database";
 
-const app = express();
+async function init() {
+    await initializeDb();
 
-settings(app);
-routes(app);
-errorHandler(app);
+    const app = express();
 
-app.listen(config.get("port"), () => {
-    Logger.warn(`server running on port : ${config.get("port")}`);
-}).on("error", (e: any) => {
-    console.log(false);
-    Logger.warn(e);
-});
+    settings(app);
+    routes(app);
+    errorHandler(app);
 
-process.on("uncaughtException", (e: Error) => {
-    console.log(false);
-    Logger.warn(e);
-});
+    app.listen(config.get("port"), () => {
+        Logger.warn(`server running on port : ${config.get("port")}`);
+    }).on("error", (e: any) => {
+        console.log(false);
+        Logger.warn(e);
+    });
+
+    process.on("uncaughtException", (e: Error) => {
+        console.log(false);
+        Logger.warn(e);
+    });
+}
+
+init();

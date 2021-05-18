@@ -34,7 +34,8 @@ export const validate = (schema: Joi.ObjectSchema, source: ValidationSource = Va
     next: NextFunction,
 ) => {
     try {
-        const value = await schema.validateAsync(req[source], {
+        console.log("validate");
+        await schema.validateAsync(req[source], {
             abortEarly: false,
         });
         //value == { email: 'sample@mail.ru', password: '123444' };

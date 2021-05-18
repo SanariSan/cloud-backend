@@ -1,32 +1,39 @@
 import { Logger } from "../core";
+import { createConnection, Connection, ConnectionOptions, EntitySchema } from "typeorm";
 import config from "config";
-import { Entity, createConnection, Connection, ConnectionOptions, EntityTarget } from "typeorm";
 
-const connectionLifespanMins: number = config.get("db.");
+const { connectionLifespanSecs }: { connectionLifespanSecs: number } = config.get("db.options");
 
-export class DBConnection {
+export class DBManager {
     private connection?: Connection;
     private connectionOptions?: ConnectionOptions;
-    private entities?: Array<EntityTarget<typeof Entity>>;
-    private connectionLifespanMs: number = connectionLifespanMins * 60 * 1000;
+    private entities?: Array<EntitySchema>;
+    private connectionName: string;
+    private connectionLifespanMs: number = connectionLifespanSecs * 1000;
     private connectionAutoCloseTimeout?: NodeJS.Timeout;
     private defaultOptions = {
+        synchronize: true,
         autoSchemaSync: true, //DEV
     };
 
-    constructor(connectionOptions: ConnectionOptions, entities: Array<EntityTarget<typeof Entity>>) {
+    constructor(connectionOptions: ConnectionOptions, entities: any) {
         this.connectionOptions = connectionOptions;
         this.entities = entities;
+        this.connectionName = (Math.random() * 100).toString();
     }
 
-    public async createConnection(): Promise<DBConnection> {
-        this.connection = await createConnection({
+    public async createConnection(): Promise<DBManager> {
+        const options: ConnectionOptions = {
             type: "postgres",
+            name: this.connectionName,
             ...this.connectionOptions,
             ...this.defaultOptions,
-            ...this.entities,
-        });
-        Logger.warn("Connection opened");
+            entities: this.entities,
+        };
+        console.log(options);
+
+        this.connection = await createConnection(options);
+        Logger.warn(`Connection ${this.connectionName} opened`);
 
         this.setConnectionLifespanTiomeout();
 
@@ -45,11 +52,11 @@ export class DBConnection {
     private setConnectionLifespanTiomeout() {
         if (this.connectionAutoCloseTimeout) clearTimeout(this.connectionAutoCloseTimeout);
         this.connectionAutoCloseTimeout = setTimeout(this.closeConnection.bind(this), this.connectionLifespanMs);
-        Logger.warn(`Connection will be autoclosed in ${connectionLifespanMins} minutes`);
+        Logger.warn(`Connection ${this.connectionName} will be autoclosed in ${connectionLifespanSecs} seconds`);
     }
 
     private async closeConnection() {
         if (this.connection) await this.connection.close();
-        Logger.warn("Connection closed");
+        Logger.warn(`Connection ${this.connectionName} closed`);
     }
 }

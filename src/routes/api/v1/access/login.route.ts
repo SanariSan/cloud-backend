@@ -1,40 +1,43 @@
-import { Request, Response, NextFunction, Router } from "express";
-import { SuccessResponse, BadRequestError, AuthFailureError } from "../../../../core";
-import { createTokens } from "../../../../auth";
+import { Request, Response, NextFunction } from "express";
+import { SuccessResponse, BadRequestError, AuthFailureError, InternalError } from "../../../../core";
+import { createTokens } from "../../../../helpers";
+import { DBManager, Keystore, KeystoreRepository, User, UserRepository } from "../../../../database";
+import { ConnectionOptions } from "typeorm";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
-// import UserRepo from '../../../database/repository/UserRepo';
-// import KeystoreRepo from '../../../database/repository/KeystoreRepo';
+import config from "config";
 
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
-    // const user = await UserRepo.findByEmail(req.body.email);
+    const options: ConnectionOptions = config.get("db.auth");
+    const dbManager: DBManager = new DBManager(options, [User, Keystore]);
+    const connection = (await dbManager.createConnection()).getConnection();
 
-    //remove
-    const createdUser = {
-        id: Math.round(Math.random() * 10),
-        name: req.body.name,
-        email: req.body.email,
-        profilePicUrl: req.body.profilePicUrl,
-    };
+    let user;
+    try {
+        user = await UserRepository.findByEmail(connection, req.body.email, ["keystore"]);
+    } catch (err) {
+        throw new InternalError();
+    }
 
-    const user = {
-        email: "e@m.ru",
-        password: "123467",
-    };
     if (!user) throw new BadRequestError("User not registered");
     if (!user.password) throw new BadRequestError("Credential not set");
 
-    const match = await bcrypt.compare(req.body.password, user.password);
+    const match: boolean = await bcrypt.compare(req.body.password, user.password);
     if (!match) throw new AuthFailureError("Authentication failure");
 
     const accessTokenKey = crypto.randomBytes(64).toString("hex");
     const refreshTokenKey = crypto.randomBytes(64).toString("hex");
 
-    // await KeystoreRepo.create(user._id, accessTokenKey, refreshTokenKey);
+    const keystore: Keystore = await KeystoreRepository.create(accessTokenKey, refreshTokenKey);
+    await KeystoreRepository.save(connection, keystore);
+
+    user.keystore.push(keystore);
+    await UserRepository.save(connection, user);
+
     const tokens = await createTokens(user, accessTokenKey, refreshTokenKey);
 
     new SuccessResponse("Login Success", {
-        user: createdUser,
+        user: { id: user.id, name: user.name, profilePicUrl: user.profilePicUrl },
         tokens: tokens,
     }).send(res);
 };

@@ -1,57 +1,42 @@
-import path from "path";
-import { readFile } from "fs";
+import config from "config";
 import { promisify } from "util";
 import { sign, verify } from "jsonwebtoken";
 import { Logger, InternalError, BadTokenError, TokenExpiredError } from "../core";
 
-/*
- * issuer 		— Software organization who issues the token.
- * subject 		— Intended user of the token.
- * audience 	— Basically identity of the intended recipient of the token.
- * expiresIn	— Expiration time after which the token will be invalid.
- * algorithm 	— Encryption algorithm to be used to protect the token.
- */
-
 export class JWT {
-    private static readPublicKey(): Promise<string> {
-        return promisify(readFile)(path.join(__dirname, "../../keys/public.pem"), "utf8");
-    }
-
-    private static readPrivateKey(): Promise<string> {
-        return promisify(readFile)(path.join(__dirname, "../../keys/private.pem"), "utf8");
-    }
-
+    //create token with the payload attached
     public static async encode(payload: JwtPayload): Promise<string> {
-        const cert = await this.readPrivateKey();
-        if (!cert) throw new InternalError("Token generation failure");
+        const secret = config.get("jwt.secret");
+        if (!secret) throw new InternalError("Token generation failure");
         // @ts-ignore
-        return promisify(sign)({ ...payload }, cert, { algorithm: "RS256" });
+        return await promisify(sign)({ ...payload }, secret, { algorithm: "HS256" });
     }
 
-    /**
-     * This method checks the token and returns the decoded data when token is valid in all respect
-     */
+    //get payload only if valid
     public static async validate(token: string): Promise<JwtPayload> {
-        const cert = await this.readPublicKey();
+        const secret = config.get("jwt.secret");
         try {
             // @ts-ignore
-            return (await promisify(verify)(token, cert)) as JwtPayload;
+            return (await promisify(verify)(token, secret, { algorithm: "HS256" })) as JwtPayload;
         } catch (e) {
             Logger.debug(e);
             if (e && e.name === "TokenExpiredError") throw new TokenExpiredError();
-            // throws error if the token has not been encrypted by the private key
+
+            // any other error with token except expired
             throw new BadTokenError();
         }
     }
 
-    /**
-     * Returns the decoded payload if the signature is valid even if it is expired
-     */
-    public static async decode(token: string): Promise<JwtPayload> {
-        const cert = await this.readPublicKey();
+    // get payload even if expired
+    public static async vlidateNoExp(token: string): Promise<JwtPayload> {
+        const secret = config.get("jwt.secret");
+
         try {
             // @ts-ignore
-            return (await promisify(verify)(token, cert, { ignoreExpiration: true })) as JwtPayload;
+            return (await promisify(verify)(token, secret, {
+                ignoreExpiration: true,
+                algorithm: "HS256",
+            })) as JwtPayload;
         } catch (e) {
             Logger.debug(e);
             throw new BadTokenError();
@@ -59,20 +44,27 @@ export class JWT {
     }
 }
 
+//audience -aud— Basically identity of the intended recipient of the token.
+//subject -sub— Intended user of the token.
+//issuer -iss— Software organization who issues the token.
+//issuedAt-iat-Timestamp of token creation
+//expiresIn-exp— Expiration time after which the token will be invalid.
+//prm -param -custom field, stands for access/refresh token depending on what we using this class for
+
 export class JwtPayload {
     aud: string;
-    sub: string;
+    sub: number;
     iss: string;
     iat: number;
     exp: number;
     prm: string;
 
-    constructor(issuer: string, audience: string, subject: string, param: string, validity: number) {
+    constructor(issuer: string, audience: string, subject: number, param: string, validForDays: number) {
         this.iss = issuer;
         this.aud = audience;
         this.sub = subject;
-        this.iat = Math.floor(Date.now() / 1000);
-        this.exp = this.iat + validity * 24 * 60 * 60;
         this.prm = param;
+        this.iat = Math.floor(Date.now() / 1000);
+        this.exp = this.iat + validForDays * 24 * 60 * 60;
     }
 }
