@@ -3,19 +3,20 @@ import express from "express";
 import config from "config";
 import { Logger } from "./core";
 import { settings, routes, errorHandler } from "./loaders";
-import { initializeDb, testUser } from "./initialization.database";
+import { initializeDb, test, testUser } from "./initialization.database";
 import { Connection } from "typeorm";
 import { initializeMusic } from "./initializationMusic";
 
 process.on("uncaughtException", (e: Error) => {
-    console.log(false);
+    console.log("Uncaught");
     Logger.warn(e);
 });
 
 async function init() {
     const connection: Connection = await initializeDb();
-    await testUser(connection);
-    await initializeMusic();
+    await test(connection);
+    // await testUser(connection);
+    // await initializeMusic();
 
     const app = express();
 
@@ -26,7 +27,7 @@ async function init() {
     app.listen(config.get("port"), () => {
         Logger.warn(`server running on port : ${config.get("port")}`);
     }).on("error", (e: any) => {
-        console.log(false);
+        console.log("App listen handler");
         Logger.warn(e);
     });
 }

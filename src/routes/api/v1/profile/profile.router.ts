@@ -1,7 +1,7 @@
 import { Profile1 } from "./profile.route";
 import { Router } from "express";
 import { asyncHandle } from "../../../../helpers";
-import { Authentificate } from "../../../../middleware";
+import { Authentificate } from "../../../../controllers";
 
 const ProfileRouter = Router();
 
