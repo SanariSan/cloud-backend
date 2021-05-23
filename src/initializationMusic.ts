@@ -33,7 +33,8 @@ async function initializeMusic(): Promise<Connection> {
         return connection;
     } catch (err) {
         Logger.warn("PROBLEMS WITH DATABASE SYNC", err);
-        process.exit(1);
+        throw new Error(err);
+        // process.exit(1);
     }
 }
 

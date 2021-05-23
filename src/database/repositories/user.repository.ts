@@ -1,21 +1,15 @@
-import { Connection, DeleteResult, Repository } from "typeorm";
+import { Connection } from "typeorm";
 import { Logger } from "../../core";
 import { getFuncName } from "../../helpers";
-import { Group, IUser, Keystore, TUser, User } from "../models";
-import { KeystoreRepository } from "../repositories";
+import { Group, IUser, Keystore, TKeysUser, User } from "../models";
+import { GenericRepository } from "../repositories";
 
-class UserRepository {
-    private record: User | null;
-    private lastOperationResult: any;
-    private repository: Repository<User> | null;
-
+class UserRepository extends GenericRepository<TKeysUser, IUser> {
     constructor() {
-        this.record = null;
-        this.repository = null;
-        this.lastOperationResult = null;
+        super();
     }
 
-    public initializeRepository(connection: Connection): UserRepository {
+    public initializeRepository(connection: Connection): this {
         try {
             this.repository = this.lastOperationResult = connection.getRepository(User);
 
@@ -27,26 +21,7 @@ class UserRepository {
         }
     }
 
-    public async findById(id: number, relations?: Array<string>): Promise<UserRepository> {
-        try {
-            if (this.repository) {
-                this.record = this.lastOperationResult = <User>await this.repository.findOne({
-                    where: {
-                        id,
-                    },
-                    relations,
-                });
-            }
-
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${getFuncName(this.findById)}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
-
-    public async findByEmail(email: string, relations?: Array<string>): Promise<UserRepository> {
+    public async findByEmail(email: string, relations?: Array<string>): Promise<this> {
         try {
             if (this.repository) {
                 this.record = this.lastOperationResult = <User>await this.repository.findOne({
@@ -65,24 +40,7 @@ class UserRepository {
         }
     }
 
-    //probably won't be used in prod
-    public async removeRecord(): Promise<UserRepository> {
-        try {
-            if (this.repository && this.record) {
-                //check somehow if all keystores for this user deleted
-                //check somehow if all relations to groups deleted
-                this.lastOperationResult = <DeleteResult>await this.repository.delete(this.record.id);
-            }
-
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${getFuncName(this.removeRecord)}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
-
-    public async addKeystore(keystore: Keystore): Promise<UserRepository> {
+    public async addKeystore(keystore: Keystore): Promise<this> {
         try {
             if (this.repository && this.record) {
                 this.lastOperationResult = await this.record.keystore.push(keystore);
@@ -96,7 +54,7 @@ class UserRepository {
         }
     }
 
-    public async addGroupOwnage(group: Group): Promise<UserRepository> {
+    public async addGroupOwnage(group: Group): Promise<this> {
         try {
             if (this.repository && this.record) {
                 this.record.groupOwnage = this.lastOperationResult = group;
@@ -110,7 +68,11 @@ class UserRepository {
         }
     }
 
-    public async createUser(user: User): Promise<UserRepository> {
+    //IF WANT TO removeRecord
+    //check somehow if all keystores for this user deleted
+    //check somehow if all relations to groups deleted
+
+    public async createUser(user: User): Promise<this> {
         const now = new Date();
         this.record = new User();
 
@@ -125,54 +87,6 @@ class UserRepository {
 
         return this;
     }
-
-    public async saveRecord(): Promise<UserRepository> {
-        try {
-            if (this.repository && this.record) {
-                this.record.updatedAt = new Date();
-                this.lastOperationResult = await this.repository.save(this.record);
-            }
-
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${getFuncName(this.saveRecord)}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
-
-    public getRepository(): Repository<User> | null {
-        return this.repository;
-    }
-
-    public getRecord(keys: Array<TUser>): User | null {
-        if (keys && keys.length) {
-            const user: IUser = <IUser>{};
-            keys.forEach((key: TUser) => {
-                //@ts-ignore
-                if (this.record) user[key] = this.record[key];
-            });
-
-            return user;
-        }
-
-        return this.record;
-    }
-
-    //probably won't be used in prod
-    public getLastOperationResult(): any | null {
-        return this.lastOperationResult;
-    }
 }
 
 export { UserRepository };
-
-// const preparedElement = {};
-// const filteredKeys: Array<string> = [];
-// for (let key in user) {
-//     // if (key !== "id") {
-//     // && key !== "password") {
-//     filteredKeys.push(key);
-//     // }s
-// }
-// filteredKeys.forEach(key => (user ? (preparedElement[key] = user[key]) : void 0));

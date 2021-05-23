@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, ManyToOne, JoinTable } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, BaseEntity } from "typeorm";
 import { User } from "./user.model";
 
 @Entity()
-export class Group {
+export class Group extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -24,3 +24,14 @@ export class Group {
     @JoinTable({ name: "userParticipateId" })
     userParticipate!: Array<User>;
 }
+
+export interface IGroup {
+    id: number;
+    name: string;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userParticipate: Array<User>;
+}
+
+export type TKeysGroup = "id" | "name" | "password" | "createdAt" | "updatedAt" | "userParticipate";

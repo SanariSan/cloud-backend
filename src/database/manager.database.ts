@@ -1,13 +1,16 @@
 import { Logger } from "../core";
-import { createConnection, Connection, ConnectionOptions, EntitySchema } from "typeorm";
+import { createConnection, Connection, ConnectionOptions, EntityTarget } from "typeorm";
+import { Group, Keystore, User } from "./models";
 import config from "config";
 
 const { connectionLifespanSecs }: { connectionLifespanSecs: number } = config.get("db.options");
 
+type TModel = User | Keystore | Group;
+
 export class DBManager {
     private connection?: Connection;
     private connectionOptions?: ConnectionOptions;
-    private entities?: Array<EntitySchema>;
+    private entities: Array<EntityTarget<TModel>>;
     private connectionName: string;
     private connectionLifespanMs: number = connectionLifespanSecs * 1000;
     private connectionAutoCloseTimeout?: NodeJS.Timeout;
@@ -16,19 +19,21 @@ export class DBManager {
         autoSchemaSync: true, //DEV
     };
 
-    constructor(connectionOptions: ConnectionOptions, entities: any) {
+    constructor(connectionOptions: ConnectionOptions, entities: Array<EntityTarget<TModel>>) {
         this.connectionOptions = connectionOptions;
         this.entities = entities;
         this.connectionName = (Math.random() * 100).toString();
+
+        console.log(this.entities);
     }
 
-    public async createConnection(): Promise<DBManager> {
+    public async createConnection(): Promise<this> {
         const options: ConnectionOptions = {
             type: "postgres",
             name: this.connectionName,
             ...this.connectionOptions,
             ...this.defaultOptions,
-            entities: this.entities,
+            entities: <Array<string>>this.entities,
         };
         console.log(options);
 

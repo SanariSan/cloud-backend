@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from "typeorm";
 import { User } from "./user.model";
 
 @Entity()
-export class Keystore {
+export class Keystore extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -32,4 +32,4 @@ export interface IKeystore {
     user: User;
 }
 
-export type TKeystore = "id" | "accessTokenKey" | "refreshTokenKey" | "createdAt" | "updatedAt" | "user";
+export type TKeysKeystore = "id" | "accessTokenKey" | "refreshTokenKey" | "createdAt" | "updatedAt" | "user";

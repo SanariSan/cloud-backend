@@ -6,14 +6,13 @@ import {
     OneToOne,
     JoinColumn,
     ManyToMany,
-    JoinTable,
-    ManyToOne,
+    BaseEntity,
 } from "typeorm";
 import { Group } from "./group.model";
 import { Keystore } from "./keystore.model";
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -56,19 +55,6 @@ export class User {
     // log!: Log[];
 }
 
-// enum EUser {
-//     ID = "id",
-//     NAME = "name",
-//     EMAIL = "email",
-//     PASSWORD = "password",
-//     PROFILEPICURL = "profilePicUrl",
-//     GROUPOWNAGE = "groupOwnage",
-//     CREATEDAT = "createdAt",
-//     UPDATEDAT = "updatedAt",
-//     KEYSTORE = "keystore",
-//     GROUPPARTICIPATE = "groupParticipate",
-// }
-
 export interface IUser {
     id: number;
     name: string;
@@ -84,7 +70,7 @@ export interface IUser {
 
 // export type TUser = Partial<Record<EUser, IUser>>;
 // =
-export type TUser =
+export type TKeysUser =
     | "id"
     | "name"
     | "email"

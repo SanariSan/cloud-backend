@@ -1,22 +1,17 @@
-import { Connection, DeleteResult, Repository } from "typeorm";
+import { Connection } from "typeorm";
 import { Logger } from "../../core";
 import { getFuncName } from "../../helpers";
-import { IKeystore, Keystore, TKeystore } from "../models";
+import { IKeystore, Keystore, TKeysKeystore } from "../models";
+import { GenericRepository } from "../repositories";
 
-class KeystoreRepository {
-    private record: Keystore | null;
-    private repository: Repository<Keystore> | null;
-    private lastOperationResult: any | null;
-
+class KeystoreRepository extends GenericRepository<TKeysKeystore, IKeystore> {
     constructor() {
-        this.record = null;
-        this.repository = null;
-        this.lastOperationResult = null;
+        super();
     }
 
-    public initializeRepository(connection: Connection): KeystoreRepository {
+    public initializeRepository(connection: Connection): this {
         try {
-            this.repository = connection.getRepository(Keystore);
+            this.repository = this.lastOperationResult = connection.getRepository(Keystore);
 
             return this;
         } catch (err) {
@@ -26,21 +21,7 @@ class KeystoreRepository {
         }
     }
 
-    public async removeRecord(): Promise<KeystoreRepository> {
-        try {
-            if (this.repository && this.record) {
-                this.lastOperationResult = <DeleteResult>await this.repository.delete(this.record.id);
-            }
-
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${getFuncName(this.removeRecord)}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
-
-    public async findByToken(accessTokenKey: string): Promise<KeystoreRepository> {
+    public async findByToken(accessTokenKey: string): Promise<this> {
         try {
             if (this.repository) {
                 this.record = this.lastOperationResult = <Keystore>await this.repository.findOne({
@@ -56,7 +37,7 @@ class KeystoreRepository {
         }
     }
 
-    public async findByBothTokens(accessTokenKey: string, refreshTokenKey: string): Promise<KeystoreRepository> {
+    public async findByBothTokens(accessTokenKey: string, refreshTokenKey: string): Promise<this> {
         try {
             if (this.repository) {
                 this.record = this.lastOperationResult = <Keystore>await this.repository.findOne({
@@ -72,7 +53,7 @@ class KeystoreRepository {
         }
     }
 
-    public createKeystore(accessTokenKey: string, refreshTokenKey: string): KeystoreRepository {
+    public createKeystore(accessTokenKey: string, refreshTokenKey: string): this {
         const now = new Date();
         this.record = new Keystore();
 
@@ -84,44 +65,6 @@ class KeystoreRepository {
         this.lastOperationResult = this.record;
 
         return this;
-    }
-
-    public async saveRecord(): Promise<KeystoreRepository> {
-        try {
-            if (this.repository && this.record) {
-                this.record.updatedAt = new Date();
-                this.lastOperationResult = await this.repository.save(this.record);
-            }
-
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${getFuncName(this.saveRecord)}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
-
-    public getRepository(): Repository<Keystore> | null {
-        return this.repository;
-    }
-
-    public getRecord(keys: Array<TKeystore>): Keystore | null {
-        if (keys && keys.length) {
-            const keystore: IKeystore = <IKeystore>{};
-            keys.forEach((key: TKeystore) => {
-                //@ts-ignore
-                if (this.record) keystore[key] = this.record[key];
-            });
-
-            return keystore;
-        }
-
-        return this.record;
-    }
-
-    //probably won't be used in prod
-    public getLastOperationResult(): any | null {
-        return this.lastOperationResult;
     }
 }
 

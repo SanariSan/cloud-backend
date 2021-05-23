@@ -1,91 +1,69 @@
-import { Connection, DeleteResult, Repository } from "typeorm";
+import { Connection } from "typeorm";
 import { Logger } from "../../core";
-import { User, Group } from "../models";
-import { KeystoreRepository } from "../repositories";
+import { getFuncName } from "../../helpers";
+import { User, Group, TKeysGroup, IGroup } from "../models";
+import { GenericRepository } from "../repositories";
 
-class GroupRepository {
-    public static getRepository(connection: Connection): Repository<Group> {
+class GroupRepository extends GenericRepository<TKeysGroup, IGroup> {
+    constructor() {
+        super();
+    }
+
+    public initializeRepository(connection: Connection): this {
         try {
-            return connection.getRepository(Group);
+            this.repository = this.lastOperationResult = connection.getRepository(Group);
+
+            return this;
         } catch (err) {
-            Logger.warn("Could not get repository Group");
-            throw new Error("Error accessing repository");
+            this.lastOperationResult = `Error in ${getFuncName(this.initializeRepository)}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
         }
     }
 
-    public static async findById(connection: Connection, id: number, relations?: Array<string>): Promise<Group> {
+    //add user to group
+    public async addUser(user: User): Promise<this> {
         try {
-            const group: Group = <Group>await GroupRepository.getRepository(connection).findOne({
-                where: {
-                    id,
-                },
-                relations,
-            });
-            return group;
+            if (this.record) {
+                this.record.userParticipate.push(user);
+            }
+
+            return this;
         } catch (err) {
-            Logger.warn("Not performed(findById-group), problems with connection");
-            throw new Error("Not performed(findById-group), problems with connection");
+            this.lastOperationResult = `Error in ${getFuncName(this.initializeRepository)}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
         }
     }
 
-    public static async addUser(
-        connection: Connection,
-        groupId: number,
-        user: User,
-        relations?: Array<string>,
-    ): Promise<void> {
+    //remove user from group
+    public async removeUser(user: User): Promise<this> {
         try {
-            const foundGroup1: Group = <Group>await GroupRepository.findById(connection, groupId, relations); //find group by id
-            foundGroup1.userParticipate.push(user); //add user instance
+            if (this.record) {
+                this.record.userParticipate = this.record.userParticipate.filter(
+                    (existingUser: User) => existingUser.id !== user.id,
+                );
+            }
+
+            return this;
         } catch (err) {
-            Logger.warn("Not performed(addUser-Group), problems with connection");
-            throw new Error("Not performed(addUser-Group), problems with connection");
+            this.lastOperationResult = `Error in ${getFuncName(this.initializeRepository)}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
         }
     }
 
-    public static async removeUser(
-        connection: Connection,
-        groupId: number,
-        user: User,
-        relations?: Array<string>,
-    ): Promise<void> {
-        try {
-            const foundGroup1: Group = <Group>await GroupRepository.findById(connection, groupId, relations); //find group by id
-            foundGroup1.userParticipate = foundGroup1.userParticipate.filter(
-                (existingUser: User) => existingUser.id !== user.id,
-            );
-        } catch (err) {
-            Logger.warn("Not performed(addUser-Group), problems with connection");
-            throw new Error("Not performed(addUser-Group), problems with connection");
-        }
-    }
-
-    public static async create(group: Group): Promise<Group> {
+    public async createGroup(group: Group): Promise<this> {
         const now = new Date();
-        const createdGroup: Group = new Group();
+        this.record = new Group();
 
-        createdGroup.name = group.name;
-        createdGroup.password = group.password;
-        createdGroup.createdAt = now;
-        createdGroup.updatedAt = now;
+        this.record.name = group.name;
+        this.record.password = group.password;
+        this.record.createdAt = now;
+        this.record.updatedAt = now;
 
-        return createdGroup;
-    }
-
-    public static async save(connection: Connection, group: Group): Promise<Group> {
-        group.updatedAt = new Date();
-        return await GroupRepository.getRepository(connection).save(group);
+        return this;
     }
 }
 
 export { GroupRepository };
-
-// const preparedElement = {};
-// const filteredKeys: Array<string> = [];
-// for (let key in user) {
-//     // if (key !== "id") {
-//     // && key !== "password") {
-//     filteredKeys.push(key);
-//     // }s
-// }
-// filteredKeys.forEach(key => (user ? (preparedElement[key] = user[key]) : void 0));
