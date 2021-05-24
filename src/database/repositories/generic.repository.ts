@@ -18,7 +18,7 @@ abstract class GenericRepositoryAbstract<M extends TModel> {
         this.lastOperationResult = null;
     }
 
-    public abstract initializeRepository(connection: Connection, entity: TEntities): this;
+    public abstract initializeRepository(connection: Connection): this;
     public abstract findById(id: number, relations?: Array<string>): Promise<this>;
     public abstract findByIds(id: Array<number>, relations?: Array<string>): Promise<this>;
     public abstract removeRecord(): Promise<this>;
