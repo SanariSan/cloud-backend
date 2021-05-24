@@ -1,11 +1,12 @@
-import { Logger } from "../core";
 import { createConnection, Connection, ConnectionOptions, EntityTarget } from "typeorm";
-import { Group, Keystore, User } from "./models";
+import { Group, User, Keystore } from "./models/FMODEL.model";
+import { TModel } from "./types-database.type";
+import { Logger } from "../core";
 import config from "config";
 
 const { connectionLifespanSecs }: { connectionLifespanSecs: number } = config.get("db.options");
 
-type TModel = User | Keystore | Group;
+// type TModel = User | Keystore | Group;
 
 export class DBManager {
     private connection?: Connection;
@@ -28,12 +29,15 @@ export class DBManager {
     }
 
     public async createConnection(): Promise<this> {
+        console.log(this.connectionName);
+        console.log(this.connectionOptions);
+        console.log(this.defaultOptions);
         const options: ConnectionOptions = {
             type: "postgres",
             name: this.connectionName,
             ...this.connectionOptions,
             ...this.defaultOptions,
-            entities: <Array<string>>this.entities,
+            entities: [Group, User, Keystore], //<Array<string>>this.entities,
         };
         console.log(options);
 

@@ -6,13 +6,36 @@ import {
     OneToOne,
     JoinColumn,
     ManyToMany,
-    BaseEntity,
+    ManyToOne,
+    JoinTable,
 } from "typeorm";
-import { Group } from "./group.model";
-import { Keystore } from "./keystore.model";
 
 @Entity()
-export class User extends BaseEntity {
+export class Group {
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @Column("text")
+    name!: string;
+
+    @Column({ type: "text", nullable: true })
+    password!: string;
+
+    @Column("text")
+    createdAt!: Date;
+
+    @Column("text")
+    updatedAt!: Date;
+
+    //list of all users Ids have access to this group
+    //with this columns we can check all users related to this particualar group
+    @ManyToMany(type => User, user => user.groupParticipate)
+    @JoinTable({ name: "userParticipateId" })
+    userParticipate!: Array<User>;
+}
+
+@Entity()
+export class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -55,29 +78,24 @@ export class User extends BaseEntity {
     // log!: Log[];
 }
 
-export interface IUser {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    profilePicUrl: string;
-    groupOwnage: Group;
-    createdAt: Date;
-    updatedAt: Date;
-    keystore: Array<Keystore>;
-    groupParticipate: Array<Group>;
-}
+@Entity()
+export class Keystore {
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-// export type TUser = Partial<Record<EUser, IUser>>;
-// =
-export type TKeysUser =
-    | "id"
-    | "name"
-    | "email"
-    | "password"
-    | "profilePicUrl"
-    | "groupOwnage"
-    | "createdAt"
-    | "updatedAt"
-    | "keystore"
-    | "groupParticipate";
+    @Column("text")
+    accessTokenKey!: string;
+
+    @Column("text")
+    refreshTokenKey!: string;
+
+    @Column("text")
+    createdAt!: Date;
+
+    @Column("text")
+    updatedAt!: Date;
+
+    @ManyToOne(type => User, user => user.keystore)
+    @JoinColumn({ name: "userId" })
+    user!: User;
+}

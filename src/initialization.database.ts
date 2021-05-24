@@ -1,5 +1,5 @@
 import { Connection } from "typeorm";
-import { User, Keystore, Group } from "./database";
+import { ENTITIES } from "./database/types-database.type";
 import { Logger } from "./core";
 import { getNewConnection } from "./helpers";
 // const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -97,8 +97,10 @@ import { getNewConnection } from "./helpers";
 
 async function initializeDb(): Promise<Connection> {
     try {
-        const connection = await getNewConnection([User.target, Keystore.target, Group.target]);
+        console.log("x1");
+        const connection = await getNewConnection([ENTITIES.User, ENTITIES.Keystore, ENTITIES.Group]);
         await connection.synchronize();
+        console.log("x2");
 
         return connection;
     } catch (err) {

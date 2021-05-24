@@ -5,8 +5,8 @@ import {
     InternalErrorResponse,
     NotFoundResponse,
     BadRequestResponse,
+    Logger,
 } from "../core";
-import { Logger } from "../core";
 import { Response } from "express";
 import { ErrorType, THttpCall } from "./types.type";
 import config from "config";
