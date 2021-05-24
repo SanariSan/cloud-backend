@@ -1,41 +1,42 @@
 import { createConnection, Connection, ConnectionOptions } from "typeorm";
-import { TEntities } from "./types-database.type";
 import { Logger } from "../core";
+import { Entities } from "./models";
 import config from "config";
-import { Group, Keystore, User } from "./models";
-
-const { connectionLifespanSecs }: { connectionLifespanSecs: number } = config.get("db.options");
 
 export class DBManager {
     private connection?: Connection;
-    private connectionOptions?: ConnectionOptions;
-    private entities: Array<TEntities>;
+    private additionalOptions?: ConnectionOptions;
     private connectionName: string;
-    private connectionLifespanMs: number = connectionLifespanSecs * 1000;
+    private connectionLifespanSecs: number = config.get("db.options.connectionLifespanSecs");
+    private connectionLifespanMs: number = this.connectionLifespanSecs * 1000;
     private connectionAutoCloseTimeout?: NodeJS.Timeout;
+    private authOptions?: ConnectionOptions = config.get("db.auth");
     private defaultOptions = {
         synchronize: true,
         autoSchemaSync: true, //DEV
     };
 
-    constructor(connectionOptions: ConnectionOptions, entities: Array<TEntities>) {
-        this.connectionOptions = connectionOptions;
-        this.entities = entities;
+    constructor(additionalOptions?: ConnectionOptions) {
+        this.additionalOptions = additionalOptions;
         this.connectionName = (Math.random() * 100).toString();
     }
 
+    static async getNewConnection(additionalOptions?: ConnectionOptions) {
+        return await new DBManager(additionalOptions).createConnection().then(_ => _.getConnection());
+    }
+
     public async createConnection(): Promise<this> {
-        const options: ConnectionOptions = {
+        const options: ConnectionOptions = <ConnectionOptions>{
             type: "postgres",
             name: this.connectionName,
-            ...this.connectionOptions,
+            ...this.authOptions,
             ...this.defaultOptions,
-            entities: [User, Keystore, Group], //this.entities,
+            ...this.additionalOptions,
+            entities: <any>[...Entities],
         };
-        // console.log(options);
+        console.log(options);
 
         this.connection = await createConnection(options);
-        // console.log(this.connection);
         Logger.warn(`Connection ${this.connectionName} opened`);
 
         this.setConnectionLifespanTiomeout();
@@ -55,7 +56,7 @@ export class DBManager {
     private setConnectionLifespanTiomeout() {
         if (this.connectionAutoCloseTimeout) clearTimeout(this.connectionAutoCloseTimeout);
         this.connectionAutoCloseTimeout = setTimeout(this.closeConnection.bind(this), this.connectionLifespanMs);
-        Logger.warn(`Connection ${this.connectionName} will be autoclosed in ${connectionLifespanSecs} seconds`);
+        Logger.warn(`Connection ${this.connectionName} will be autoclosed in ${this.connectionLifespanSecs} seconds`);
     }
 
     private async closeConnection() {

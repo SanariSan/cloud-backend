@@ -1,4 +1,4 @@
-import { User, Group, Keystore } from "../database";
+import { User, Group, Keystore } from "./models";
 
 export interface IUser {
     id: number;

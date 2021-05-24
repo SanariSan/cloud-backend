@@ -1,14 +1,13 @@
 import { Connection } from "typeorm";
 import {
-    ENTITIES,
     IUserManual,
     KeystoreRepository,
     IKeystoreManual,
     UserRepository,
     GroupRepository,
     IGroupManual,
+    DBManager,
 } from "./database";
-import { getNewConnection } from "./helpers";
 
 async function test() {
     const newUserData: IUserManual = {
@@ -28,7 +27,7 @@ async function test() {
         password: "pass1",
     };
 
-    const connection: Connection = await getNewConnection([ENTITIES.USER, ENTITIES.KEYSTORE, ENTITIES.GROUP]);
+    const connection: Connection = await DBManager.getNewConnection();
     const userRepository = await new UserRepository()
         .initializeRepository(connection)
         .createUser(newUserData)

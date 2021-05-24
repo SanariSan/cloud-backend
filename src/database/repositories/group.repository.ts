@@ -1,8 +1,7 @@
-import { ENTITIES } from "../types-database.type";
+import { ENTITIES, IGroupManual } from "../types-database.type";
 import { Logger } from "../../core";
 import { Group, User } from "../models";
 import { GenericRepository } from "./generic.repository";
-import { IGroupManual } from "..";
 
 class GroupRepository extends GenericRepository<Group> {
     constructor() {

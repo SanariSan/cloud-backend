@@ -1,7 +1,6 @@
 import { Connection, DeleteResult, Repository } from "typeorm";
-import { TIModel, TKeysModel, TEntities } from "../types-database.type";
+import { TKeysModel, TEntities, TModel } from "../types-database.type";
 import { Logger } from "../../core";
-import { TModel } from "..";
 
 abstract class GenericRepositoryAbstract<M extends TModel> {
     protected entityName: TEntities;
