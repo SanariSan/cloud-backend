@@ -1,17 +1,15 @@
-import { createConnection, Connection, ConnectionOptions, EntityTarget } from "typeorm";
-import { Group, User, Keystore } from "./models/FMODEL.model";
-import { TModel } from "./types-database.type";
+import { createConnection, Connection, ConnectionOptions } from "typeorm";
+import { TEntities } from "./types-database.type";
 import { Logger } from "../core";
 import config from "config";
+import { Group, Keystore, User } from "./models";
 
 const { connectionLifespanSecs }: { connectionLifespanSecs: number } = config.get("db.options");
-
-// type TModel = User | Keystore | Group;
 
 export class DBManager {
     private connection?: Connection;
     private connectionOptions?: ConnectionOptions;
-    private entities: Array<EntityTarget<TModel>>;
+    private entities: Array<TEntities>;
     private connectionName: string;
     private connectionLifespanMs: number = connectionLifespanSecs * 1000;
     private connectionAutoCloseTimeout?: NodeJS.Timeout;
@@ -20,28 +18,24 @@ export class DBManager {
         autoSchemaSync: true, //DEV
     };
 
-    constructor(connectionOptions: ConnectionOptions, entities: Array<EntityTarget<TModel>>) {
+    constructor(connectionOptions: ConnectionOptions, entities: Array<TEntities>) {
         this.connectionOptions = connectionOptions;
         this.entities = entities;
         this.connectionName = (Math.random() * 100).toString();
-
-        console.log(this.entities);
     }
 
     public async createConnection(): Promise<this> {
-        console.log(this.connectionName);
-        console.log(this.connectionOptions);
-        console.log(this.defaultOptions);
         const options: ConnectionOptions = {
             type: "postgres",
             name: this.connectionName,
             ...this.connectionOptions,
             ...this.defaultOptions,
-            entities: [Group, User, Keystore], //<Array<string>>this.entities,
+            entities: [User, Keystore, Group], //this.entities,
         };
-        console.log(options);
+        // console.log(options);
 
         this.connection = await createConnection(options);
+        // console.log(this.connection);
         Logger.warn(`Connection ${this.connectionName} opened`);
 
         this.setConnectionLifespanTiomeout();

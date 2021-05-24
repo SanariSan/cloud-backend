@@ -1,7 +1,8 @@
-import config from "config";
 import { promisify } from "util";
 import { sign, verify } from "jsonwebtoken";
-import { Logger, InternalError, BadTokenError, TokenExpiredError } from "../core";
+import { InternalError, BadTokenError, TokenExpiredError } from "./api-error.core";
+import { Logger } from "./logger.core";
+import config from "config";
 
 export class JWT {
     //create token with the payload attached

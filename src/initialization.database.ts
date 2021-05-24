@@ -97,10 +97,8 @@ import { getNewConnection } from "./helpers";
 
 async function initializeDb(): Promise<Connection> {
     try {
-        console.log("x1");
-        const connection = await getNewConnection([ENTITIES.User, ENTITIES.Keystore, ENTITIES.Group]);
+        const connection = await getNewConnection([ENTITIES.USER, ENTITIES.KEYSTORE, ENTITIES.GROUP]);
         await connection.synchronize();
-        console.log("x2");
 
         return connection;
     } catch (err) {

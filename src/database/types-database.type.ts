@@ -12,6 +12,14 @@ export interface IUser {
     keystore: Array<Keystore>;
     groupParticipate: Array<Group>;
 }
+
+export interface IUserManual {
+    name: string;
+    email: string;
+    password: string;
+    profilePicUrl: string;
+}
+
 export type TKeysUser =
     | "id"
     | "name"
@@ -24,6 +32,8 @@ export type TKeysUser =
     | "keystore"
     | "groupParticipate";
 
+//-----------------------------------------
+
 export interface IKeystore {
     id: number;
     accessTokenKey: string;
@@ -32,7 +42,13 @@ export interface IKeystore {
     updatedAt: Date;
     user: User;
 }
+export interface IKeystoreManual {
+    accessTokenKey: string;
+    refreshTokenKey: string;
+}
 export type TKeysKeystore = "id" | "accessTokenKey" | "refreshTokenKey" | "createdAt" | "updatedAt" | "user";
+
+//-----------------------------------------
 
 export interface IGroup {
     id: number;
@@ -42,15 +58,20 @@ export interface IGroup {
     updatedAt: Date;
     userParticipate: Array<User>;
 }
+export interface IGroupManual {
+    name: string;
+    password: string;
+}
 export type TKeysGroup = "id" | "name" | "password" | "createdAt" | "updatedAt" | "userParticipate";
 
-export enum ENTITIES {
-    User = "User",
-    Keystore = "Keystore",
-    Group = "Group",
-}
+//-----------------------------------------
 
-export type TEntities = ENTITIES;
+export enum ENTITIES {
+    USER = "User",
+    KEYSTORE = "Keystore",
+    GROUP = "Group",
+}
+export type TEntities = ENTITIES.USER | ENTITIES.KEYSTORE | ENTITIES.GROUP;
 export type TModel = User | Keystore | Group;
 export type TIModel = IUser | IKeystore | IGroup;
 export type TKeysModel = TKeysUser | TKeysKeystore | TKeysGroup;

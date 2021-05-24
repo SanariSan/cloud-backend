@@ -4,6 +4,8 @@ import config from "config";
 import { Logger } from "./core";
 // import { settings, routes, errorHandler } from "./loaders";
 import { initializeDb } from "./initialization.database";
+import { Connection } from "typeorm";
+import { test } from "./test.database";
 // import { Connection } from "typeorm";
 
 // process.on("uncaughtException", (e: Error) => {
@@ -12,9 +14,10 @@ import { initializeDb } from "./initialization.database";
 // });
 
 async function init() {
-    // const connection: Connection =
-    await initializeDb();
+    const connection: Connection = await initializeDb();
     console.log("initialized");
+
+    await test();
     // await test(connection);
     // await testUser(connection);
     // await initializeMusic();
