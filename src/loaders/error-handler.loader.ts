@@ -1,6 +1,5 @@
-import { NotFoundError, ApiError, InternalError } from "../core";
 import { NextFunction, Request, Response } from "express";
-import { Logger } from "../core";
+import { NotFoundError, ApiError, InternalError, Logger } from "../core";
 
 function errorHandler(app) {
     app.use((req: Request, res: Response, next: NextFunction) => next(new NotFoundError()));

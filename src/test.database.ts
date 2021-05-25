@@ -1,46 +1,43 @@
-import { Connection } from "typeorm";
 import {
-    IUserManual,
+    IUserManualInput,
     KeystoreRepository,
-    IKeystoreManual,
+    IKeystoreManualInput,
     UserRepository,
     GroupRepository,
-    IGroupManual,
+    IGroupManualInput,
     DBManager,
+    ENTITIES,
 } from "./database";
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 async function test() {
-    const newUserData: IUserManual = {
+    const newUserData: IUserManualInput = {
         name: "test",
         email: "test",
         profilePicUrl: "test_url",
         password: "test_hash",
     };
 
-    const newKeystoreData: IKeystoreManual = {
+    const newKeystoreData: IKeystoreManualInput = {
         accessTokenKey: "12345",
         refreshTokenKey: "54321",
     };
 
-    const newGroupData: IGroupManual = {
+    const newGroupData: IGroupManualInput = {
         name: "Group1",
         password: "pass1",
     };
 
-    const connection: Connection = await DBManager.getNewConnection();
-    const userRepository = await new UserRepository()
-        .initializeRepository(connection)
-        .createUser(newUserData)
-        .saveRecord();
+    const dbManager: DBManager = await new DBManager([
+        ENTITIES.USER,
+        ENTITIES.KEYSTORE,
+        ENTITIES.GROUP,
+    ]).createConnection();
 
-    const keystoreRepository = await new KeystoreRepository()
-        .initializeRepository(connection)
-        .createKeystore(newKeystoreData)
-        .saveRecord();
-    const groupRepository = await new GroupRepository()
-        .initializeRepository(connection)
-        .createGroup(newGroupData)
-        .saveRecord();
+    const userRepository = await new UserRepository(dbManager).createUser(newUserData).saveRecord();
+    const keystoreRepository = await new KeystoreRepository(dbManager).createKeystore(newKeystoreData).saveRecord();
+    const groupRepository = await new GroupRepository(dbManager).createGroup(newGroupData).saveRecord();
 
     await userRepository
         .addKeystore(keystoreRepository.getRecord())
@@ -49,9 +46,27 @@ async function test() {
 
     await groupRepository.addUser(userRepository.getRecord()).saveRecord();
 
-    console.log(userRepository.getRecord());
-    console.log(keystoreRepository.getRecord());
-    console.log(groupRepository.getRecord());
+    // console.log(userRepository.getRecord());
+    // console.log(keystoreRepository.getRecord());
+    // console.log(groupRepository.getRecord());
+
+    let user = await userRepository
+        .findByEmail("test")
+        .then(_ => _.getRecord())
+        .catch(e => {
+            console.log(e);
+        });
+    if (user) console.log(user);
+
+    // await sleep(8000);
+
+    // let user1 = await userRepository
+    //     .findByEmail("test")
+    //     .then(_ => _.getRecord())
+    //     .catch(e => {
+    //         console.log(e);
+    //     });
+    // if (user1) console.log(user);
 }
 
 export { test };

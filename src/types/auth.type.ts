@@ -1,11 +1,14 @@
-// import User from '../database/model/User';
-// import Keystore from '../database/model/Keystore';
 import { Request } from "express";
+import { GroupRepository, KeystoreRepository, UserRepository } from "../database";
 
-export interface ProtectedRequest extends Request {
-    user?: any;
+export interface PreparedRequest extends Request {
+    userRepository: UserRepository;
+    keystoreRepository: KeystoreRepository;
+    groupRepository: GroupRepository;
+}
+
+export interface ProtectedRequest extends PreparedRequest {
     accessToken?: string;
-    keystore?: any;
 }
 
 export interface Tokens {

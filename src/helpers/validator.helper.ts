@@ -1,26 +1,15 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
-import { Logger, BadRequestError, AuthFailureError } from "../core";
-// import { Types } from "mongoose";
+import { Logger, BadRequestError } from "../core";
+import { ValidationSource } from "./";
 
-export enum ValidationSource {
-    BODY = "body",
-    HEADER = "headers",
-    QUERY = "query",
-    PARAM = "params",
-}
-
-// export const JoiObjectId = () =>
-// Joi.string().custom((value: string, helpers) => {
-//     if (!Types.ObjectId.isValid(value)) return helpers.error("any.invalid");
-//     return value;
-// }, "Object Id Validation");
-
+//not used, USE
 export const JoiUrlEndpoint = () =>
     Joi.string().custom((value: string, helpers) => {
         if (value.includes("://")) return helpers.error("any.invalid");
         return value;
     }, "Url Endpoint Validation");
+//
 
 export const JoiBearerHeader = () =>
     Joi.string().custom((value: string, helpers) => {
@@ -34,7 +23,6 @@ export const validate = (schema: Joi.ObjectSchema, source: ValidationSource = Va
     next: NextFunction,
 ) => {
     try {
-        console.log("validate");
         await schema.validateAsync(req[source], {
             abortEarly: false,
         });

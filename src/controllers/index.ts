@@ -1,1 +1,1 @@
-export * from "./authentification";
+export * from "./authentification.controller";

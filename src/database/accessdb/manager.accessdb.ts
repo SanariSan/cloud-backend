@@ -1,10 +1,12 @@
 import { createConnection, Connection, ConnectionOptions } from "typeorm";
-import { Logger } from "../core";
-import { Entities } from "./models";
+import { Logger } from "../../core";
+import { TEntities } from "./";
+import * as Entities from "../models";
 import config from "config";
 
 export class DBManager {
-    private connection?: Connection;
+    private openedConnection?: Connection;
+    private entities: Array<TEntities>;
     private additionalOptions?: ConnectionOptions;
     private connectionName: string;
     private connectionLifespanSecs: number = config.get("db.options.connectionLifespanSecs");
@@ -16,13 +18,10 @@ export class DBManager {
         autoSchemaSync: true, //DEV
     };
 
-    constructor(additionalOptions?: ConnectionOptions) {
+    constructor(entities: Array<TEntities>, additionalOptions?: ConnectionOptions) {
+        this.entities = entities;
         this.additionalOptions = additionalOptions;
         this.connectionName = (Math.random() * 100).toString();
-    }
-
-    static async getNewConnection(additionalOptions?: ConnectionOptions) {
-        return await new DBManager(additionalOptions).createConnection().then(_ => _.getConnection());
     }
 
     public async createConnection(): Promise<this> {
@@ -32,35 +31,36 @@ export class DBManager {
             ...this.authOptions,
             ...this.defaultOptions,
             ...this.additionalOptions,
-            entities: <any>[...Entities],
+            entities: Object.keys(Entities)
+                .filter(key => this.entities.includes(<TEntities>key))
+                .map(key => Entities[key]),
         };
-        console.log(options);
 
-        this.connection = await createConnection(options);
-        Logger.warn(`Connection ${this.connectionName} opened`);
+        this.openedConnection = await createConnection(options);
 
-        this.setConnectionLifespanTiomeout();
+        Logger.debug(`Connection options ${JSON.stringify(options)}`);
+        Logger.debug(`Connection ${this.connectionName} opened`);
 
         return this;
     }
 
-    public getConnection(): Connection {
-        if (this.connection) {
-            this.setConnectionLifespanTiomeout();
-            return this.connection;
+    public get connection(): Connection {
+        if (this.openedConnection) {
+            this.updateConnectionLifespanTiomeout();
+            return this.openedConnection;
         }
 
         throw new Error("No connection available");
     }
 
-    private setConnectionLifespanTiomeout() {
+    private updateConnectionLifespanTiomeout() {
         if (this.connectionAutoCloseTimeout) clearTimeout(this.connectionAutoCloseTimeout);
         this.connectionAutoCloseTimeout = setTimeout(this.closeConnection.bind(this), this.connectionLifespanMs);
-        Logger.warn(`Connection ${this.connectionName} will be autoclosed in ${this.connectionLifespanSecs} seconds`);
+        Logger.debug(`Connection ${this.connectionName} will be autoclosed in ${this.connectionLifespanSecs} seconds`);
     }
 
     private async closeConnection() {
-        if (this.connection) await this.connection.close();
-        Logger.warn(`Connection ${this.connectionName} closed`);
+        if (this.openedConnection) await this.openedConnection.close();
+        Logger.debug(`Connection ${this.connectionName} closed`);
     }
 }

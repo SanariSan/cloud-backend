@@ -1,63 +1,77 @@
 import { Connection, DeleteResult, Repository } from "typeorm";
-import { TKeysModel, TEntities, TModel } from "../types-database.type";
+import { TModelsKeys, TEntities, TModels, DBManager } from "../accessdb";
 import { Logger } from "../../core";
 
-abstract class GenericRepositoryAbstract<M extends TModel> {
+abstract class GenericRepositoryAbstract<M extends TModels, K extends TModelsKeys> {
     protected entityName: TEntities;
+    protected dbManager: DBManager;
     protected record: M | null;
-    protected records: Array<M> | null;
+    protected records: Array<M | null>;
     protected lastOperationResult: any;
-    protected repository: Repository<any> | null;
 
-    constructor(entityName: TEntities) {
+    constructor(entityName: TEntities, dbManager: DBManager) {
         this.entityName = entityName;
+        this.dbManager = dbManager;
 
         this.record = null;
-        this.records = null;
-        this.repository = null;
+        this.records = [];
         this.lastOperationResult = null;
     }
 
-    public abstract initializeRepository(connection: Connection): this;
+    protected abstract get connection(): Connection;
+    protected abstract get repository(): Repository<M>;
+    protected abstract convertToNull(el: M | Array<M>): M | Array<M | null> | null;
     public abstract findById(id: number, relations?: Array<string>): Promise<this>;
     public abstract findByIds(id: Array<number>, relations?: Array<string>): Promise<this>;
     public abstract removeRecord(): Promise<this>;
     public abstract saveRecord(): Promise<this>;
     public abstract saveRecords(): Promise<this>;
-    public abstract getRepository(): Repository<M> | null;
-    public abstract getRecord(keys?: Array<TKeysModel>): M | null;
-    public abstract getRecords(keys?: Array<TKeysModel>): Array<M> | null;
+    public abstract getRecord(keys?: Array<Extract<TModelsKeys, K>>): M | null;
+    public abstract getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M> | null;
     public abstract getLastOperationResult(): any | null;
 }
 
-class GenericRepository<M extends TModel> extends GenericRepositoryAbstract<M> {
-    constructor(entityName: TEntities) {
-        super(entityName);
+class GenericRepository<M extends TModels, K extends TModelsKeys> extends GenericRepositoryAbstract<M, K> {
+    constructor(entityName: TEntities, dbManager: DBManager) {
+        super(entityName, dbManager);
     }
 
-    public initializeRepository(connection: Connection): this {
-        try {
-            this.repository = this.lastOperationResult = connection.getRepository(this.entityName);
+    protected get connection() {
+        return this.dbManager.connection;
+    }
 
-            return this;
+    protected get repository(): Repository<M> {
+        try {
+            return this.connection.getRepository(this.entityName);
         } catch (err) {
-            this.lastOperationResult = `Error in ${this.initializeRepository.name}, ${err}`;
+            this.lastOperationResult = `Error in getter repository, ${err}`;
             Logger.warn(this.lastOperationResult);
             throw new Error(this.lastOperationResult);
         }
     }
 
+    protected convertToNull(el: M | Array<M>): M | Array<M | null> | null {
+        if (Array.isArray(el)) {
+            return el.map(el => (el ? el : null));
+        }
+
+        return el ? el : null;
+    }
+
     public async findById(id: number, relations?: Array<string>): Promise<this> {
         try {
             if (this.repository) {
-                this.record = this.lastOperationResult = <M>await this.repository.findOne({
-                    where: {
-                        id,
-                    },
-                    relations,
-                });
+                this.record = this.lastOperationResult = <M | null>this.convertToNull(
+                    <M>await this.repository.findOne({
+                        where: {
+                            id,
+                        },
+                        relations,
+                    }),
+                );
             }
 
+            Logger.debug(`${this.findById.name}_${JSON.stringify(this.lastOperationResult)}`);
             return this;
         } catch (err) {
             this.lastOperationResult = `Error in ${this.findById.name}, ${err}`;
@@ -69,14 +83,17 @@ class GenericRepository<M extends TModel> extends GenericRepositoryAbstract<M> {
     public async findByIds(id: Array<number>, relations?: Array<string>): Promise<this> {
         try {
             if (this.repository) {
-                this.records = this.lastOperationResult = <Array<M>>await this.repository.find({
-                    where: {
-                        id,
-                    },
-                    relations,
-                });
+                this.records = this.lastOperationResult = <Array<M | null>>this.convertToNull(
+                    <Array<M>>await this.repository.find({
+                        where: {
+                            id,
+                        },
+                        relations,
+                    }),
+                );
             }
 
+            Logger.debug(`${this.findByIds.name}_${JSON.stringify(this.lastOperationResult)}`);
             return this;
         } catch (err) {
             this.lastOperationResult = `Error in ${this.findByIds.name}, ${err}`;
@@ -90,6 +107,9 @@ class GenericRepository<M extends TModel> extends GenericRepositoryAbstract<M> {
         try {
             if (this.repository && this.record) {
                 this.lastOperationResult = <DeleteResult>await this.repository.delete(this.record.id);
+                this.record = null;
+
+                Logger.debug(`${this.removeRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -104,7 +124,9 @@ class GenericRepository<M extends TModel> extends GenericRepositoryAbstract<M> {
         try {
             if (this.repository && this.record) {
                 this.record.updatedAt = new Date();
-                this.lastOperationResult = await this.repository.save(this.record);
+                this.lastOperationResult = await this.repository.save<any>(this.record);
+
+                Logger.debug(`${this.saveRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -118,12 +140,15 @@ class GenericRepository<M extends TModel> extends GenericRepositoryAbstract<M> {
     public async saveRecords(): Promise<this> {
         try {
             if (this.repository && this.records) {
+                this.records = this.records.filter(el => el);
                 this.records = this.records.map(el => {
-                    el.updatedAt = new Date();
+                    if (el) el.updatedAt = new Date();
                     return el;
                 });
 
-                this.lastOperationResult = await this.repository.save<any>(this.record);
+                this.lastOperationResult = await this.repository.save<any>(this.records);
+
+                Logger.debug(`${this.saveRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -134,39 +159,41 @@ class GenericRepository<M extends TModel> extends GenericRepositoryAbstract<M> {
         }
     }
 
-    public getRepository(): Repository<M> | null {
-        return this.repository;
-    }
-
-    public getRecord(keys?: Array<TKeysModel>): M {
+    public getRecord(keys?: Array<Extract<TModelsKeys, K>>): M {
         if (this.record) {
             if (keys && keys.length) {
                 const newRecord: M = <M>{};
-                keys.forEach((key: TKeysModel) => {
+                keys.forEach((key: TModelsKeys) => {
                     if (this.record) newRecord[key] = this.record[key];
                 });
 
                 return newRecord;
             }
+
+            Logger.debug(`${this.getRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
         }
 
         return <M>this.record;
     }
 
-    public getRecords(keys?: Array<TKeysModel>): Array<M> | null {
+    public getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M> | null {
         if (this.records) {
-            this.records.map((record: M) => {
-                if (keys && keys.length) {
+            this.records = this.records.filter(el => el);
+            const newRecords: Array<M> = (this.lastOperationResult = <Array<M>>this.records.map(record => {
+                if (record && keys && keys.length) {
                     const newRecord: M = <M>{};
-                    keys.forEach((key: TKeysModel) => {
+                    keys.forEach((key: TModelsKeys) => {
                         if (this.record) newRecord[key] = record[key];
                     });
 
-                    return record;
+                    return newRecord;
                 }
 
                 return record;
-            });
+            }));
+
+            Logger.debug(`${this.getRecords.name}_${JSON.stringify(this.lastOperationResult)}`);
+            return newRecords;
         }
 
         return <Array<M>>this.records;

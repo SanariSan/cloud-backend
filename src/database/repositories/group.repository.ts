@@ -1,18 +1,20 @@
-import { ENTITIES, IGroupManual } from "../types-database.type";
+import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys } from "../accessdb";
 import { Logger } from "../../core";
 import { Group, User } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class GroupRepository extends GenericRepository<Group> {
-    constructor() {
-        super(ENTITIES.GROUP);
+class GroupRepository extends GenericRepository<Group, TGroupKeys> {
+    constructor(dbManager: DBManager) {
+        super(ENTITIES.GROUP, dbManager);
     }
 
     //add user to group
     public addUser(user: User): this {
         try {
             if (this.record) {
-                this.record.userParticipate.push(user);
+                this.lastOperationResult = this.record.userParticipate.push(user);
+
+                Logger.debug(`${this.addUser.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -27,9 +29,11 @@ class GroupRepository extends GenericRepository<Group> {
     public removeUser(user: User): this {
         try {
             if (this.record) {
-                this.record.userParticipate = this.record.userParticipate.filter(
+                this.record.userParticipate = this.lastOperationResult = this.record.userParticipate.filter(
                     (existingUser: User) => existingUser.id !== user.id,
                 );
+
+                Logger.debug(`${this.removeUser.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -40,7 +44,7 @@ class GroupRepository extends GenericRepository<Group> {
         }
     }
 
-    public createGroup(group: IGroupManual): this {
+    public createGroup(group: IGroupManualInput): this {
         const now = new Date();
         this.record = new Group();
 
@@ -49,6 +53,9 @@ class GroupRepository extends GenericRepository<Group> {
         this.record.userParticipate = [];
         this.record.createdAt = now;
         this.record.updatedAt = now;
+
+        this.lastOperationResult = this.record;
+        Logger.debug(`${this.createGroup.name}_${JSON.stringify(this.lastOperationResult)}`);
 
         return this;
     }

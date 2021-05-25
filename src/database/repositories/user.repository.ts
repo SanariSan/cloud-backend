@@ -1,22 +1,26 @@
 import { Logger } from "../../core";
-import { Group, Keystore, User } from "../models";
-import { IUserManual, ENTITIES } from "../types-database.type";
+import { User, Keystore, Group } from "../models";
+import { IUserManualInput, ENTITIES, TUserKeys, DBManager } from "../accessdb";
 import { GenericRepository } from "./generic.repository";
 
-class UserRepository extends GenericRepository<User> {
-    constructor() {
-        super(ENTITIES.USER);
+class UserRepository extends GenericRepository<User, TUserKeys> {
+    constructor(dbManager: DBManager) {
+        super(ENTITIES.USER, dbManager);
     }
 
     public async findByEmail(email: string, relations?: Array<string>): Promise<this> {
         try {
             if (this.repository) {
-                this.record = this.lastOperationResult = <User>await this.repository.findOne({
-                    where: {
-                        email,
-                    },
-                    relations,
-                });
+                this.record = this.lastOperationResult = <User | null>this.convertToNull(
+                    <User>await this.repository.findOne({
+                        where: {
+                            email,
+                        },
+                        relations,
+                    }),
+                );
+
+                Logger.debug(`${this.findByEmail.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -31,6 +35,8 @@ class UserRepository extends GenericRepository<User> {
         try {
             if (this.repository && this.record) {
                 this.lastOperationResult = this.record.keystore.push(keystore);
+
+                Logger.debug(`${this.addKeystore.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -45,6 +51,8 @@ class UserRepository extends GenericRepository<User> {
         try {
             if (this.repository && this.record) {
                 this.record.groupOwnage = this.lastOperationResult = group;
+
+                Logger.debug(`${this.addGroupOwnage.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -59,7 +67,7 @@ class UserRepository extends GenericRepository<User> {
     //check somehow if all keystores for this user deleted
     //check somehow if all relations to groups deleted
 
-    public createUser(user: IUserManual): this {
+    public createUser(user: IUserManualInput): this {
         const now = new Date();
         this.record = new User();
 
@@ -72,6 +80,7 @@ class UserRepository extends GenericRepository<User> {
         this.record.updatedAt = now;
 
         this.lastOperationResult = this.record;
+        Logger.debug(`${this.createUser.name}_${JSON.stringify(this.lastOperationResult)}`);
 
         return this;
     }

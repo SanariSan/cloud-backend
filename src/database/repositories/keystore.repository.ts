@@ -1,20 +1,23 @@
-import { IKeystoreManual } from "..";
+import { DBManager, ENTITIES, IKeystoreManualInput, TKeystoreKeys } from "../accessdb";
 import { Logger } from "../../core";
 import { Keystore } from "../models";
-import { ENTITIES } from "../types-database.type";
 import { GenericRepository } from "./generic.repository";
 
-class KeystoreRepository extends GenericRepository<Keystore> {
-    constructor() {
-        super(ENTITIES.KEYSTORE);
+class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys> {
+    constructor(dbManager: DBManager) {
+        super(ENTITIES.KEYSTORE, dbManager);
     }
 
     public async findByToken(accessTokenKey: string): Promise<this> {
         try {
             if (this.repository) {
-                this.record = this.lastOperationResult = <Keystore>await this.repository.findOne({
-                    where: [{ accessTokenKey }],
-                });
+                this.record = this.lastOperationResult = <Keystore | null>this.convertToNull(
+                    <Keystore>await this.repository.findOne({
+                        where: [{ accessTokenKey }],
+                    }),
+                );
+
+                Logger.debug(`${this.findByToken.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -28,9 +31,13 @@ class KeystoreRepository extends GenericRepository<Keystore> {
     public async findByBothTokens(accessTokenKey: string, refreshTokenKey: string): Promise<this> {
         try {
             if (this.repository) {
-                this.record = this.lastOperationResult = <Keystore>await this.repository.findOne({
-                    where: [{ accessTokenKey, refreshTokenKey }],
-                });
+                this.record = this.lastOperationResult = <Keystore | null>this.convertToNull(
+                    <Keystore>await this.repository.findOne({
+                        where: [{ accessTokenKey, refreshTokenKey }],
+                    }),
+                );
+
+                Logger.debug(`${this.findByBothTokens.name}_${JSON.stringify(this.lastOperationResult)}`);
             }
 
             return this;
@@ -41,7 +48,7 @@ class KeystoreRepository extends GenericRepository<Keystore> {
         }
     }
 
-    public createKeystore(keystore: IKeystoreManual): this {
+    public createKeystore(keystore: IKeystoreManualInput): this {
         const now = new Date();
         this.record = new Keystore();
 
@@ -51,6 +58,7 @@ class KeystoreRepository extends GenericRepository<Keystore> {
         this.record.updatedAt = now;
 
         this.lastOperationResult = this.record;
+        Logger.debug(`${this.createKeystore.name}_${JSON.stringify(this.lastOperationResult)}`);
 
         return this;
     }
