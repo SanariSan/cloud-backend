@@ -38,10 +38,4 @@ export class User {
     @ManyToMany(type => Group, group => group.userParticipate)
     @JoinColumn({ name: "groupParticipateId" })
     groupParticipate!: Array<Group>;
-
-    // @OneToOne(type => UserPrivilege, userPrivilege => userPrivilege.user)
-    // userPrivilege!: Array<UserPrivilege>;
-
-    // @OneToOne(type => Keystore, log => log.user)
-    // log!: Log[];
 }

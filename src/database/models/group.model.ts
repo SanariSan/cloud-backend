@@ -21,7 +21,7 @@ export class Group {
     //list of all users Ids have access to this group
     //with this columns we can check all users related to this particualar group
     @ManyToMany(type => User, user => user.groupParticipate)
-    @JoinTable({ name: "group_group_user" })
+    @JoinTable({ name: "groups_users" })
     @JoinColumn({ name: "userParticipateId" })
     userParticipate!: Array<User>;
 }

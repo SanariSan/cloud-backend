@@ -1,17 +1,17 @@
 import { Tokens } from "../types";
 import { JWT, JwtPayload, AuthFailureError, InternalError } from "../core";
-import { KeystoreRepository, IUser, UserRepository } from "../database";
+import { KeystoreRepository, UserRepository } from "../database";
 import crypto from "crypto";
 import config from "config";
 
 const { accessTokenValidDays, refreshTokenValidDays, issuer, audience } = config.get("jwt");
 
-async function createTokens(user: IUser, accessTokenKey: string, refreshTokenKey: string): Promise<Tokens> {
+async function createTokens(userId: number, accessTokenKey: string, refreshTokenKey: string): Promise<Tokens> {
     const accessToken = await JWT.encode(
-        new JwtPayload(issuer, audience, user.id, accessTokenKey, accessTokenValidDays),
+        new JwtPayload(issuer, audience, userId, accessTokenKey, accessTokenValidDays),
     );
     const refreshToken = await JWT.encode(
-        new JwtPayload(issuer, audience, user.id, refreshTokenKey, refreshTokenValidDays),
+        new JwtPayload(issuer, audience, userId, refreshTokenKey, refreshTokenValidDays),
     );
 
     if (!accessToken) throw new InternalError();
@@ -54,7 +54,7 @@ export async function setNewTokenPair(
     await userRepository.addKeystore(keystoreRepository.getRecord()).saveRecord();
 
     const tokens = await createTokens(
-        userRepository.getRecord(),
+        userRepository.getRecord().id,
         keystoreRepository.getRecord().accessTokenKey,
         keystoreRepository.getRecord().refreshTokenKey,
     );
