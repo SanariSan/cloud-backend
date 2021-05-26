@@ -1,11 +1,27 @@
 import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys } from "../accessdb";
 import { Logger } from "../../core";
-import { Group, User } from "../models";
+import { Group, GroupPath, User } from "../models";
 import { GenericRepository } from "./generic.repository";
 
 class GroupRepository extends GenericRepository<Group, TGroupKeys> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.GROUP, dbManager);
+    }
+
+    public addPathOwnage(groupPath: GroupPath): this {
+        try {
+            if (this.repository && this.record) {
+                this.record.groupPathId = this.lastOperationResult = groupPath;
+
+                Logger.debug(`${this.addPathOwnage.name}_${JSON.stringify(this.lastOperationResult)}`);
+            }
+
+            return this;
+        } catch (err) {
+            this.lastOperationResult = `Error in ${this.addPathOwnage.name}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
+        }
     }
 
     //add user to group

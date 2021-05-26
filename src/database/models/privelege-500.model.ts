@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserPrivelege } from "./user-privelege.model";
 
 @Entity()
@@ -7,12 +7,15 @@ export class Privelege500 {
     id!: number;
 
     @Column("text")
+    expiresAt!: Date;
+
+    @Column("text")
     createdAt!: Date;
 
     @Column("text")
-    expiresAt!: Date;
+    updatedAt!: Date;
 
-    @ManyToMany(type => UserPrivelege, userPrivilege => userPrivilege.privelege500)
-    @JoinColumn({ name: "userId" })
+    @ManyToOne(type => UserPrivelege)
+    @JoinColumn({ name: "userPrivilegeId" })
     userPrivilege!: Array<UserPrivelege>;
 }

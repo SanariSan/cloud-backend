@@ -1,11 +1,11 @@
 export enum ENTITIES {
     USER = "User",
+    USER_PRIVELEGE = "UserPrivelege",
     KEYSTORE = "Keystore",
     GROUP = "Group",
-    USER_PRIVELEGE = "UserPrivelege",
+    GROUP_PATH = "GroupPath",
     PRIVELEGE_100 = "Privelege100",
     PRIVELEGE_500 = "Privelege500",
-    GROUP_PATH = "GroupPath",
 }
 export type TEntities =
     | ENTITIES.USER

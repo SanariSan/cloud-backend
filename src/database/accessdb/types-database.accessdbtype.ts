@@ -16,6 +16,7 @@ export type TUserKeys =
     | "password"
     | "profilePicUrl"
     | "groupOwnage"
+    | "userPrivelege"
     | "createdAt"
     | "updatedAt"
     | "keystore"
@@ -35,7 +36,7 @@ export interface IGroupManualInput {
     name: string;
     password: string;
 }
-export type TGroupKeys = "id" | "name" | "password" | "createdAt" | "updatedAt" | "userParticipate";
+export type TGroupKeys = "id" | "name" | "password" | "createdAt" | "updatedAt" | "groupPathId" | "userParticipate";
 
 //-----------------------------------------
 
@@ -45,17 +46,26 @@ export interface IGroupPathManualInput {
     sizeUsed: number;
 }
 
-export type TGroupPathKeys = "id" | "pathName" | "sizeMax" | "sizeUsed" | "createdAt" | "updatedAt" | "groupId";
+export type TGroupPathKeys = "id" | "pathName" | "sizeMax" | "sizeUsed" | "createdAt" | "updatedAt";
 
 //-----------------------------------------
 
-export type TUserPrivelegeKeys = "id" | "createdAt" | "updatedAt" | "privelege100Id" | "privelege500Id" | "user";
+export type TUserPrivelegeKeys = "id" | "createdAt" | "updatedAt" | "user" | "privelege100" | "privelege500";
 
 //-----------------------------------------
+
+export interface IPrivelege100ManualInput {
+    expiresIn: number;
+}
 
 export type TPrivelege100Keys = "id" | "createdAt" | "updatedAt" | "userPrivilege";
 
 //-----------------------------------------
+
+export interface IPrivelege500ManualInput {
+    expiresIn: number;
+}
+
 export type TPrivelege500Keys = "id" | "createdAt" | "updatedAt" | "userPrivilege";
 
 //-----------------------------------------

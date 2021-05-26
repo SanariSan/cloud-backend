@@ -20,8 +20,4 @@ export class GroupPath {
 
     @Column("text")
     updatedAt!: Date;
-
-    @OneToOne(type => Group)
-    @JoinColumn({ name: "groupId" })
-    groupId!: Group;
 }

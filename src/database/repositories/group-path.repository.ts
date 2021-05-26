@@ -5,23 +5,7 @@ import { GenericRepository } from "./generic.repository";
 
 class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys> {
     constructor(dbManager: DBManager) {
-        super(ENTITIES.GROUP, dbManager);
-    }
-
-    public updateSizeMax(size: number): this {
-        try {
-            if (this.record) {
-                this.lastOperationResult = this.record.sizeMax = size;
-
-                Logger.debug(`${this.updateSizeMax.name}_${JSON.stringify(this.lastOperationResult)}`);
-            }
-
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${this.updateSizeMax.name}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
+        super(ENTITIES.GROUP_PATH, dbManager);
     }
 
     public updateSizeUsed(size: number): this {
@@ -35,6 +19,22 @@ class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys> {
             return this;
         } catch (err) {
             this.lastOperationResult = `Error in ${this.updateSizeUsed.name}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
+        }
+    }
+
+    public updateSizeMax(size: number): this {
+        try {
+            if (this.record) {
+                this.lastOperationResult = this.record.sizeMax = size;
+
+                Logger.debug(`${this.updateSizeMax.name}_${JSON.stringify(this.lastOperationResult)}`);
+            }
+
+            return this;
+        } catch (err) {
+            this.lastOperationResult = `Error in ${this.updateSizeMax.name}, ${err}`;
             Logger.warn(this.lastOperationResult);
             throw new Error(this.lastOperationResult);
         }

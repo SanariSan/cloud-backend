@@ -7,13 +7,17 @@ import { initializeDb } from "./initialization.database";
 import { test } from "./test.database";
 
 process.on("uncaughtException", (e: Error) => {
-    console.log("Uncaught");
-    Logger.warn(e);
+    console.log("Uncaught Exception");
+    Logger.error(e);
+});
+process.on("unhandledRejection", (e: Error) => {
+    console.log("Unhandled Rejection");
+    Logger.error(e);
 });
 
 async function init() {
     await initializeDb();
-    // await test();
+    await test();
 
     console.log("initialized");
 

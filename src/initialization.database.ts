@@ -4,9 +4,19 @@ import { DBManager, ENTITIES } from "./database";
 
 async function initializeDb(): Promise<Connection> {
     try {
-        const connection: Connection = await new DBManager([ENTITIES.USER, ENTITIES.KEYSTORE, ENTITIES.GROUP])
+        const connection: Connection = await new DBManager([
+            ENTITIES.USER,
+            ENTITIES.KEYSTORE,
+            ENTITIES.GROUP,
+            ENTITIES.GROUP_PATH,
+            ENTITIES.USER_PRIVELEGE,
+            ENTITIES.PRIVELEGE_100,
+            ENTITIES.PRIVELEGE_500,
+        ])
             .createConnection()
             .then(_ => _.connection);
+
+        await connection.dropDatabase();
         await connection.synchronize();
 
         return connection;

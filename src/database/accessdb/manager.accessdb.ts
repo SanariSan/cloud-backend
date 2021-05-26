@@ -25,20 +25,22 @@ export class DBManager {
     }
 
     public async createConnection(): Promise<this> {
+        const filteredEntities = Object.keys(Entities)
+            .filter(key => this.entities.includes(<TEntities>key))
+            .map(key => Entities[key]);
+
         const options: ConnectionOptions = <ConnectionOptions>{
             type: "postgres",
             name: this.connectionName,
             ...this.authOptions,
             ...this.defaultOptions,
             ...this.additionalOptions,
-            entities: Object.keys(Entities)
-                .filter(key => this.entities.includes(<TEntities>key))
-                .map(key => Entities[key]),
+            entities: filteredEntities,
         };
 
         this.openedConnection = await createConnection(options);
 
-        Logger.debug(`Connection options ${JSON.stringify(options)}`);
+        Logger.debug(`Connection options ${JSON.stringify(options)} with entities ${JSON.stringify(this.entities)}`);
         Logger.debug(`Connection ${this.connectionName} opened`);
 
         return this;

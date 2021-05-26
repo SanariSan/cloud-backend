@@ -22,5 +22,9 @@
         "options": {
             "connectionLifespanSecs": 10
         }
+    },
+    "privelege": {
+        "lifetimeDays100_default": 30,
+        "lifetimeDays500_default": 30
     }
 }

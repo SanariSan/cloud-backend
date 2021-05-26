@@ -1,5 +1,5 @@
 import { Logger } from "../../core";
-import { User, Keystore, Group } from "../models";
+import { User, Keystore, Group, UserPrivelege } from "../models";
 import { IUserManualInput, ENTITIES, TUserKeys, DBManager } from "../accessdb";
 import { GenericRepository } from "./generic.repository";
 
@@ -63,6 +63,38 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
         }
     }
 
+    public addGroupParticipance(group: Group): this {
+        try {
+            if (this.repository && this.record) {
+                this.lastOperationResult = this.record.groupParticipate.push(group);
+
+                Logger.debug(`${this.addGroupParticipance.name}_${JSON.stringify(this.lastOperationResult)}`);
+            }
+
+            return this;
+        } catch (err) {
+            this.lastOperationResult = `Error in ${this.addGroupParticipance.name}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
+        }
+    }
+
+    public addUserPrivelege(userPrivelege: UserPrivelege): this {
+        try {
+            if (this.repository && this.record) {
+                this.record.userPrivelege = this.lastOperationResult = userPrivelege;
+
+                Logger.debug(`${this.addUserPrivelege.name}_${JSON.stringify(this.lastOperationResult)}`);
+            }
+
+            return this;
+        } catch (err) {
+            this.lastOperationResult = `Error in ${this.addUserPrivelege.name}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
+        }
+    }
+
     //IF WANT TO removeRecord
     //check somehow if all keystores for this user deleted
     //check somehow if all relations to groups deleted
@@ -76,6 +108,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
         this.record.password = user.password;
         this.record.profilePicUrl = user.profilePicUrl;
         this.record.keystore = [];
+        this.record.groupParticipate = [];
         this.record.createdAt = now;
         this.record.updatedAt = now;
 
