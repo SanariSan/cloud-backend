@@ -42,7 +42,7 @@ export class User {
     //but can join multiple groups
     //with this column we can check all the groups this user in
 
-    @ManyToMany(type => Group, group => group.userParticipate)
+    @ManyToMany(type => Group, group => group.usersParticipate)
     @JoinColumn({ name: "groupParticipateId" })
-    groupParticipate!: Array<Group>;
+    groupsParticipate!: Array<Group>;
 }

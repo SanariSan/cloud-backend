@@ -28,7 +28,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
     public addUser(user: User): this {
         try {
             if (this.record) {
-                this.lastOperationResult = this.record.userParticipate.push(user);
+                this.lastOperationResult = this.record.usersParticipate.push(user);
 
                 Logger.debug(`${this.addUser.name}`);
             }
@@ -45,7 +45,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
     public removeUser(user: User): this {
         try {
             if (this.record) {
-                this.record.userParticipate = this.lastOperationResult = this.record.userParticipate.filter(
+                this.record.usersParticipate = this.lastOperationResult = this.record.usersParticipate.filter(
                     (existingUser: User) => existingUser.id !== user.id,
                 );
 
@@ -66,7 +66,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
 
         this.record.name = group.name;
         this.record.password = group.password;
-        this.record.userParticipate = [];
+        this.record.usersParticipate = [];
         this.record.createdAt = now;
         this.record.updatedAt = now;
 

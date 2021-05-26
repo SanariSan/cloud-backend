@@ -14,8 +14,7 @@ export class DBManager {
     private connectionAutoCloseTimeout?: NodeJS.Timeout;
     private authOptions?: ConnectionOptions = config.get("db.auth");
     private defaultOptions = {
-        synchronize: true,
-        autoSchemaSync: true, //DEV
+        // synchronize: true,
     };
 
     constructor(entities: Array<TEntities>, additionalOptions?: ConnectionOptions) {
@@ -40,8 +39,10 @@ export class DBManager {
 
         this.openedConnection = await createConnection(options);
 
-        Logger.debug(`Connection options ${JSON.stringify(options)} with entities ${JSON.stringify(this.entities)}`);
-        Logger.debug(`Connection ${this.connectionName} opened`);
+        // Logger.debug(`Connection options ${JSON.stringify(options)} with entities ${JSON.stringify(this.entities)}`);
+        Logger.debug(
+            `Connection ${this.connectionName} with entities [${filteredEntities.map(_ => _.name).join(", ")}] opened`,
+        );
 
         return this;
     }

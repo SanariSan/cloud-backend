@@ -20,7 +20,7 @@ export type TUserKeys =
     | "createdAt"
     | "updatedAt"
     | "keystore"
-    | "groupParticipate";
+    | "groupsParticipate";
 
 //-----------------------------------------
 
@@ -36,7 +36,7 @@ export interface IGroupManualInput {
     name: string;
     password: string;
 }
-export type TGroupKeys = "id" | "name" | "password" | "createdAt" | "updatedAt" | "groupPathId" | "userParticipate";
+export type TGroupKeys = "id" | "name" | "password" | "createdAt" | "updatedAt" | "groupPathId" | "usersParticipate";
 
 //-----------------------------------------
 

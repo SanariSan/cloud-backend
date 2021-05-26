@@ -84,11 +84,10 @@ export class AuthFailureResponse extends SingleApiResponse {
 }
 
 export class NotFoundResponse extends SingleApiResponse {
-    public url: string;
+    public url?: string;
 
     constructor(message = "Not Found") {
         super(StatusCode.FAILURE, ResponseStatus.NOT_FOUND, message);
-        this.url = "";
     }
 
     //reimplementing send method to include url field from express res obj

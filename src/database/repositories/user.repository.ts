@@ -66,7 +66,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
     public addGroupParticipance(group: Group): this {
         try {
             if (this.repository && this.record) {
-                this.lastOperationResult = this.record.groupParticipate.push(group);
+                this.lastOperationResult = this.record.groupsParticipate.push(group);
 
                 Logger.debug(`${this.addGroupParticipance.name}`);
             }
@@ -108,7 +108,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
         this.record.password = user.password;
         this.record.profilePicUrl = user.profilePicUrl;
         this.record.keystore = [];
-        this.record.groupParticipate = [];
+        this.record.groupsParticipate = [];
         this.record.createdAt = now;
         this.record.updatedAt = now;
 

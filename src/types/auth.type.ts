@@ -1,14 +1,26 @@
 import { Request } from "express";
-import { GroupRepository, KeystoreRepository, UserRepository } from "../database";
+import {
+    GroupPathRepository,
+    GroupRepository,
+    KeystoreRepository,
+    Privelege100Repository,
+    Privelege500Repository,
+    UserPrivelegeRepository,
+    UserRepository,
+} from "../database";
 
 export interface PreparedRequest extends Request {
     userRepository: UserRepository;
     keystoreRepository: KeystoreRepository;
     groupRepository: GroupRepository;
+    userPrivelegeRepository: UserPrivelegeRepository;
+    groupPathRepository: GroupPathRepository;
+    privelege100Repository: Privelege100Repository;
+    privelege500Repository: Privelege500Repository;
 }
 
 export interface ProtectedRequest extends PreparedRequest {
-    accessToken?: string;
+    accessToken?: boolean;
 }
 
 export interface Tokens {

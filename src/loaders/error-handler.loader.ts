@@ -14,7 +14,6 @@ function errorHandler(app) {
             ApiError.handle(err, res);
         } else {
             Logger.warn(err);
-            // return res.status(500).send(err.message);
             ApiError.handle(new InternalError(), res);
         }
     });

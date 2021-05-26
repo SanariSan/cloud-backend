@@ -51,13 +51,15 @@ export async function setNewTokenPair(
     const refreshTokenKey = crypto.randomBytes(64).toString("hex");
 
     await keystoreRepository.createKeystore({ accessTokenKey, refreshTokenKey }).saveRecord();
-    await userRepository.addKeystore(keystoreRepository.getRecord()).saveRecord();
 
-    const tokens = await createTokens(
-        userRepository.getRecord().id,
-        keystoreRepository.getRecord().accessTokenKey,
-        keystoreRepository.getRecord().refreshTokenKey,
-    );
+    const keystoreRecord = keystoreRepository.getRecord();
+    if (!keystoreRecord) throw new Error();
 
+    await userRepository.addKeystore(keystoreRecord).saveRecord();
+
+    const userRecord = userRepository.getRecord();
+    if (!userRecord) throw new Error();
+
+    const tokens = await createTokens(userRecord.id, keystoreRecord.accessTokenKey, keystoreRecord.refreshTokenKey);
     return tokens;
 }

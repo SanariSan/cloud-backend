@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { JoiBearerHeader } from "../../../../helpers";
 
-export const Schema = {
+export const schema = {
     userCredential: Joi.object().keys({
         email: Joi.string().required().email(),
         password: Joi.string().required().min(6),
@@ -13,11 +13,11 @@ export const Schema = {
         .keys({
             authorization: JoiBearerHeader().required(),
         })
-        .unknown(true),
+        .unknown(true), //?
     signup: Joi.object().keys({
-        name: Joi.string().min(3).required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).required(),
-        profilePicUrl: Joi.string().uri().optional(),
+        name: Joi.string().required().min(3),
+        email: Joi.string().required().email(),
+        password: Joi.string().required().min(6),
+        profilePicUrl: Joi.string().optional().uri(),
     }),
 };

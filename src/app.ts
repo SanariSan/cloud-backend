@@ -4,7 +4,7 @@ import config from "config";
 import { Logger } from "./core";
 import { settings, routes, errorHandler } from "./loaders";
 import { initializeDb } from "./initialization.database";
-import { test } from "./test.database";
+// import { test } from "./test.database";
 
 process.on("uncaughtException", (e: Error) => {
     console.log("Uncaught Exception");
@@ -17,9 +17,7 @@ process.on("unhandledRejection", (e: Error) => {
 
 async function init() {
     await initializeDb();
-    await test();
-
-    console.log("initialized");
+    // await test();
 
     const app = express();
     settings(app);

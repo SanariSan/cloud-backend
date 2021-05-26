@@ -1,8 +1,7 @@
-import { Profile1 } from "./profile.route";
 import { Router } from "express";
+import { Profile1 } from "./profile.route";
 import { asyncHandle } from "../../../../helpers";
-import { Authentificate } from "../../../../controllers";
-import { StickRepos } from "../../../../controllers/repositories-sticker.controller";
+import { Authentificate, StickRepos } from "../../../../controllers";
 
 const ProfileRouter = Router();
 

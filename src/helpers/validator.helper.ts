@@ -3,13 +3,11 @@ import { Request, Response, NextFunction } from "express";
 import { Logger, BadRequestError } from "../core";
 import { ValidationSource } from "./";
 
-//not used, USE
-export const JoiUrlEndpoint = () =>
+export const JoiUrlValidate = () =>
     Joi.string().custom((value: string, helpers) => {
         if (value.includes("://")) return helpers.error("any.invalid");
         return value;
     }, "Url Endpoint Validation");
-//
 
 export const JoiBearerHeader = () =>
     Joi.string().custom((value: string, helpers) => {

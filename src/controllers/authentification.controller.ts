@@ -26,7 +26,7 @@ const Authentificate = async (req: ProtectedRequest, res: Response, next: NextFu
             });
         if (!keystore) throw new AuthFailureError("Invalid access token");
 
-        req.accessToken = accessToken;
+        req.accessToken = true;
         return next();
     } catch (e) {
         if (e instanceof TokenExpiredError) throw new AccessTokenError(e.message);

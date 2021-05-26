@@ -1,25 +1,25 @@
 import { Response, NextFunction } from "express";
-import { SuccessResponse, BadRequestError, AuthFailureError, InternalError } from "../../../../core";
+import { SuccessResponse, BadRequestError, AuthFailureError } from "../../../../core";
 import { setNewTokenPair } from "../../../../helpers";
 import { ENTITIES } from "../../../../database";
 import { PreparedRequest } from "../../../../types";
 import bcrypt from "bcrypt";
 
 export const Login = async (req: PreparedRequest, res: Response, next: NextFunction) => {
-    let user = await req.userRepository
-        .findByEmail(req.body.email, [ENTITIES.KEYSTORE.toLowerCase()])
-        .then(_ => _.getRecord())
-        .catch(e => {
-            throw new InternalError();
-        });
-    if (!user) throw new BadRequestError("User not registered");
-    if (!user.password) throw new BadRequestError("Credential not set");
+    await req.userRepository.findByEmail(req.body.email, [ENTITIES.KEYSTORE.toLowerCase()]);
 
-    const matchPass: boolean = await bcrypt.compare(req.body.password, user.password);
+    //get user's record if exists
+    const userRecord = req.userRepository.getRecord();
+    if (!userRecord) throw new BadRequestError("User not registered");
+
+    //compare pass
+    const matchPass: boolean = await bcrypt.compare(req.body.password, userRecord.password);
     if (!matchPass) throw new AuthFailureError("Authentication failure");
 
+    //create new keystore, save it and assign relation to user's record
     const tokens = await setNewTokenPair(req.userRepository, req.keystoreRepository);
-    new SuccessResponse("Login Success", {
+
+    return new SuccessResponse("Login Success", {
         user: req.userRepository.getRecord(["id", "name", "email", "profilePicUrl"]),
         tokens: tokens,
     }).send(res);

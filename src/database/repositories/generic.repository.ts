@@ -27,7 +27,7 @@ abstract class GenericRepositoryAbstract<M extends TModels, K extends TModelsKey
     public abstract saveRecord(): Promise<this>;
     public abstract saveRecords(): Promise<this>;
     public abstract getRecord(keys?: Array<Extract<TModelsKeys, K>>): M | null;
-    public abstract getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M> | null;
+    public abstract getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M | null>;
     public abstract getLastOperationResult(): any | null;
 }
 
@@ -159,7 +159,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
         }
     }
 
-    public getRecord(keys?: Array<Extract<TModelsKeys, K>>): M {
+    public getRecord(keys?: Array<Extract<TModelsKeys, K>>): M | null {
         if (this.record) {
             if (keys && keys.length) {
                 const newRecord: M = <M>{};
@@ -173,10 +173,10 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
             Logger.debug(`${this.getRecord.name}`);
         }
 
-        return <M>this.record;
+        return this.record;
     }
 
-    public getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M> | null {
+    public getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M | null> {
         if (this.records) {
             this.records = this.records.filter(el => el);
             const newRecords: Array<M> = (this.lastOperationResult = <Array<M>>this.records.map(record => {
@@ -196,7 +196,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
             return newRecords;
         }
 
-        return <Array<M>>this.records;
+        return <Array<M | null>>this.records;
     }
 
     //probably won't be used in prod

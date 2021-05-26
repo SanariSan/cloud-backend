@@ -55,22 +55,36 @@ async function test() {
     const privelege100Repository = await new Privelege100Repository(dbManager).createPrivelege100().saveRecord();
     const privelege500Repository = await new Privelege500Repository(dbManager).createPrivelege500().saveRecord();
 
+    const keystoreRecord = keystoreRepository.getRecord();
+    if (!keystoreRecord) throw new Error();
+
+    const groupRecord = groupRepository.getRecord();
+    if (!groupRecord) throw new Error();
+
+    const userPrivelegeRecord = userPrivelegeRepository.getRecord();
+    if (!userPrivelegeRecord) throw new Error();
+
     await userRepository
-        .addKeystore(keystoreRepository.getRecord())
-        .addGroupOwnage(groupRepository.getRecord())
-        .addGroupParticipance(groupRepository.getRecord())
-        .addUserPrivelege(userPrivelegeRepository.getRecord())
+        .addKeystore(keystoreRecord)
+        .addGroupOwnage(groupRecord)
+        .addGroupParticipance(groupRecord)
+        .addUserPrivelege(userPrivelegeRecord)
         .saveRecord();
 
-    await groupRepository
-        .addUser(userRepository.getRecord())
-        .addPathOwnage(groupPathRepository.getRecord())
-        .saveRecord();
+    const userRecord = userRepository.getRecord();
+    if (!userRecord) throw new Error();
 
-    await userPrivelegeRepository
-        .addPrivelege100(privelege100Repository.getRecord())
-        .addPrivelege500(privelege500Repository.getRecord())
-        .saveRecord();
+    const groupPathRecord = groupPathRepository.getRecord();
+    if (!groupPathRecord) throw new Error();
+
+    const privelege100Record = privelege100Repository.getRecord();
+    if (!privelege100Record) throw new Error();
+
+    const privelege500Record = privelege500Repository.getRecord();
+    if (!privelege500Record) throw new Error();
+
+    await groupRepository.addUser(userRecord).addPathOwnage(groupPathRecord).saveRecord();
+    await userPrivelegeRepository.addPrivelege100(privelege100Record).addPrivelege500(privelege500Record).saveRecord();
 
     console.log(userRepository.getRecord());
     console.log(keystoreRepository.getRecord());
@@ -79,24 +93,6 @@ async function test() {
     console.log(userPrivelegeRepository.getRecord());
     console.log(privelege100Repository.getRecord());
     console.log(privelege500Repository.getRecord());
-
-    // let user = await userRepository
-    //     .findByEmail("test")
-    //     .then(_ => _.getRecord())
-    //     .catch(e => {
-    //         console.log(e);
-    //     });
-    // if (user) console.log(user);
-
-    // await sleep(8000);
-
-    // let user1 = await userRepository
-    //     .findByEmail("test")
-    //     .then(_ => _.getRecord())
-    //     .catch(e => {
-    //         console.log(e);
-    //     });
-    // if (user1) console.log(user);
 }
 
 export { test };
