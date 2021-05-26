@@ -13,7 +13,7 @@ class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys> {
             if (this.record) {
                 this.lastOperationResult = this.record.sizeUsed = size;
 
-                Logger.debug(`${this.updateSizeUsed.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.updateSizeUsed.name}`);
             }
 
             return this;
@@ -29,7 +29,7 @@ class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys> {
             if (this.record) {
                 this.lastOperationResult = this.record.sizeMax = size;
 
-                Logger.debug(`${this.updateSizeMax.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.updateSizeMax.name}`);
             }
 
             return this;
@@ -51,7 +51,7 @@ class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys> {
         this.record.updatedAt = now;
 
         this.lastOperationResult = this.record;
-        Logger.debug(`${this.createGroupPath.name}_${JSON.stringify(this.lastOperationResult)}`);
+        Logger.debug(`${this.createGroupPath.name}`);
 
         return this;
     }

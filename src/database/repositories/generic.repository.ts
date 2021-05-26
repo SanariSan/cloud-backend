@@ -71,7 +71,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
                 );
             }
 
-            Logger.debug(`${this.findById.name}_${JSON.stringify(this.lastOperationResult)}`);
+            Logger.debug(`${this.findById.name}`);
             return this;
         } catch (err) {
             this.lastOperationResult = `Error in ${this.findById.name}, ${err}`;
@@ -93,7 +93,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
                 );
             }
 
-            Logger.debug(`${this.findByIds.name}_${JSON.stringify(this.lastOperationResult)}`);
+            Logger.debug(`${this.findByIds.name}`);
             return this;
         } catch (err) {
             this.lastOperationResult = `Error in ${this.findByIds.name}, ${err}`;
@@ -109,7 +109,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
                 this.lastOperationResult = <DeleteResult>await this.repository.delete(this.record.id);
                 this.record = null;
 
-                Logger.debug(`${this.removeRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.removeRecord.name}`);
             }
 
             return this;
@@ -126,7 +126,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
                 this.record.updatedAt = new Date();
                 this.lastOperationResult = await this.repository.save<any>(this.record);
 
-                Logger.debug(`${this.saveRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.saveRecord.name}`);
             }
 
             return this;
@@ -148,7 +148,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
 
                 this.lastOperationResult = await this.repository.save<any>(this.records);
 
-                Logger.debug(`${this.saveRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.saveRecord.name}`);
             }
 
             return this;
@@ -170,7 +170,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
                 return newRecord;
             }
 
-            Logger.debug(`${this.getRecord.name}_${JSON.stringify(this.lastOperationResult)}`);
+            Logger.debug(`${this.getRecord.name}`);
         }
 
         return <M>this.record;
@@ -192,7 +192,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
                 return record;
             }));
 
-            Logger.debug(`${this.getRecords.name}_${JSON.stringify(this.lastOperationResult)}`);
+            Logger.debug(`${this.getRecords.name}`);
             return newRecords;
         }
 

@@ -17,7 +17,7 @@ class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys> {
                     }),
                 );
 
-                Logger.debug(`${this.findByToken.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.findByToken.name}`);
             }
 
             return this;
@@ -37,7 +37,7 @@ class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys> {
                     }),
                 );
 
-                Logger.debug(`${this.findByBothTokens.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.findByBothTokens.name}`);
             }
 
             return this;
@@ -58,7 +58,7 @@ class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys> {
         this.record.updatedAt = now;
 
         this.lastOperationResult = this.record;
-        Logger.debug(`${this.createKeystore.name}_${JSON.stringify(this.lastOperationResult)}`);
+        Logger.debug(`${this.createKeystore.name}`);
 
         return this;
     }

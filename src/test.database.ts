@@ -51,6 +51,9 @@ async function test() {
     const keystoreRepository = await new KeystoreRepository(dbManager).createKeystore(newKeystoreData).saveRecord();
     const groupRepository = await new GroupRepository(dbManager).createGroup(newGroup).saveRecord();
     const userPrivelegeRepository = await new UserPrivelegeRepository(dbManager).createUserPrivelege().saveRecord();
+    const groupPathRepository = await new GroupPathRepository(dbManager).createGroupPath(newGroupPath).saveRecord();
+    const privelege100Repository = await new Privelege100Repository(dbManager).createPrivelege100().saveRecord();
+    const privelege500Repository = await new Privelege500Repository(dbManager).createPrivelege500().saveRecord();
 
     await userRepository
         .addKeystore(keystoreRepository.getRecord())
@@ -59,14 +62,11 @@ async function test() {
         .addUserPrivelege(userPrivelegeRepository.getRecord())
         .saveRecord();
 
-    const groupPathRepository = await new GroupPathRepository(dbManager).createGroupPath(newGroupPath).saveRecord();
     await groupRepository
         .addUser(userRepository.getRecord())
         .addPathOwnage(groupPathRepository.getRecord())
-        .saveRecord(); //XXX
+        .saveRecord();
 
-    const privelege100Repository = await new Privelege100Repository(dbManager).createPrivelege100().saveRecord();
-    const privelege500Repository = await new Privelege500Repository(dbManager).createPrivelege500().saveRecord();
     await userPrivelegeRepository
         .addPrivelege100(privelege100Repository.getRecord())
         .addPrivelege500(privelege500Repository.getRecord())

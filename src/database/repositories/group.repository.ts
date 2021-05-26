@@ -13,7 +13,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
             if (this.repository && this.record) {
                 this.record.groupPathId = this.lastOperationResult = groupPath;
 
-                Logger.debug(`${this.addPathOwnage.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addPathOwnage.name}`);
             }
 
             return this;
@@ -30,7 +30,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
             if (this.record) {
                 this.lastOperationResult = this.record.userParticipate.push(user);
 
-                Logger.debug(`${this.addUser.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addUser.name}`);
             }
 
             return this;
@@ -49,7 +49,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
                     (existingUser: User) => existingUser.id !== user.id,
                 );
 
-                Logger.debug(`${this.removeUser.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.removeUser.name}`);
             }
 
             return this;
@@ -71,7 +71,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
         this.record.updatedAt = now;
 
         this.lastOperationResult = this.record;
-        Logger.debug(`${this.createGroup.name}_${JSON.stringify(this.lastOperationResult)}`);
+        Logger.debug(`${this.createGroup.name}`);
 
         return this;
     }

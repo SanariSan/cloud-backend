@@ -20,7 +20,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
                     }),
                 );
 
-                Logger.debug(`${this.findByEmail.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.findByEmail.name}`);
             }
 
             return this;
@@ -36,7 +36,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
             if (this.repository && this.record) {
                 this.lastOperationResult = this.record.keystore.push(keystore);
 
-                Logger.debug(`${this.addKeystore.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addKeystore.name}`);
             }
 
             return this;
@@ -52,7 +52,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
             if (this.repository && this.record) {
                 this.record.groupOwnage = this.lastOperationResult = group;
 
-                Logger.debug(`${this.addGroupOwnage.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addGroupOwnage.name}`);
             }
 
             return this;
@@ -68,7 +68,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
             if (this.repository && this.record) {
                 this.lastOperationResult = this.record.groupParticipate.push(group);
 
-                Logger.debug(`${this.addGroupParticipance.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addGroupParticipance.name}`);
             }
 
             return this;
@@ -84,7 +84,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
             if (this.repository && this.record) {
                 this.record.userPrivelege = this.lastOperationResult = userPrivelege;
 
-                Logger.debug(`${this.addUserPrivelege.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addUserPrivelege.name}`);
             }
 
             return this;
@@ -113,7 +113,7 @@ class UserRepository extends GenericRepository<User, TUserKeys> {
         this.record.updatedAt = now;
 
         this.lastOperationResult = this.record;
-        Logger.debug(`${this.createUser.name}_${JSON.stringify(this.lastOperationResult)}`);
+        Logger.debug(`${this.createUser.name}`);
 
         return this;
     }

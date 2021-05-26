@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { GroupPath } from "./group-path.model";
-import { GroupUser } from "./group-user.model";
+import { User } from "./user.model";
 
 @Entity()
 export class Group {
@@ -26,7 +26,8 @@ export class Group {
     //list of all users Ids have access to this group
     //with this columns we can check all users related to this particualar group
 
-    @OneToMany(type => GroupUser, groupUser => groupUser.userParticipate) //"groupParticipate")
+    @ManyToMany(type => User, user => user.groupParticipate)
+    @JoinTable({ name: "groups_users" })
     @JoinColumn({ name: "userParticipateId" })
-    userParticipate!: Array<GroupUser>;
+    userParticipate!: Array<User>;
 }

@@ -13,7 +13,7 @@ class UserPrivelegeRepository extends GenericRepository<UserPrivelege, TUserPriv
             if (this.record) {
                 this.lastOperationResult = this.record.privelege100.push(privelege100);
 
-                Logger.debug(`${this.addPrivelege100.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addPrivelege100.name}`);
             }
 
             return this;
@@ -29,7 +29,7 @@ class UserPrivelegeRepository extends GenericRepository<UserPrivelege, TUserPriv
             if (this.record) {
                 this.lastOperationResult = this.record.privelege500.push(privelege500);
 
-                Logger.debug(`${this.addPrivelege500.name}_${JSON.stringify(this.lastOperationResult)}`);
+                Logger.debug(`${this.addPrivelege500.name}`);
             }
 
             return this;
@@ -50,7 +50,7 @@ class UserPrivelegeRepository extends GenericRepository<UserPrivelege, TUserPriv
         this.record.privelege500 = [];
 
         this.lastOperationResult = this.record;
-        Logger.debug(`${this.createUserPrivelege.name}_${JSON.stringify(this.lastOperationResult)}`);
+        Logger.debug(`${this.createUserPrivelege.name}`);
 
         return this;
     }

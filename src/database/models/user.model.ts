@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { GroupUser } from "./group-user.model";
 import { Group } from "./group.model";
 import { Keystore } from "./keystore.model";
 import { UserPrivelege } from "./user-privelege.model";
@@ -43,7 +42,7 @@ export class User {
     //but can join multiple groups
     //with this column we can check all the groups this user in
 
-    @OneToMany(type => GroupUser, groupUser => groupUser.groupParticipate) //"userParticipate")
+    @ManyToMany(type => Group, group => group.userParticipate)
     @JoinColumn({ name: "groupParticipateId" })
-    groupParticipate!: Array<GroupUser>;
+    groupParticipate!: Array<Group>;
 }

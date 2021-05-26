@@ -21,7 +21,7 @@ class Privelege500Repository extends GenericRepository<Privelege500, TPrivelege1
         this.record.expiresAt = new Date(now.getTime() + expMs);
 
         this.lastOperationResult = this.record;
-        Logger.debug(`${this.createPrivelege500.name}_${JSON.stringify(this.lastOperationResult)}`);
+        Logger.debug(`${this.createPrivelege500.name}`);
 
         return this;
     }
