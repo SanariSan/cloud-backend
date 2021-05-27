@@ -92,7 +92,7 @@ export class NotFoundResponse extends SingleApiResponse {
 
     //reimplementing send method to include url field from express res obj
     public send(res: Response): THttpCall {
-        // including path we could not find
+        // including path we could not find (if invoked for path)
         if (res.req) this.url = res.req.originalUrl;
         return super.prepare<NotFoundResponse>(res, this);
     }
@@ -110,13 +110,13 @@ export class InternalErrorResponse extends SingleApiResponse {
     }
 }
 
-export class FailureMsgResponse extends SingleApiResponse {
-    constructor(message: string) {
-        super(StatusCode.FAILURE, ResponseStatus.SUCCESS, message);
-    }
-}
+//not used
+// export class FailureMsgResponse extends SingleApiResponse {
+//     constructor(message: string) {
+//         super(StatusCode.FAILURE, ResponseStatus.SUCCESS, message);
+//     }
+// }
 
-// find where used
 export class AccessTokenErrorResponse extends SingleApiResponse {
     constructor(message = "Access token invalid") {
         super(StatusCode.INVALID_ACCESS_TOKEN, ResponseStatus.UNAUTHORIZED, message);

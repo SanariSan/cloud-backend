@@ -14,10 +14,6 @@ export class UserPrivelege {
     @Column("text")
     updatedAt!: Date;
 
-    @OneToOne(type => User)
-    @JoinColumn({ name: "userId" })
-    user!: User;
-
     @OneToMany(type => Privelege100, privelege100 => privelege100.userPrivilege)
     privelege100!: Array<Privelege100>;
 

@@ -1,9 +1,9 @@
-import { DBManager, ENTITIES, IKeystoreManualInput, TKeystoreKeys } from "../accessdb";
+import { DBManager, ENTITIES, IKeystoreManualInput, KEYSTORE_RELATIONS, TKeystoreKeys } from "../accessdb";
 import { Logger } from "../../core";
 import { Keystore } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys> {
+class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys, KEYSTORE_RELATIONS> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.KEYSTORE, dbManager);
     }

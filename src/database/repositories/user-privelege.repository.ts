@@ -1,9 +1,9 @@
-import { DBManager, ENTITIES, TUserPrivelegeKeys } from "../accessdb";
+import { DBManager, ENTITIES, TUserPrivelegeKeys, USER_PRIVELEGE_RELATIONS } from "../accessdb";
 import { Logger } from "../../core";
 import { Privelege100, Privelege500, UserPrivelege } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class UserPrivelegeRepository extends GenericRepository<UserPrivelege, TUserPrivelegeKeys> {
+class UserPrivelegeRepository extends GenericRepository<UserPrivelege, TUserPrivelegeKeys, USER_PRIVELEGE_RELATIONS> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.USER_PRIVELEGE, dbManager);
     }

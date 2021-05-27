@@ -1,10 +1,10 @@
-import { DBManager, ENTITIES, IPrivelege500ManualInput, TPrivelege100Keys } from "../accessdb";
+import { DBManager, ENTITIES, IPrivelege500ManualInput, PRIVELEGE_500_RELATIONS, TPrivelege100Keys } from "../accessdb";
 import { Logger } from "../../core";
 import { Privelege500 } from "../models";
 import { GenericRepository } from "./generic.repository";
 import config from "config";
 
-class Privelege500Repository extends GenericRepository<Privelege500, TPrivelege100Keys> {
+class Privelege500Repository extends GenericRepository<Privelege500, TPrivelege100Keys, PRIVELEGE_500_RELATIONS> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.PRIVELEGE_100, dbManager);
     }

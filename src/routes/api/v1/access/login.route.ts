@@ -1,12 +1,12 @@
 import { Response, NextFunction } from "express";
 import { SuccessResponse, BadRequestError, AuthFailureError } from "../../../../core";
 import { setNewTokenPair } from "../../../../helpers";
-import { ENTITIES } from "../../../../database";
+import { USER_RELATIONS } from "../../../../database";
 import { PreparedRequest } from "../../../../types";
 import bcrypt from "bcrypt";
 
 export const Login = async (req: PreparedRequest, res: Response, next: NextFunction) => {
-    await req.userRepository.findByEmail(req.body.email, [ENTITIES.KEYSTORE.toLowerCase()]);
+    await req.userRepository.findByEmail(req.body.email, [USER_RELATIONS.KEYSTORE]);
 
     //get user's record if exists
     const userRecord = req.userRepository.getRecord();

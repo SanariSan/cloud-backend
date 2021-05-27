@@ -1,16 +1,19 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../../../types";
-import { SuccessResponse } from "../../../../core";
+import { BadRequestError, SuccessResponse } from "../../../../core";
 import { IGroupManualInput, IGroupPathManualInput } from "../../../../database";
 import bcrypt from "bcrypt";
 
+//req.body === {groupName: string, password: string}
 export const GroupCreate = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
     //get user's record
     const userRecord = req.userRepository.getRecord();
     if (!userRecord) throw new Error();
 
+    if (userRecord.groupOwnage) throw new BadRequestError("You already have group");
+
     const newGroup: IGroupManualInput = {
-        name: req.body.name,
+        name: req.body.groupName,
         password: await bcrypt.hash(req.body.password, 12),
     };
 
@@ -33,10 +36,6 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
     // await helper.fs = create directory(req.groupPathRepository.getRecord().pathName)
 
     await req.userRepository.addGroupOwnage(groupRecord).addGroupParticipance(groupRecord).saveRecord();
-
-    //get updated user's record
-    // userRecord = req.userRepository.getRecord();
-    // if (!userRecord) throw new Error();
 
     //add user's record to group participants list, link path ownage
     await req.groupRepository.addUser(userRecord).addPathOwnage(groupPathRecord).saveRecord();

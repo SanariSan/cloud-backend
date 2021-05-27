@@ -1,8 +1,8 @@
 import { Connection, DeleteResult, Repository } from "typeorm";
-import { TModelsKeys, TEntities, TModels, DBManager } from "../accessdb";
+import { TModelsKeys, TEntities, TModels, DBManager, TModelsRelationsKeys } from "../accessdb";
 import { Logger } from "../../core";
 
-abstract class GenericRepositoryAbstract<M extends TModels, K extends TModelsKeys> {
+abstract class GenericRepositoryAbstract<M extends TModels, K extends TModelsKeys, R extends TModelsRelationsKeys> {
     protected entityName: TEntities;
     protected dbManager: DBManager;
     protected record: M | null;
@@ -21,8 +21,8 @@ abstract class GenericRepositoryAbstract<M extends TModels, K extends TModelsKey
     protected abstract get connection(): Connection;
     protected abstract get repository(): Repository<M>;
     protected abstract convertToNull(el: M | Array<M>): M | Array<M | null> | null;
-    public abstract findById(id: number, relations?: Array<string>): Promise<this>;
-    public abstract findByIds(id: Array<number>, relations?: Array<string>): Promise<this>;
+    public abstract findById(id: number, relations?: Array<R>): Promise<this>;
+    public abstract findByIds(ids: Array<number>, relations?: Array<R>): Promise<this>;
     public abstract removeRecord(): Promise<this>;
     public abstract saveRecord(): Promise<this>;
     public abstract saveRecords(): Promise<this>;
@@ -31,7 +31,11 @@ abstract class GenericRepositoryAbstract<M extends TModels, K extends TModelsKey
     public abstract getLastOperationResult(): any | null;
 }
 
-class GenericRepository<M extends TModels, K extends TModelsKeys> extends GenericRepositoryAbstract<M, K> {
+class GenericRepository<
+    M extends TModels,
+    K extends TModelsKeys,
+    R extends TModelsRelationsKeys
+> extends GenericRepositoryAbstract<M, K, R> {
     constructor(entityName: TEntities, dbManager: DBManager) {
         super(entityName, dbManager);
     }
@@ -58,7 +62,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
         return el ? el : null;
     }
 
-    public async findById(id: number, relations?: Array<string>): Promise<this> {
+    public async findById(id: number, relations?: Array<R>): Promise<this> {
         try {
             if (this.repository) {
                 this.record = this.lastOperationResult = <M | null>this.convertToNull(
@@ -80,14 +84,13 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
         }
     }
 
-    public async findByIds(id: Array<number>, relations?: Array<string>): Promise<this> {
+    public async findByIds(ids: Array<number>, relations?: Array<R>): Promise<this> {
         try {
             if (this.repository) {
+                const sOptions = ids.length !== 0 ? { ids } : undefined;
                 this.records = this.lastOperationResult = <Array<M | null>>this.convertToNull(
                     <Array<M>>await this.repository.find({
-                        where: {
-                            id,
-                        },
+                        where: sOptions,
                         relations,
                     }),
                 );
@@ -176,7 +179,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
         return this.record;
     }
 
-    public getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M | null> {
+    public getRecords(keys?: Array<Extract<TModelsKeys, K>>): Array<M> {
         if (this.records) {
             this.records = this.records.filter(el => el);
             const newRecords: Array<M> = (this.lastOperationResult = <Array<M>>this.records.map(record => {
@@ -196,7 +199,7 @@ class GenericRepository<M extends TModels, K extends TModelsKeys> extends Generi
             return newRecords;
         }
 
-        return <Array<M | null>>this.records;
+        return <Array<M>>this.records;
     }
 
     //probably won't be used in prod

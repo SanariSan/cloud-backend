@@ -2,22 +2,29 @@ import Joi from "joi";
 import { JoiBearerHeader } from "../../../../helpers";
 
 export const schema = {
-    userCredential: Joi.object().keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required().min(6),
-    }),
-    refreshToken: Joi.object().keys({
-        refreshToken: Joi.string().required().min(1),
-    }),
     auth: Joi.object()
         .keys({
             authorization: JoiBearerHeader().required(),
         })
-        .unknown(true), //?
-    signup: Joi.object().keys({
-        name: Joi.string().required().min(3),
-        email: Joi.string().required().email(),
-        password: Joi.string().required().min(6),
-        profilePicUrl: Joi.string().optional().uri(),
+        .unknown(true),
+    groupCreate: Joi.object().keys({
+        groupName: Joi.string().min(6).required(),
+        password: Joi.string().min(6).required(),
     }),
+    // groupJoin: Joi.object().keys({
+    //     groupId: id,
+    //     password: string
+    // }),
+    // groupLeave: Joi.object().keys({
+    //     refreshToken: Joi.string().required().min(1),
+    // }),
+    // groupChangePassword: Joi.object().keys({
+    //     refreshToken: Joi.string().required().min(1),
+    // }),
+    // groupSearchByName: Joi.object().keys({
+    //     refreshToken: Joi.string().required().min(1),
+    // }),
+    // groupSearchByEmail: Joi.object().keys({
+    //     refreshToken: Joi.string().required().min(1),
+    // }),
 };

@@ -21,7 +21,7 @@ export class Group {
 
     @OneToOne(type => GroupPath)
     @JoinColumn({ name: "groupPathId" })
-    groupPathId!: GroupPath;
+    groupPath!: GroupPath;
 
     //list of all users Ids have access to this group
     //with this columns we can check all users related to this particualar group

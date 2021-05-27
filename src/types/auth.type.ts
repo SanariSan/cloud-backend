@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { JwtPayload } from "../core";
 import {
     GroupPathRepository,
     GroupRepository,
@@ -20,7 +21,7 @@ export interface PreparedRequest extends Request {
 }
 
 export interface ProtectedRequest extends PreparedRequest {
-    accessToken?: boolean;
+    accessTokenPayload: JwtPayload;
 }
 
 export interface Tokens {

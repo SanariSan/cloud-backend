@@ -2,11 +2,12 @@ import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../../../types";
 import { AuthFailureError, BadRequestError, SuccessResponse } from "../../../../core";
 import bcrypt from "bcrypt";
+import { GROUP_RELATIONS } from "../../../../database";
 
-// req.body === {joinerId: id, ownerId: id, groupId: id}
+// req.body === {groupId: id, password: string, }
 export const GroupJoin = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
     //search for target group
-    await req.groupRepository.findById(req.body.groupId);
+    await req.groupRepository.findById(req.body.groupId, [GROUP_RELATIONS.USERS_PARTICIPATE]);
 
     //if found - get record
     const groupRecord = req.groupRepository.getRecord();
@@ -16,30 +17,21 @@ export const GroupJoin = async (req: ProtectedRequest, res: Response, next: Next
     const matchPass: boolean = await bcrypt.compare(req.body.password, groupRecord.password);
     if (!matchPass) throw new AuthFailureError("Authentication failure");
 
-    //check if user already in group
-    const participants = groupRecord.usersParticipate;
-    if (participants.some(user => user.id === req.body.joinerId))
-        throw new BadRequestError("You are already in this group");
-
-    //search for user
-    await req.userRepository.findById(req.body.joinerId);
-
-    //if found - get record
     const userRecord = req.userRepository.getRecord();
     if (!userRecord) throw new Error();
+
+    //check if user already in group
+    const participants = groupRecord.usersParticipate;
+    if (participants.some(user => user.id === userRecord.id))
+        throw new BadRequestError("You are already in this group");
 
     //add target group's record to user's groups list
     await req.userRepository.addGroupParticipance(groupRecord).saveRecord();
 
-    //get updated user's record
-    // userRecord = req.userRepository.getRecord();
-    // if (!userRecord) throw new Error();
-
     //add user's record to target group's users list
     await req.groupRepository.addUser(userRecord).saveRecord();
 
-    return new SuccessResponse("Group created", {
+    return new SuccessResponse("Group join successful", {
         group: req.groupRepository.getRecord(["id", "name"]),
-        size: req.groupPathRepository.getRecord(["id", "sizeUsed", "sizeMax"]),
     }).send(res);
 };

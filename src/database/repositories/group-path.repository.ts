@@ -1,9 +1,9 @@
-import { DBManager, ENTITIES, IGroupPathManualInput, TGroupPathKeys } from "../accessdb";
+import { DBManager, ENTITIES, GROUP_PATH_RELATIONS, IGroupPathManualInput, TGroupPathKeys } from "../accessdb";
 import { Logger } from "../../core";
 import { GroupPath } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys> {
+class GroupPathRepository extends GenericRepository<GroupPath, TGroupPathKeys, GROUP_PATH_RELATIONS> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.GROUP_PATH, dbManager);
     }

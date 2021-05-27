@@ -1,9 +1,9 @@
-import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys } from "../accessdb";
+import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys, GROUP_RELATIONS } from "../accessdb";
 import { Logger } from "../../core";
 import { Group, GroupPath, User } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class GroupRepository extends GenericRepository<Group, TGroupKeys> {
+class GroupRepository extends GenericRepository<Group, TGroupKeys, GROUP_RELATIONS> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.GROUP, dbManager);
     }
@@ -11,7 +11,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
     public addPathOwnage(groupPath: GroupPath): this {
         try {
             if (this.repository && this.record) {
-                this.record.groupPathId = this.lastOperationResult = groupPath;
+                this.record.groupPath = this.lastOperationResult = groupPath;
 
                 Logger.debug(`${this.addPathOwnage.name}`);
             }
@@ -55,6 +55,44 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys> {
             return this;
         } catch (err) {
             this.lastOperationResult = `Error in ${this.removeUser.name}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
+        }
+    }
+
+    public setPassword(newPassword: string): this {
+        try {
+            if (this.record) {
+                this.record.password = this.lastOperationResult = newPassword;
+
+                Logger.debug(`${this.removeUser.name}`);
+            }
+
+            return this;
+        } catch (err) {
+            this.lastOperationResult = `Error in ${this.removeUser.name}, ${err}`;
+            Logger.warn(this.lastOperationResult);
+            throw new Error(this.lastOperationResult);
+        }
+    }
+
+    public async findByName(name: string, relations?: Array<GROUP_RELATIONS>): Promise<this> {
+        try {
+            if (this.repository) {
+                this.records = this.lastOperationResult = <Array<Group | null>>this.convertToNull(
+                    <Array<Group>>await this.repository.find({
+                        where: {
+                            name,
+                        },
+                        relations,
+                    }),
+                );
+            }
+
+            Logger.debug(`${this.findByIds.name}`);
+            return this;
+        } catch (err) {
+            this.lastOperationResult = `Error in ${this.findByIds.name}, ${err}`;
             Logger.warn(this.lastOperationResult);
             throw new Error(this.lastOperationResult);
         }

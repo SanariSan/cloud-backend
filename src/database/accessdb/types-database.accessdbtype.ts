@@ -22,6 +22,13 @@ export type TUserKeys =
     | "keystore"
     | "groupsParticipate";
 
+export enum USER_RELATIONS {
+    USER_PRIVELEGE = "userPrivelege",
+    GROUP_OWNAGE = "groupOwnage",
+    KEYSTORE = "keystore",
+    GROUPS_PARTICIPATE = "groupsParticipate",
+}
+
 //-----------------------------------------
 
 export interface IKeystoreManualInput {
@@ -30,13 +37,22 @@ export interface IKeystoreManualInput {
 }
 export type TKeystoreKeys = "id" | "accessTokenKey" | "refreshTokenKey" | "createdAt" | "updatedAt" | "user";
 
+export enum KEYSTORE_RELATIONS {
+    USER = "user",
+}
+
 //-----------------------------------------
 
 export interface IGroupManualInput {
     name: string;
     password: string;
 }
-export type TGroupKeys = "id" | "name" | "password" | "createdAt" | "updatedAt" | "groupPathId" | "usersParticipate";
+export type TGroupKeys = "id" | "name" | "password" | "createdAt" | "updatedAt" | "groupPath" | "usersParticipate";
+
+export enum GROUP_RELATIONS {
+    GROUP_PATH = "groupPath",
+    USERS_PARTICIPATE = "usersParticipate",
+}
 
 //-----------------------------------------
 
@@ -48,9 +64,18 @@ export interface IGroupPathManualInput {
 
 export type TGroupPathKeys = "id" | "pathName" | "sizeMax" | "sizeUsed" | "createdAt" | "updatedAt";
 
+export enum GROUP_PATH_RELATIONS { // big oof
+    UNDEFINED = "undefined",
+}
+
 //-----------------------------------------
 
-export type TUserPrivelegeKeys = "id" | "createdAt" | "updatedAt" | "user" | "privelege100" | "privelege500";
+export type TUserPrivelegeKeys = "id" | "createdAt" | "updatedAt" | "privelege100" | "privelege500";
+
+export enum USER_PRIVELEGE_RELATIONS {
+    PRIVELEGE_100 = "privelege100",
+    PRIVELEGE_500 = "privelege500",
+}
 
 //-----------------------------------------
 
@@ -60,6 +85,10 @@ export interface IPrivelege100ManualInput {
 
 export type TPrivelege100Keys = "id" | "createdAt" | "updatedAt" | "userPrivilege";
 
+export enum PRIVELEGE_100_RELATIONS {
+    USER_PRIVELEGE = "userPrivilege",
+}
+
 //-----------------------------------------
 
 export interface IPrivelege500ManualInput {
@@ -67,6 +96,10 @@ export interface IPrivelege500ManualInput {
 }
 
 export type TPrivelege500Keys = "id" | "createdAt" | "updatedAt" | "userPrivilege";
+
+export enum PRIVELEGE_500_RELATIONS {
+    USER_PRIVELEGE = "userPrivilege",
+}
 
 //-----------------------------------------
 
@@ -79,35 +112,11 @@ export type TModelsKeys =
     | TUserPrivelegeKeys
     | TPrivelege100Keys
     | TPrivelege500Keys;
-
-//-----------------------------------------
-
-// export type TIModel = IUser | IKeystore | IGroup;
-// export interface IGroup {
-//     id: number;
-//     name: string;
-//     password: string;
-//     createdAt: Date;
-//     updatedAt: Date;
-//     userParticipate: Array<User>;
-// }
-// export interface IUser {
-//     id: number;
-//     name: string;
-//     email: string;
-//     password: string;
-//     profilePicUrl: string;
-//     groupOwnage: Group;
-//     createdAt: Date;
-//     updatedAt: Date;
-//     keystore: Array<Keystore>;
-//     groupParticipate: Array<Group>;
-// }
-// export interface IKeystore {
-//     id: number;
-//     accessTokenKey: string;
-//     refreshTokenKey: string;
-//     createdAt: Date;
-//     updatedAt: Date;
-//     user: User;
-// }
+export type TModelsRelationsKeys =
+    | USER_RELATIONS
+    | KEYSTORE_RELATIONS
+    | GROUP_RELATIONS
+    | GROUP_PATH_RELATIONS
+    | USER_PRIVELEGE_RELATIONS
+    | PRIVELEGE_100_RELATIONS
+    | PRIVELEGE_500_RELATIONS;

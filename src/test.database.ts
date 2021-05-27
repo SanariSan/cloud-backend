@@ -12,6 +12,7 @@ import {
     Privelege100Repository,
     GroupPathRepository,
     Privelege500Repository,
+    USER_RELATIONS,
 } from "./database";
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -93,6 +94,18 @@ async function test() {
     console.log(userPrivelegeRepository.getRecord());
     console.log(privelege100Repository.getRecord());
     console.log(privelege500Repository.getRecord());
+
+    await userRepository.findByIds([], [USER_RELATIONS.GROUP_OWNAGE]);
+    const userRecords = userRepository.getRecords();
+    if (!userRecords) throw new Error();
+
+    // console.log(userRecords);
+
+    // console.log("_________");
+    // const usersWithTargetGroupRecords = userRecords
+    //     .filter(el => el.groupOwnage)
+    //     .filter(el => el.groupOwnage.name === "Group1");
+    // console.log(usersWithTargetGroupRecords);
 }
 
 export { test };

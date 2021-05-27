@@ -1,14 +1,14 @@
 import { Logger } from "../../core";
 import { User, Keystore, Group, UserPrivelege } from "../models";
-import { IUserManualInput, ENTITIES, TUserKeys, DBManager } from "../accessdb";
+import { IUserManualInput, ENTITIES, TUserKeys, DBManager, USER_RELATIONS } from "../accessdb";
 import { GenericRepository } from "./generic.repository";
 
-class UserRepository extends GenericRepository<User, TUserKeys> {
+class UserRepository extends GenericRepository<User, TUserKeys, USER_RELATIONS> {
     constructor(dbManager: DBManager) {
         super(ENTITIES.USER, dbManager);
     }
 
-    public async findByEmail(email: string, relations?: Array<string>): Promise<this> {
+    public async findByEmail(email: string, relations?: Array<USER_RELATIONS>): Promise<this> {
         try {
             if (this.repository) {
                 this.record = this.lastOperationResult = <User | null>this.convertToNull(
