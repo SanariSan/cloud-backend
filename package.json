@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"main": "app.js",
 	"license": "MIT",
-	"prettier": ".prettierrc",
 	"scripts": {
 		"start": "yarn build && yarn launch-dev",
 		"build": "yarn drop-build && yarn drop-logs-dev && tsc",
@@ -12,7 +11,7 @@
 		"drop-logs-prod": "rm -rf ./logs-prod",
 		"launch-prod": "cross-env NODE_ENV=production node ./dist/app.js",
 		"launch-dev": "cross-env NODE_ENV=development node ./dist/app.js",
-        "prettier": "prettier -w --config ./.prettierrc ."
+		"prettier": "prettier -w --config ./.prettierrc.json ."
 	},
 	"dependencies": {
 		"bcrypt": "^5.0.1",
@@ -38,6 +37,7 @@
 		"@types/cors": "^2.8.10",
 		"@types/express": "^4.17.11",
 		"@types/jsonwebtoken": "^8.5.1",
-		"madge": "^4.0.2"
+		"madge": "^4.0.2",
+		"prettier": "^2.3.0"
 	}
 }
