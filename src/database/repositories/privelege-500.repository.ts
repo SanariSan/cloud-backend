@@ -4,7 +4,7 @@ import {
 	IPrivelege500ManualInput,
 	PRIVELEGE_500_RELATIONS,
 	TPrivelege100Keys,
-} from "../accessdb";
+} from "../connection";
 import { Logger } from "../../core";
 import { Privelege500 } from "../models";
 import { GenericRepository } from "./generic.repository";

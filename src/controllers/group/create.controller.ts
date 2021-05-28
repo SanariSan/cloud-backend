@@ -1,11 +1,11 @@
 import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../../types";
-import { BadRequestError, SuccessResponse } from "../../../../core";
-import { IGroupManualInput, IGroupPathManualInput } from "../../../../database";
+import { ProtectedRequest } from "../../types";
+import { BadRequestError, SuccessResponse } from "../../core";
+import { IGroupManualInput, IGroupPathManualInput } from "../../database";
 import bcrypt from "bcrypt";
 
 //req.body === {groupName: string, password: string}
-export const GroupCreate = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const Create = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	//get user's record
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();

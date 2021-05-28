@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../../types";
-import { SuccessResponse } from "../../../../core";
+import { ProtectedRequest } from "../../types";
+import { SuccessResponse } from "../../core";
 
 export const Profile1 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const groupsUserIn = req.userRepository.getRecord();

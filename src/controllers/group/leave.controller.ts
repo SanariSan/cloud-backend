@@ -1,11 +1,11 @@
 import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../../types";
-import { BadRequestError, SuccessMsgResponse } from "../../../../core";
-import { GROUP_RELATIONS } from "../../../../database";
+import { ProtectedRequest } from "../../types";
+import { BadRequestError, SuccessMsgResponse } from "../../core";
+import { GROUP_RELATIONS } from "../../database";
 
 // req.body.send === string
 // req.body === groupId (group to leave form)
-export const GroupLeave = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const Leave = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	await req.groupRepository.findById(req.body.groupId, [GROUP_RELATIONS.USERS_PARTICIPATE]);
 
 	const userRecord = req.userRepository.getRecord();

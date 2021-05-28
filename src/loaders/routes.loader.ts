@@ -1,9 +1,9 @@
 import config from "config";
-import * as apiBranches from "../routes";
+import * as apiBranches from "../routers";
 
-function routes(app) {
+function routers(app) {
 	const apiVersion = <string>config.get("apiVersion");
 	app.use(`/${apiVersion}`, apiBranches[apiVersion.toUpperCase()]);
 }
 
-export { routes };
+export { routers };

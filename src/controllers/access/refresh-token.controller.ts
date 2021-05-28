@@ -1,8 +1,8 @@
 import { Response, NextFunction } from "express";
-import { AuthFailureError, JWT, TokenRefreshResponse } from "../../../../core";
-import { USER_RELATIONS } from "../../../../database";
-import { ProtectedRequest } from "../../../../types";
-import { getToken, validateTokenData, setNewTokenPair } from "../../../../helpers";
+import { AuthFailureError, JWT, TokenRefreshResponse } from "../../core";
+import { USER_RELATIONS } from "../../database";
+import { ProtectedRequest } from "../../types";
+import { getToken, validateTokenData, setNewTokenPair } from "../../helpers";
 
 export const Refresh = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const accessTokenPayload = await JWT.validateNoExp(getToken(req.headers.authorization));

@@ -16,24 +16,21 @@ export const JoiBearerHeader = () =>
 		return value;
 	}, "Authorization Header Validation");
 
-export const Validate = (
-	schema: Joi.ObjectSchema,
-	source: ValidationSource = ValidationSource.BODY,
-) => async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		await schema.validateAsync(req[source], {
-			abortEarly: false,
-		});
-		//value == { email: 'sample@mail.ru', password: '123444' };
-		return next();
-	} catch (err) {
-		const { details } = err;
-		const message = details
-			.map((el, i) => `${i + 1}. ${el.message.replace(/"/g, "")}`)
-			.join(";");
+export const Validate =
+	(schema: Joi.ObjectSchema, source: ValidationSource = ValidationSource.BODY) =>
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			await schema.validateAsync(req[source], {
+				abortEarly: false,
+			});
 
-		Logger.debug(details);
+			return next();
+		} catch (err) {
+			const { details } = err;
+			const message = details.map((el, i) => `${el.message.replace(/"/g, "")}`).join(";");
 
-		next(new BadRequestError(message));
-	}
-};
+			Logger.debug(details);
+
+			next(new BadRequestError(message));
+		}
+	};

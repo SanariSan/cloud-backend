@@ -2,7 +2,7 @@ import "reflect-metadata";
 import express from "express";
 import config from "config";
 import { Logger } from "./core";
-import { settings, routes, errorHandler } from "./loaders";
+import { settings, routers, errorHandler } from "./loaders";
 import { initializeDb } from "./initialization.database";
 import { test } from "./test.database";
 
@@ -21,7 +21,7 @@ async function init() {
 
 	const app = express();
 	settings(app);
-	routes(app);
+	routers(app);
 	errorHandler(app);
 
 	app.listen(config.get("port"), () => {

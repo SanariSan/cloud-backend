@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
-import { setNewTokenPair } from "../../../../helpers";
-import { BadRequestError, SuccessResponse } from "../../../../core";
-import { PreparedRequest } from "../../../../types";
+import { setNewTokenPair } from "../../helpers";
+import { BadRequestError, SuccessResponse } from "../../core";
+import { PreparedRequest } from "../../types";
 import bcrypt from "bcrypt";
 
 export const Register = async (req: PreparedRequest, res: Response, next: NextFunction) => {

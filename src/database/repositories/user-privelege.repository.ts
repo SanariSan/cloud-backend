@@ -1,4 +1,4 @@
-import { DBManager, ENTITIES, TUserPrivelegeKeys, USER_PRIVELEGE_RELATIONS } from "../accessdb";
+import { DBManager, ENTITIES, TUserPrivelegeKeys, USER_PRIVELEGE_RELATIONS } from "../connection";
 import { Logger } from "../../core";
 import { Privelege100, Privelege500, UserPrivelege } from "../models";
 import { GenericRepository } from "./generic.repository";

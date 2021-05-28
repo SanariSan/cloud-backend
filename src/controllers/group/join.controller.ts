@@ -1,11 +1,11 @@
 import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../../types";
-import { AuthFailureError, BadRequestError, SuccessResponse } from "../../../../core";
+import { ProtectedRequest } from "../../types";
+import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
+import { GROUP_RELATIONS } from "../../database";
 import bcrypt from "bcrypt";
-import { GROUP_RELATIONS } from "../../../../database";
 
 // req.body === {groupId: id, password: string, }
-export const GroupJoin = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const Join = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	//search for target group
 	await req.groupRepository.findById(req.body.groupId, [GROUP_RELATIONS.USERS_PARTICIPATE]);
 

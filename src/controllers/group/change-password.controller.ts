@@ -1,14 +1,10 @@
 import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../../types";
-import { AuthFailureError, BadRequestError, SuccessMsgResponse } from "../../../../core";
+import { ProtectedRequest } from "../../types";
+import { AuthFailureError, BadRequestError, SuccessMsgResponse } from "../../core";
 import bcrypt from "bcrypt";
 
 // req.body === {oldPassword: string, newPassword: string, }
-export const GroupChangePassword = async (
-	req: ProtectedRequest,
-	res: Response,
-	next: NextFunction,
-) => {
+export const ChangePassword = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 

@@ -1,11 +1,8 @@
 import { Router } from "express";
 import { Validate, ValidationSource } from "../../../../helpers";
-import { AsyncHandle, Authentificate, StickRepos } from "../../../../controllers";
+import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
+import { Login, Logout, Refresh, Register, ChangePassword } from "../../../../controllers/access";
 import { Schema } from "./access.schema";
-import { Login } from "./login.route";
-import { Logout } from "./logout.route";
-import { Refresh } from "./refresh-token.route";
-import { Register } from "./register.route";
 
 const AccessRouter = Router();
 
@@ -17,21 +14,27 @@ AccessRouter.post(
 );
 AccessRouter.post(
 	"/login",
-	Validate(Schema.userCredential, ValidationSource.BODY),
+	Validate(Schema.login, ValidationSource.BODY),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Login),
 );
+
+AccessRouter.put("/", Validate(Schema.auth, ValidationSource.HEADER));
 AccessRouter.put(
 	"/refresh",
-	Validate(Schema.auth, ValidationSource.HEADER),
-	Validate(Schema.refreshToken, ValidationSource.BODY),
+	Validate(Schema.refresh, ValidationSource.BODY),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Refresh),
 );
-//todo add change password + move asyncHandle(Authentificate) POST bcs also deleting all old tokens
+AccessRouter.post(
+	"/change-password",
+	Validate(Schema.changePassword, ValidationSource.BODY),
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(ChangePassword),
+);
 AccessRouter.delete(
 	"/logout",
-	Validate(Schema.auth, ValidationSource.HEADER),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 	AsyncHandle(Logout),

@@ -4,7 +4,7 @@ import {
 	GROUP_PATH_RELATIONS,
 	IGroupPathManualInput,
 	TGroupPathKeys,
-} from "../accessdb";
+} from "../connection";
 import { Logger } from "../../core";
 import { GroupPath } from "../models";
 import { GenericRepository } from "./generic.repository";

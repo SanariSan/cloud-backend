@@ -4,7 +4,7 @@ import {
 	IKeystoreManualInput,
 	KEYSTORE_RELATIONS,
 	TKeystoreKeys,
-} from "../accessdb";
+} from "../connection";
 import { Logger } from "../../core";
 import { Keystore } from "../models";
 import { GenericRepository } from "./generic.repository";

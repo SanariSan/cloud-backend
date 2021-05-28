@@ -1,8 +1,8 @@
 import { Response, NextFunction } from "express";
-import { SuccessResponse, BadRequestError, AuthFailureError } from "../../../../core";
-import { setNewTokenPair } from "../../../../helpers";
-import { USER_RELATIONS } from "../../../../database";
-import { PreparedRequest } from "../../../../types";
+import { SuccessResponse, BadRequestError, AuthFailureError } from "../../core";
+import { setNewTokenPair } from "../../helpers";
+import { USER_RELATIONS } from "../../database";
+import { PreparedRequest } from "../../types";
 import bcrypt from "bcrypt";
 
 export const Login = async (req: PreparedRequest, res: Response, next: NextFunction) => {

@@ -1,33 +1,26 @@
 import { Connection, DeleteResult, Repository } from "typeorm";
-import { TModelsKeys, TEntities, TModels, DBManager, TModelsRelationsKeys } from "../accessdb";
+import { TModelsKeys, TEntities, TModels, DBManager, TModelsRelationsKeys } from "../connection";
 import { Logger } from "../../core";
 
 abstract class GenericRepositoryAbstract<
 	M extends TModels,
 	K extends TModelsKeys,
-	R extends TModelsRelationsKeys
+	R extends TModelsRelationsKeys,
 > {
-	protected entityName: TEntities;
-	protected dbManager: DBManager;
-	protected record: M | null;
-	protected records: Array<M | null>;
-	protected lastOperationResult: any;
-
-	constructor(entityName: TEntities, dbManager: DBManager) {
-		this.entityName = entityName;
-		this.dbManager = dbManager;
-
-		this.record = null;
-		this.records = [];
-		this.lastOperationResult = null;
-	}
+	protected abstract entityName: TEntities;
+	protected abstract dbManager: DBManager;
+	protected abstract record: M | null;
+	protected abstract records: Array<M | null>;
+	protected abstract lastOperationResult: any;
 
 	protected abstract get connection(): Connection;
 	protected abstract get repository(): Repository<M>;
+
 	protected abstract convertToNull(el: M | Array<M>): M | Array<M | null> | null;
 	public abstract findById(id: number, relations?: Array<R>): Promise<this>;
-	public abstract findByIds(ids: Array<number>, relations?: Array<R>): Promise<this>;
-	public abstract removeRecord(): Promise<this>;
+	public abstract findByIds(ids?: Array<number>, relations?: Array<R>): Promise<this>;
+	public abstract removeRecord(id?: number): Promise<this>;
+	public abstract removeRecords(ids?: Array<number>): Promise<this>;
 	public abstract saveRecord(): Promise<this>;
 	public abstract saveRecords(): Promise<this>;
 	public abstract getRecord(keys?: Array<Extract<TModelsKeys, K>>): M | null;
@@ -38,10 +31,23 @@ abstract class GenericRepositoryAbstract<
 class GenericRepository<
 	M extends TModels,
 	K extends TModelsKeys,
-	R extends TModelsRelationsKeys
+	R extends TModelsRelationsKeys,
 > extends GenericRepositoryAbstract<M, K, R> {
+	protected entityName: TEntities;
+	protected dbManager: DBManager;
+	protected record: M | null;
+	protected records: Array<M | null>;
+	protected lastOperationResult: any;
+
 	constructor(entityName: TEntities, dbManager: DBManager) {
-		super(entityName, dbManager);
+		super();
+
+		this.entityName = entityName;
+		this.dbManager = dbManager;
+
+		this.record = null;
+		this.records = [];
+		this.lastOperationResult = null;
 	}
 
 	protected get connection() {
@@ -88,10 +94,11 @@ class GenericRepository<
 		}
 	}
 
-	public async findByIds(ids: Array<number>, relations?: Array<R>): Promise<this> {
+	public async findByIds(ids?: Array<number>, relations?: Array<R>): Promise<this> {
 		try {
 			if (this.repository) {
-				const sOptions = ids.length !== 0 ? { ids } : undefined;
+				const sOptions = ids && ids.length !== 0 ? { ids } : undefined;
+
 				this.records = this.lastOperationResult = <Array<M | null>>this.convertToNull(
 					<Array<M>>await this.repository.find({
 						where: sOptions,
@@ -109,16 +116,39 @@ class GenericRepository<
 		}
 	}
 
-	//probably won't be used in prod
-	public async removeRecord(): Promise<this> {
+	public async removeRecord(id?: number): Promise<this> {
 		try {
 			if (this.repository && this.record) {
-				this.lastOperationResult = <DeleteResult>(
-					await this.repository.delete(this.record.id)
-				);
+				id = id || this.record.id;
+
+				this.lastOperationResult = <DeleteResult>await this.repository.delete(id);
 				this.record = null;
 
 				Logger.debug(`${this.removeRecord.name}`);
+			}
+
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.removeRecord.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
+
+	public async removeRecords(ids?: Array<number>): Promise<this> {
+		try {
+			if (this.repository && this.records) {
+				ids =
+					ids && ids.length
+						? ids
+						: this.records.filter((el) => el).map((el) => (<M>el).id);
+
+				if (this.records.length !== 0) {
+					this.lastOperationResult = <DeleteResult>await this.repository.delete(ids);
+					this.record = null;
+
+					Logger.debug(`${this.removeRecord.name}`);
+				}
 			}
 
 			return this;

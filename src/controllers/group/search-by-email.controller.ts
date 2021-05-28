@@ -1,15 +1,11 @@
 import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../../types";
-import { NoEntryError, SuccessResponse } from "../../../../core";
-import { USER_RELATIONS } from "../../../../database";
+import { ProtectedRequest } from "../../types";
+import { NoEntryError, SuccessResponse } from "../../core";
+import { USER_RELATIONS } from "../../database";
 
 // req.body.send === [{ownerId: id, groupId: id, groupName: string}, ...]
 // req.body === ownerEmail
-export const GroupSearchByEmail = async (
-	req: ProtectedRequest,
-	res: Response,
-	next: NextFunction,
-) => {
+export const SearchByEmail = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	let result: Array<{
 		ownerId: number;
 		groupId: number;

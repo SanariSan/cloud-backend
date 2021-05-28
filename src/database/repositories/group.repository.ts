@@ -1,4 +1,4 @@
-import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys, GROUP_RELATIONS } from "../accessdb";
+import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys, GROUP_RELATIONS } from "../connection";
 import { Logger } from "../../core";
 import { Group, GroupPath, User } from "../models";
 import { GenericRepository } from "./generic.repository";
@@ -45,9 +45,10 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys, GROUP_RELATIO
 	public removeUser(user: User): this {
 		try {
 			if (this.record) {
-				this.record.usersParticipate = this.lastOperationResult = this.record.usersParticipate.filter(
-					(existingUser: User) => existingUser.id !== user.id,
-				);
+				this.record.usersParticipate = this.lastOperationResult =
+					this.record.usersParticipate.filter(
+						(existingUser: User) => existingUser.id !== user.id,
+					);
 
 				Logger.debug(`${this.removeUser.name}`);
 			}
@@ -65,12 +66,12 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys, GROUP_RELATIO
 			if (this.record) {
 				this.record.password = this.lastOperationResult = newPassword;
 
-				Logger.debug(`${this.removeUser.name}`);
+				Logger.debug(`${this.setPassword.name}`);
 			}
 
 			return this;
 		} catch (err) {
-			this.lastOperationResult = `Error in ${this.removeUser.name}, ${err}`;
+			this.lastOperationResult = `Error in ${this.setPassword.name}, ${err}`;
 			Logger.warn(this.lastOperationResult);
 			throw new Error(this.lastOperationResult);
 		}

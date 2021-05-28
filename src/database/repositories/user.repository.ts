@@ -1,6 +1,6 @@
 import { Logger } from "../../core";
 import { User, Keystore, Group, UserPrivelege } from "../models";
-import { IUserManualInput, ENTITIES, TUserKeys, DBManager, USER_RELATIONS } from "../accessdb";
+import { IUserManualInput, ENTITIES, TUserKeys, DBManager, USER_RELATIONS } from "../connection";
 import { GenericRepository } from "./generic.repository";
 
 class UserRepository extends GenericRepository<User, TUserKeys, USER_RELATIONS> {
@@ -90,6 +90,22 @@ class UserRepository extends GenericRepository<User, TUserKeys, USER_RELATIONS> 
 			return this;
 		} catch (err) {
 			this.lastOperationResult = `Error in ${this.addUserPrivelege.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
+
+	public setPassword(newPassword: string): this {
+		try {
+			if (this.record) {
+				this.record.password = this.lastOperationResult = newPassword;
+
+				Logger.debug(`${this.setPassword.name}`);
+			}
+
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.setPassword.name}, ${err}`;
 			Logger.warn(this.lastOperationResult);
 			throw new Error(this.lastOperationResult);
 		}
