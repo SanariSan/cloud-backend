@@ -1,13 +1,13 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
-import { GROUP_RELATIONS } from "../../database";
+import { EGROUP_KEYS, EGROUP_RELATIONS } from "../../database";
 import bcrypt from "bcrypt";
 
 // req.body === {groupId: id, password: string, }
 export const Join = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	//search for target group
-	await req.groupRepository.findById(req.body.groupId, [GROUP_RELATIONS.USERS_PARTICIPATE]);
+	await req.groupRepository.findById(req.body.groupId, [EGROUP_RELATIONS.USERS_PARTICIPATE]);
 
 	//if found - get record
 	const groupRecord = req.groupRepository.getRecord();
@@ -32,6 +32,6 @@ export const Join = async (req: ProtectedRequest, res: Response, next: NextFunct
 	await req.groupRepository.addUser(userRecord).saveRecord();
 
 	return new SuccessResponse("Group join successful", {
-		group: req.groupRepository.getRecord(["id", "name"]),
+		group: req.groupRepository.getRecord([EGROUP_KEYS.ID, EGROUP_KEYS.NAME]),
 	}).send(res);
 };

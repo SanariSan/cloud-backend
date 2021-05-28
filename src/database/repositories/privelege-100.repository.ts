@@ -2,8 +2,8 @@ import {
 	DBManager,
 	ENTITIES,
 	IPrivelege100ManualInput,
-	PRIVELEGE_100_RELATIONS,
-	TPrivelege100Keys,
+	EPRIVELEGE_100_RELATIONS,
+	EPRIVELEGE_100_KEYS,
 } from "../connection";
 import { Logger } from "../../core";
 import { Privelege100 } from "../models";
@@ -12,8 +12,8 @@ import config from "config";
 
 class Privelege100Repository extends GenericRepository<
 	Privelege100,
-	TPrivelege100Keys,
-	PRIVELEGE_100_RELATIONS
+	EPRIVELEGE_100_KEYS,
+	EPRIVELEGE_100_RELATIONS
 > {
 	constructor(dbManager: DBManager) {
 		super(ENTITIES.PRIVELEGE_100, dbManager);

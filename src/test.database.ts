@@ -12,7 +12,7 @@ import {
 	Privelege100Repository,
 	GroupPathRepository,
 	Privelege500Repository,
-	USER_RELATIONS,
+	EUSER_RELATIONS,
 } from "./database";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -108,7 +108,7 @@ async function test() {
 	console.log(privelege100Repository.getRecord());
 	console.log(privelege500Repository.getRecord());
 
-	await userRepository.findByIds([], [USER_RELATIONS.GROUP_OWNAGE]);
+	await userRepository.findByIds([], [EUSER_RELATIONS.GROUP_OWNAGE]);
 	const userRecords = userRepository.getRecords();
 	if (!userRecords) throw new Error();
 

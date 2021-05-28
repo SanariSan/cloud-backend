@@ -14,7 +14,7 @@ import { Schema } from "./group.schema";
 const GroupRouter = Router();
 
 GroupRouter.post(
-	"/",
+	"/*",
 	Validate(Schema.auth, ValidationSource.HEADER),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),

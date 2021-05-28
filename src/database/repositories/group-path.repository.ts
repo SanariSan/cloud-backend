@@ -1,9 +1,9 @@
 import {
 	DBManager,
 	ENTITIES,
-	GROUP_PATH_RELATIONS,
+	EGROUP_PATH_RELATIONS,
 	IGroupPathManualInput,
-	TGroupPathKeys,
+	EGROUP_PATH_KEYS,
 } from "../connection";
 import { Logger } from "../../core";
 import { GroupPath } from "../models";
@@ -11,8 +11,8 @@ import { GenericRepository } from "./generic.repository";
 
 class GroupPathRepository extends GenericRepository<
 	GroupPath,
-	TGroupPathKeys,
-	GROUP_PATH_RELATIONS
+	EGROUP_PATH_KEYS,
+	EGROUP_PATH_RELATIONS
 > {
 	constructor(dbManager: DBManager) {
 		super(ENTITIES.GROUP_PATH, dbManager);

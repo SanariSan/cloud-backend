@@ -1,7 +1,12 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { BadRequestError, SuccessResponse } from "../../core";
-import { IGroupManualInput, IGroupPathManualInput } from "../../database";
+import {
+	EGROUP_KEYS,
+	EGROUP_PATH_KEYS,
+	IGroupManualInput,
+	IGroupPathManualInput,
+} from "../../database";
 import bcrypt from "bcrypt";
 
 //req.body === {groupName: string, password: string}
@@ -44,7 +49,11 @@ export const Create = async (req: ProtectedRequest, res: Response, next: NextFun
 	await req.groupRepository.addUser(userRecord).addPathOwnage(groupPathRecord).saveRecord();
 
 	return new SuccessResponse("Group created", {
-		group: req.groupRepository.getRecord(["id", "name"]),
-		size: req.groupPathRepository.getRecord(["id", "sizeUsed", "sizeMax"]),
+		group: req.groupRepository.getRecord([EGROUP_KEYS.ID, EGROUP_KEYS.NAME]),
+		size: req.groupPathRepository.getRecord([
+			EGROUP_PATH_KEYS.ID,
+			EGROUP_PATH_KEYS.SIZE_USED,
+			EGROUP_PATH_KEYS.SIZE_MAX,
+		]),
 	}).send(res);
 };

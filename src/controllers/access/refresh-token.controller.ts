@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { AuthFailureError, JWT, TokenRefreshResponse } from "../../core";
-import { USER_RELATIONS } from "../../database";
+import { EUSER_RELATIONS } from "../../database";
 import { ProtectedRequest } from "../../types";
 import { getToken, validateTokenData, setNewTokenPair } from "../../helpers";
 
@@ -15,7 +15,7 @@ export const Refresh = async (req: ProtectedRequest, res: Response, next: NextFu
 		throw new AuthFailureError("Access token holder mismatch");
 
 	//search for user
-	await req.userRepository.findById(accessTokenPayload.sub, [USER_RELATIONS.KEYSTORE]);
+	await req.userRepository.findById(accessTokenPayload.sub, [EUSER_RELATIONS.KEYSTORE]);
 
 	//get user's record if exists
 	const userRecord = req.userRepository.getRecord();

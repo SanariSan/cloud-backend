@@ -1,9 +1,15 @@
-import { DBManager, ENTITIES, IGroupManualInput, TGroupKeys, GROUP_RELATIONS } from "../connection";
+import {
+	DBManager,
+	ENTITIES,
+	IGroupManualInput,
+	EGROUP_KEYS,
+	EGROUP_RELATIONS,
+} from "../connection";
 import { Logger } from "../../core";
 import { Group, GroupPath, User } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class GroupRepository extends GenericRepository<Group, TGroupKeys, GROUP_RELATIONS> {
+class GroupRepository extends GenericRepository<Group, EGROUP_KEYS, EGROUP_RELATIONS> {
 	constructor(dbManager: DBManager) {
 		super(ENTITIES.GROUP, dbManager);
 	}
@@ -77,7 +83,7 @@ class GroupRepository extends GenericRepository<Group, TGroupKeys, GROUP_RELATIO
 		}
 	}
 
-	public async findByName(name: string, relations?: Array<GROUP_RELATIONS>): Promise<this> {
+	public async findByName(name: string, relations?: Array<EGROUP_RELATIONS>): Promise<this> {
 		try {
 			if (this.repository) {
 				this.records = this.lastOperationResult = <Array<Group | null>>this.convertToNull(

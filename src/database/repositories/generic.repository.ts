@@ -76,10 +76,7 @@ class GenericRepository<
 		try {
 			if (this.repository) {
 				this.record = this.lastOperationResult = <M | null>this.convertToNull(
-					<M>await this.repository.findOne({
-						where: {
-							id,
-						},
+					<M>await this.repository.findOne(id, {
 						relations,
 					}),
 				);
@@ -143,7 +140,7 @@ class GenericRepository<
 						? ids
 						: this.records.filter((el) => el).map((el) => (<M>el).id);
 
-				if (this.records.length !== 0) {
+				if (ids.length !== 0) {
 					this.lastOperationResult = <DeleteResult>await this.repository.delete(ids);
 					this.record = null;
 

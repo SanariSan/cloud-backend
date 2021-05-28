@@ -16,7 +16,7 @@ export const ChangePassword = async (req: ProtectedRequest, res: Response, next:
 
 	//remove all keystore records, relation to user's records removes automatically
 	const userKeystoresIds = userRecord.keystore.map((el) => el.id);
-	await req.keystoreRepository.removeRecords(userKeystoresIds);
+	await req.keystoreRepository.removeRecords(userKeystoresIds).then((_) => _.saveRecord());
 
 	return new SuccessMsgResponse("Password changed, login again").send(res);
 };

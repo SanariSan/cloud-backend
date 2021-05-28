@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { NoEntryError, SuccessResponse } from "../../core";
-import { USER_RELATIONS } from "../../database";
+import { EUSER_RELATIONS } from "../../database";
 
 // req.body.send === [{ownerId: id, groupId: id, groupName: string}, ...]
 // req.body === groupName
@@ -12,7 +12,7 @@ export const SearchByName = async (req: ProtectedRequest, res: Response, next: N
 		groupName: string;
 	}> = [];
 
-	await req.userRepository.findByIds([], [USER_RELATIONS.GROUP_OWNAGE]);
+	await req.userRepository.findByIds([], [EUSER_RELATIONS.GROUP_OWNAGE]);
 	const userRecords = req.userRepository.getRecords();
 	if (!userRecords) throw new NoEntryError("No Users Found");
 

@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { setNewTokenPair } from "../../helpers";
 import { BadRequestError, SuccessResponse } from "../../core";
 import { PreparedRequest } from "../../types";
+import { EUSER_KEYS } from "../../database";
 import bcrypt from "bcrypt";
 
 export const Register = async (req: PreparedRequest, res: Response, next: NextFunction) => {
@@ -22,7 +23,12 @@ export const Register = async (req: PreparedRequest, res: Response, next: NextFu
 	const tokens = await setNewTokenPair(req.userRepository, req.keystoreRepository);
 
 	return new SuccessResponse("Signup Successful", {
-		user: req.userRepository.getRecord(["id", "name", "email", "profilePicUrl"]),
+		user: req.userRepository.getRecord([
+			EUSER_KEYS.ID,
+			EUSER_KEYS.NAME,
+			EUSER_KEYS.EMAIL,
+			EUSER_KEYS.PROFILE_PIC_URL,
+		]),
 		tokens: tokens,
 	}).send(res);
 };

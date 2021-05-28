@@ -6,7 +6,7 @@ abstract class ApiResponse {
 	protected abstract status?: ResponseStatus;
 	protected abstract message: string;
 
-	protected constructor(statusCode, status, message) {}
+	protected constructor() {}
 
 	protected abstract prepare<T extends ApiResponse>(res: Response, newResponseData: T): THttpCall;
 	public abstract send(res: Response): THttpCall;
@@ -26,7 +26,8 @@ class SingleApiResponse extends ApiResponse {
 	protected message: string;
 
 	protected constructor(statusCode, status, message) {
-		super(statusCode, status, message);
+		super();
+
 		this.statusCode = statusCode;
 		this.status = status;
 		this.message = message;
@@ -47,7 +48,8 @@ class StreamApiResponse extends ApiResponse {
 	protected message: string;
 
 	protected constructor(statusCode, status, message) {
-		super(statusCode, status, message);
+		super();
+
 		this.statusCode = statusCode;
 		this.status = status;
 		this.message = message;

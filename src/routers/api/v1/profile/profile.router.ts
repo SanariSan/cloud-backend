@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Profile1 } from "./profile.route";
-import { AsyncHandle, Authentificate, StickRepos } from "../../../../controllers";
+import { Profile1 } from "../../../../controllers/profile";
+import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
 
 const ProfileRouter = Router();
 

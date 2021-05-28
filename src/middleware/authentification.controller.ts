@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../types";
 import { JWT, AuthFailureError, AccessTokenError, TokenExpiredError } from "../core";
 import { getToken, validateTokenData } from "../helpers";
-import { USER_RELATIONS } from "../database";
+import { EUSER_RELATIONS } from "../database";
 
 const Authentificate = async (
 	req: ProtectedRequest,
@@ -17,10 +17,10 @@ const Authentificate = async (
 
 		let user = await req.userRepository
 			.findById(accessTokenPayload.sub, [
-				USER_RELATIONS.KEYSTORE,
-				USER_RELATIONS.GROUPS_PARTICIPATE,
-				USER_RELATIONS.GROUP_OWNAGE,
-				USER_RELATIONS.USER_PRIVELEGE,
+				EUSER_RELATIONS.KEYSTORE,
+				EUSER_RELATIONS.GROUPS_PARTICIPATE,
+				EUSER_RELATIONS.GROUP_OWNAGE,
+				EUSER_RELATIONS.USER_PRIVELEGE,
 			])
 			.then((_) => _.getRecord());
 		if (!user) throw new AuthFailureError("User not registered");

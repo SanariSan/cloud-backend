@@ -19,7 +19,8 @@ AccessRouter.post(
 	AsyncHandle(Login),
 );
 
-AccessRouter.put("/", Validate(Schema.auth, ValidationSource.HEADER));
+AccessRouter.put("/*", Validate(Schema.auth, ValidationSource.HEADER));
+
 AccessRouter.put(
 	"/refresh",
 	Validate(Schema.refresh, ValidationSource.BODY),

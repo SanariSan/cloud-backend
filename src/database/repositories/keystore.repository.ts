@@ -2,14 +2,14 @@ import {
 	DBManager,
 	ENTITIES,
 	IKeystoreManualInput,
-	KEYSTORE_RELATIONS,
-	TKeystoreKeys,
+	EKEYSTORE_RELATIONS,
+	EKEYSTORE_KEYS,
 } from "../connection";
 import { Logger } from "../../core";
 import { Keystore } from "../models";
 import { GenericRepository } from "./generic.repository";
 
-class KeystoreRepository extends GenericRepository<Keystore, TKeystoreKeys, KEYSTORE_RELATIONS> {
+class KeystoreRepository extends GenericRepository<Keystore, EKEYSTORE_KEYS, EKEYSTORE_RELATIONS> {
 	constructor(dbManager: DBManager) {
 		super(ENTITIES.KEYSTORE, dbManager);
 	}
