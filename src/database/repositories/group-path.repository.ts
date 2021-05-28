@@ -34,10 +34,10 @@ class GroupPathRepository extends GenericRepository<
 		}
 	}
 
-	public updateSizeMax(size: number): this {
+	public updateSizeMax(defaultSize: number, extraSize: number): this {
 		try {
 			if (this.record) {
-				this.lastOperationResult = this.record.sizeMax = size;
+				this.lastOperationResult = this.record.sizeMax = defaultSize + extraSize;
 
 				Logger.debug(`${this.updateSizeMax.name}`);
 			}

@@ -3,7 +3,8 @@
 	"corsUrl": "sitename.ru",
 	"apiVersion": "v1",
 	"logDirectory": "./logs-prod",
-	"port": 3001,
+	"port": 3000,
+	"portServices": 3001,
 	"jwt": {
 		"accessTokenValidDays": 1,
 		"refreshTokenValidDays": 1,
@@ -24,6 +25,7 @@
 		}
 	},
 	"privelege": {
+		"defaultStorageSizeGb": 15,
 		"lifetimeDays100_default": 30,
 		"lifetimeDays500_default": 30
 	}

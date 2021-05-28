@@ -1,5 +1,5 @@
 import config from "config";
-import * as apiBranches from "../routers";
+import * as apiBranches from "../../routers/api";
 
 function routers(app) {
 	const apiVersion = <string>config.get("apiVersion");

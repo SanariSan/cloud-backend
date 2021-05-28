@@ -4,6 +4,7 @@
 	"apiVersion": "v1",
 	"logDirectory": "./logs-dev",
 	"port": 3002,
+	"portServices": 3003,
 	"jwt": {
 		"accessTokenValidDays": 1,
 		"refreshTokenValidDays": 1,
@@ -24,6 +25,7 @@
 		}
 	},
 	"privelege": {
+		"defaultStorageSizeGb": 15,
 		"lifetimeDays100_default": 30,
 		"lifetimeDays500_default": 30
 	}

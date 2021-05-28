@@ -49,6 +49,29 @@ class UserPrivelegeRepository extends GenericRepository<
 		}
 	}
 
+	public filterOutdatedPriveleges() {
+		try {
+			if (this.record) {
+				this.lastOperationResult = this.record.privelege100 =
+					this.record.privelege100.filter(
+						(el) => new Date().getTime() <= new Date(el.expiresAt).getTime(),
+					);
+				this.lastOperationResult = this.record.privelege500 =
+					this.record.privelege500.filter(
+						(el) => new Date().getTime() <= new Date(el.expiresAt).getTime(),
+					);
+
+				Logger.debug(`${this.filterOutdatedPriveleges.name}`);
+			}
+
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.filterOutdatedPriveleges.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
+
 	public createUserPrivelege(): this {
 		const now = new Date();
 		this.record = new UserPrivelege();

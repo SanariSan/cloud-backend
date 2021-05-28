@@ -8,6 +8,7 @@ import {
 	IGroupPathManualInput,
 } from "../../database";
 import bcrypt from "bcrypt";
+import config from "config";
 
 //req.body === {groupName: string, password: string}
 export const Create = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
@@ -25,7 +26,7 @@ export const Create = async (req: ProtectedRequest, res: Response, next: NextFun
 	const newGroupPath: IGroupPathManualInput = {
 		pathName: userRecord.email,
 		sizeUsed: 0,
-		sizeMax: 15,
+		sizeMax: config.get("privelege.defaultStorageSizeGb"),
 	};
 
 	//create group and group path
@@ -38,11 +39,17 @@ export const Create = async (req: ProtectedRequest, res: Response, next: NextFun
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
 
+	//add empty priveleges record for later purchases
+	await req.userPrivelegeRepository.createUserPrivelege().saveRecord();
+	const userPrivelegeRecord = req.userPrivelegeRepository.getRecord();
+	if (!userPrivelegeRecord) throw new Error();
+
 	// await helper.fs = create directory(req.groupPathRepository.getRecord().pathName)
 
 	await req.userRepository
 		.addGroupOwnage(groupRecord)
 		.addGroupParticipance(groupRecord)
+		.addUserPrivelege(userPrivelegeRecord)
 		.saveRecord();
 
 	//add user's record to group participants list, link path ownage

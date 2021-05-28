@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Privelege100 } from "./privelege-100.model";
 import { Privelege500 } from "./privelege-500.model";
-import { User } from "./user.model";
 
 @Entity()
 export class UserPrivelege {
