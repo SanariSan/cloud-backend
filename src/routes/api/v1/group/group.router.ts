@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { asyncHandle } from "../../../../helpers";
-import { Authentificate, StickRepos } from "../../../../controllers";
+import { AsyncHandle, Authentificate, StickRepos } from "../../../../controllers";
 import { GroupCreate } from "./create.route";
 import { GroupSearchByName } from "./search-by-name.route";
 import { GroupSearchByEmail } from "./search-by-email.route";
@@ -10,26 +9,41 @@ import { GroupChangePassword } from "./change-password.route";
 
 const GroupRouter = Router();
 
-GroupRouter.post("/create", asyncHandle(StickRepos), asyncHandle(Authentificate), asyncHandle(GroupCreate));
-GroupRouter.post("/join", asyncHandle(StickRepos), asyncHandle(Authentificate), asyncHandle(GroupJoin));
-GroupRouter.post("/leave", asyncHandle(StickRepos), asyncHandle(Authentificate), asyncHandle(GroupLeave));
 GroupRouter.post(
-    "/change-password",
-    asyncHandle(StickRepos),
-    asyncHandle(Authentificate),
-    asyncHandle(GroupChangePassword),
+	"/create",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(GroupCreate),
 );
 GroupRouter.post(
-    "/search-by-name",
-    asyncHandle(StickRepos),
-    asyncHandle(Authentificate),
-    asyncHandle(GroupSearchByName),
+	"/join",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(GroupJoin),
 );
 GroupRouter.post(
-    "/search-by-email",
-    asyncHandle(StickRepos),
-    asyncHandle(Authentificate),
-    asyncHandle(GroupSearchByEmail),
+	"/leave",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(GroupLeave),
+);
+GroupRouter.post(
+	"/change-password",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(GroupChangePassword),
+);
+GroupRouter.post(
+	"/search-by-name",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(GroupSearchByName),
+);
+GroupRouter.post(
+	"/search-by-email",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(GroupSearchByEmail),
 );
 
 export { GroupRouter };

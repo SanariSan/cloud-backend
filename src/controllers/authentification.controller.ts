@@ -4,32 +4,38 @@ import { JWT, AuthFailureError, AccessTokenError, TokenExpiredError } from "../c
 import { getToken, validateTokenData } from "../helpers";
 import { USER_RELATIONS } from "../database";
 
-const Authentificate = async (req: ProtectedRequest, res: Response, next: NextFunction): Promise<any> => {
-    const accessToken = getToken(req.headers.authorization);
+const Authentificate = async (
+	req: ProtectedRequest,
+	res: Response,
+	next: NextFunction,
+): Promise<any> => {
+	const accessToken = getToken(req.headers.authorization);
 
-    try {
-        const accessTokenPayload = await JWT.validate(accessToken);
-        validateTokenData(accessTokenPayload);
+	try {
+		const accessTokenPayload = await JWT.validate(accessToken);
+		validateTokenData(accessTokenPayload);
 
-        let user = await req.userRepository
-            .findById(accessTokenPayload.sub, [
-                USER_RELATIONS.KEYSTORE,
-                USER_RELATIONS.GROUPS_PARTICIPATE,
-                USER_RELATIONS.GROUP_OWNAGE,
-                USER_RELATIONS.USER_PRIVELEGE,
-            ])
-            .then(_ => _.getRecord());
-        if (!user) throw new AuthFailureError("User not registered");
+		let user = await req.userRepository
+			.findById(accessTokenPayload.sub, [
+				USER_RELATIONS.KEYSTORE,
+				USER_RELATIONS.GROUPS_PARTICIPATE,
+				USER_RELATIONS.GROUP_OWNAGE,
+				USER_RELATIONS.USER_PRIVELEGE,
+			])
+			.then((_) => _.getRecord());
+		if (!user) throw new AuthFailureError("User not registered");
 
-        let keystore = await req.keystoreRepository.findByToken(accessTokenPayload.prm).then(_ => _.getRecord());
-        if (!keystore) throw new AuthFailureError("Invalid access token");
+		let keystore = await req.keystoreRepository
+			.findByToken(accessTokenPayload.prm)
+			.then((_) => _.getRecord());
+		if (!keystore) throw new AuthFailureError("Invalid access token");
 
-        req.accessTokenPayload = accessTokenPayload;
-        return next();
-    } catch (e) {
-        if (e instanceof TokenExpiredError) throw new AccessTokenError(e.message);
-        throw e;
-    }
+		req.accessTokenPayload = accessTokenPayload;
+		return next();
+	} catch (e) {
+		if (e instanceof TokenExpiredError) throw new AccessTokenError(e.message);
+		throw e;
+	}
 };
 
 export { Authentificate };

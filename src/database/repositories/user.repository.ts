@@ -4,119 +4,119 @@ import { IUserManualInput, ENTITIES, TUserKeys, DBManager, USER_RELATIONS } from
 import { GenericRepository } from "./generic.repository";
 
 class UserRepository extends GenericRepository<User, TUserKeys, USER_RELATIONS> {
-    constructor(dbManager: DBManager) {
-        super(ENTITIES.USER, dbManager);
-    }
+	constructor(dbManager: DBManager) {
+		super(ENTITIES.USER, dbManager);
+	}
 
-    public async findByEmail(email: string, relations?: Array<USER_RELATIONS>): Promise<this> {
-        try {
-            if (this.repository) {
-                this.record = this.lastOperationResult = <User | null>this.convertToNull(
-                    <User>await this.repository.findOne({
-                        where: {
-                            email,
-                        },
-                        relations,
-                    }),
-                );
+	public async findByEmail(email: string, relations?: Array<USER_RELATIONS>): Promise<this> {
+		try {
+			if (this.repository) {
+				this.record = this.lastOperationResult = <User | null>this.convertToNull(
+					<User>await this.repository.findOne({
+						where: {
+							email,
+						},
+						relations,
+					}),
+				);
 
-                Logger.debug(`${this.findByEmail.name}`);
-            }
+				Logger.debug(`${this.findByEmail.name}`);
+			}
 
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${this.findByEmail.name}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.findByEmail.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
 
-    public addKeystore(keystore: Keystore): this {
-        try {
-            if (this.repository && this.record) {
-                this.lastOperationResult = this.record.keystore.push(keystore);
+	public addKeystore(keystore: Keystore): this {
+		try {
+			if (this.repository && this.record) {
+				this.lastOperationResult = this.record.keystore.push(keystore);
 
-                Logger.debug(`${this.addKeystore.name}`);
-            }
+				Logger.debug(`${this.addKeystore.name}`);
+			}
 
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${this.addKeystore.name}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.addKeystore.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
 
-    public addGroupOwnage(group: Group): this {
-        try {
-            if (this.repository && this.record) {
-                this.record.groupOwnage = this.lastOperationResult = group;
+	public addGroupOwnage(group: Group): this {
+		try {
+			if (this.repository && this.record) {
+				this.record.groupOwnage = this.lastOperationResult = group;
 
-                Logger.debug(`${this.addGroupOwnage.name}`);
-            }
+				Logger.debug(`${this.addGroupOwnage.name}`);
+			}
 
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${this.addGroupOwnage.name}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.addGroupOwnage.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
 
-    public addGroupParticipance(group: Group): this {
-        try {
-            if (this.repository && this.record) {
-                this.lastOperationResult = this.record.groupsParticipate.push(group);
+	public addGroupParticipance(group: Group): this {
+		try {
+			if (this.repository && this.record) {
+				this.lastOperationResult = this.record.groupsParticipate.push(group);
 
-                Logger.debug(`${this.addGroupParticipance.name}`);
-            }
+				Logger.debug(`${this.addGroupParticipance.name}`);
+			}
 
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${this.addGroupParticipance.name}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.addGroupParticipance.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
 
-    public addUserPrivelege(userPrivelege: UserPrivelege): this {
-        try {
-            if (this.repository && this.record) {
-                this.record.userPrivelege = this.lastOperationResult = userPrivelege;
+	public addUserPrivelege(userPrivelege: UserPrivelege): this {
+		try {
+			if (this.repository && this.record) {
+				this.record.userPrivelege = this.lastOperationResult = userPrivelege;
 
-                Logger.debug(`${this.addUserPrivelege.name}`);
-            }
+				Logger.debug(`${this.addUserPrivelege.name}`);
+			}
 
-            return this;
-        } catch (err) {
-            this.lastOperationResult = `Error in ${this.addUserPrivelege.name}, ${err}`;
-            Logger.warn(this.lastOperationResult);
-            throw new Error(this.lastOperationResult);
-        }
-    }
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.addUserPrivelege.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
 
-    //IF WANT TO removeRecord
-    //check somehow if all keystores for this user deleted
-    //check somehow if all relations to groups deleted
+	//IF WANT TO removeRecord
+	//check somehow if all keystores for this user deleted
+	//check somehow if all relations to groups deleted
 
-    public createUser(user: IUserManualInput): this {
-        const now = new Date();
-        this.record = new User();
+	public createUser(user: IUserManualInput): this {
+		const now = new Date();
+		this.record = new User();
 
-        this.record.name = user.name;
-        this.record.email = user.email;
-        this.record.password = user.password;
-        this.record.profilePicUrl = user.profilePicUrl;
-        this.record.keystore = [];
-        this.record.groupsParticipate = [];
-        this.record.createdAt = now;
-        this.record.updatedAt = now;
+		this.record.name = user.name;
+		this.record.email = user.email;
+		this.record.password = user.password;
+		this.record.profilePicUrl = user.profilePicUrl;
+		this.record.keystore = [];
+		this.record.groupsParticipate = [];
+		this.record.createdAt = now;
+		this.record.updatedAt = now;
 
-        this.lastOperationResult = this.record;
-        Logger.debug(`${this.createUser.name}`);
+		this.lastOperationResult = this.record;
+		Logger.debug(`${this.createUser.name}`);
 
-        return this;
-    }
+		return this;
+	}
 }
 
 export { UserRepository };

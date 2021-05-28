@@ -1,22 +1,22 @@
 {
-    "extends": "./tsconfig-base.json",
-    "compilerOptions": {
-        "target": "ES2020",
-        "module": "CommonJS",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "allowJs": false,
-        "forceConsistentCasingInFileNames": true,
-        "rootDir": "src",
-        "outDir": "dist",
-        "sourceMap": true,
-        "declaration": false,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "pretty": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
-    },
-    "include": ["src/**/*", "/music-src/**/*"],
-    "exclude": ["node_modules"]
+	"extends": "./tsconfig-base.json",
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"allowJs": false,
+		"forceConsistentCasingInFileNames": true,
+		"rootDir": "src",
+		"outDir": "dist",
+		"sourceMap": true,
+		"declaration": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"pretty": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true
+	},
+	"include": ["src/**/*", "/music-src/**/*"],
+	"exclude": ["node_modules"]
 }
