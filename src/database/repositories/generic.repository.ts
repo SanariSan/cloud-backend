@@ -142,7 +142,7 @@ class GenericRepository<
 
 				if (ids.length !== 0) {
 					this.lastOperationResult = <DeleteResult>await this.repository.delete(ids);
-					this.record = null;
+					this.records = [];
 
 					Logger.debug(`${this.removeRecord.name}`);
 				}

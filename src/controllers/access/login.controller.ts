@@ -6,9 +6,8 @@ import { PreparedRequest } from "../../types";
 import bcrypt from "bcrypt";
 
 export const Login = async (req: PreparedRequest, res: Response, next: NextFunction) => {
-	await req.userRepository.findByEmail(req.body.email, [EUSER_RELATIONS.KEYSTORE]);
-
 	//get user's record if exists
+	await req.userRepository.findByEmail(req.body.email, [EUSER_RELATIONS.KEYSTORE]);
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new BadRequestError("User not registered");
 

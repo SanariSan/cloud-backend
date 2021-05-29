@@ -79,6 +79,25 @@ class UserRepository extends GenericRepository<User, EUSER_KEYS, EUSER_RELATIONS
 		}
 	}
 
+	public removeGroupParticipance(group: Group): this {
+		try {
+			if (this.repository && this.record) {
+				this.record.groupsParticipate = this.lastOperationResult =
+					this.record.groupsParticipate.filter(
+						(existingGroup: Group) => existingGroup.id !== group.id,
+					);
+
+				Logger.debug(`${this.removeGroupParticipance.name}`);
+			}
+
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.removeGroupParticipance.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
+
 	public addUserPrivelege(userPrivelege: UserPrivelege): this {
 		try {
 			if (this.repository && this.record) {

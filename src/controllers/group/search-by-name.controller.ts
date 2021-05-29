@@ -12,14 +12,20 @@ export const SearchByName = async (req: ProtectedRequest, res: Response, next: N
 		groupName: string;
 	}> = [];
 
+	//get all existing users records, if any exist :_)
 	await req.userRepository.findByIds([], [EUSER_RELATIONS.GROUP_OWNAGE]);
 	const userRecords = req.userRepository.getRecords();
-	if (!userRecords) throw new NoEntryError("No Users Found");
+	if (!userRecords || !userRecords.some((el) => el)) throw new NoEntryError("No Users Found");
 
+	//get users who own groups and whose group name matches search request/includes search request
+	//sort by name and take top 50
 	const filteredUsers = userRecords
 		.filter((el) => el.groupOwnage)
-		.filter((el) => el.groupOwnage.name === req.body.groupName);
+		.filter((el) => el.groupOwnage.name.includes(req.body.groupName))
+		.sort((a, b) => b.groupOwnage.name.length - a.groupOwnage.name.length)
+		.slice(0, 50);
 
+	//if any groups found - return info
 	if (filteredUsers.length !== 0)
 		result = filteredUsers.map((el) => ({
 			ownerId: el.id,

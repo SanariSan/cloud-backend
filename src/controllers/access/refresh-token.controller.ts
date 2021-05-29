@@ -14,17 +14,13 @@ export const Refresh = async (req: ProtectedRequest, res: Response, next: NextFu
 	if (accessTokenPayload.sub !== refreshTokenPayload.sub)
 		throw new AuthFailureError("Access token holder mismatch");
 
-	//search for user
-	await req.userRepository.findById(accessTokenPayload.sub, [EUSER_RELATIONS.KEYSTORE]);
-
 	//get user's record if exists
+	await req.userRepository.findById(accessTokenPayload.sub, [EUSER_RELATIONS.KEYSTORE]);
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new AuthFailureError("User not registered");
 
-	//search the keystore
+	//get keystore if exists (not needed further, just for the check)
 	await req.keystoreRepository.findByBothTokens(accessTokenPayload.prm, refreshTokenPayload.prm);
-
-	//get if exists (not needed further, just for the check)
 	const keystoreRecord = req.keystoreRepository.getRecord();
 	if (!keystoreRecord) throw new AuthFailureError("Token pair not found");
 

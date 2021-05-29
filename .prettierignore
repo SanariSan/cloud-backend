@@ -1,0 +1,7 @@
+dist/
+logs/
+logs-dev/
+node_modules/
+storage/
+.git/
+*.md

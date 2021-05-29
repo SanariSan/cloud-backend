@@ -6,17 +6,16 @@ import bcrypt from "bcrypt";
 
 // req.body === {groupId: id, password: string, }
 export const Join = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
-	//search for target group
+	//get group record if exists
 	await req.groupRepository.findById(req.body.groupId, [EGROUP_RELATIONS.USERS_PARTICIPATE]);
-
-	//if found - get record
 	const groupRecord = req.groupRepository.getRecord();
-	if (!groupRecord) throw new Error();
+	if (!groupRecord) throw new BadRequestError("Requested group not found");
 
 	//check pass
 	const matchPass: boolean = await bcrypt.compare(req.body.password, groupRecord.password);
 	if (!matchPass) throw new AuthFailureError("Authentication failure");
 
+	//get user record if exists
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
@@ -27,9 +26,8 @@ export const Join = async (req: ProtectedRequest, res: Response, next: NextFunct
 
 	//add target group's record to user's groups list
 	await req.userRepository.addGroupParticipance(groupRecord).saveRecord();
-
 	//add user's record to target group's users list
-	await req.groupRepository.addUser(userRecord).saveRecord();
+	await req.groupRepository.addParticipant(userRecord).saveRecord();
 
 	return new SuccessResponse("Group join successful", {
 		group: req.groupRepository.getRecord([EGROUP_KEYS.ID, EGROUP_KEYS.NAME]),

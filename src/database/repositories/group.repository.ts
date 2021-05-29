@@ -31,24 +31,24 @@ class GroupRepository extends GenericRepository<Group, EGROUP_KEYS, EGROUP_RELAT
 	}
 
 	//add user to group
-	public addUser(user: User): this {
+	public addParticipant(user: User): this {
 		try {
 			if (this.record) {
 				this.lastOperationResult = this.record.usersParticipate.push(user);
 
-				Logger.debug(`${this.addUser.name}`);
+				Logger.debug(`${this.addParticipant.name}`);
 			}
 
 			return this;
 		} catch (err) {
-			this.lastOperationResult = `Error in ${this.addUser.name}, ${err}`;
+			this.lastOperationResult = `Error in ${this.addParticipant.name}, ${err}`;
 			Logger.warn(this.lastOperationResult);
 			throw new Error(this.lastOperationResult);
 		}
 	}
 
 	//remove user from group
-	public removeUser(user: User): this {
+	public removeParticipant(user: User): this {
 		try {
 			if (this.record) {
 				this.record.usersParticipate = this.lastOperationResult =
@@ -56,12 +56,12 @@ class GroupRepository extends GenericRepository<Group, EGROUP_KEYS, EGROUP_RELAT
 						(existingUser: User) => existingUser.id !== user.id,
 					);
 
-				Logger.debug(`${this.removeUser.name}`);
+				Logger.debug(`${this.removeParticipant.name}`);
 			}
 
 			return this;
 		} catch (err) {
-			this.lastOperationResult = `Error in ${this.removeUser.name}, ${err}`;
+			this.lastOperationResult = `Error in ${this.removeParticipant.name}, ${err}`;
 			Logger.warn(this.lastOperationResult);
 			throw new Error(this.lastOperationResult);
 		}

@@ -15,22 +15,22 @@ export const Create = async (req: ProtectedRequest, res: Response, next: NextFun
 	//get user's record
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
-
 	if (userRecord.groupOwnage) throw new BadRequestError("You already have group");
 
+	//initialize new group and path objects
 	const newGroup: IGroupManualInput = {
 		name: req.body.groupName,
 		password: await bcrypt.hash(req.body.password, 12),
 	};
-
 	const newGroupPath: IGroupPathManualInput = {
 		pathName: userRecord.email,
 		sizeUsed: 0,
 		sizeMax: config.get("privelege.defaultStorageSizeGb"),
 	};
 
-	//create group and group path
+	//create group record
 	await req.groupRepository.createGroup(newGroup).saveRecord();
+	//create group path record
 	await req.groupPathRepository.createGroupPath(newGroupPath).saveRecord();
 
 	//check if records exist, if so - get them
@@ -44,16 +44,22 @@ export const Create = async (req: ProtectedRequest, res: Response, next: NextFun
 	const userPrivelegeRecord = req.userPrivelegeRepository.getRecord();
 	if (!userPrivelegeRecord) throw new Error();
 
-	// await helper.fs = create directory(req.groupPathRepository.getRecord().pathName)
+	//XXXXXXXX!!!!!!!!!!!!?????XXXXXXXX
+	//await helper.fs = create directory(req.groupPathRepository.getRecord().pathName)
+	///???!!!!!!!!!!!!!!!!!!!!!
 
+	//add all created info to relations listed below
 	await req.userRepository
 		.addGroupOwnage(groupRecord)
 		.addGroupParticipance(groupRecord)
 		.addUserPrivelege(userPrivelegeRecord)
 		.saveRecord();
 
-	//add user's record to group participants list, link path ownage
-	await req.groupRepository.addUser(userRecord).addPathOwnage(groupPathRecord).saveRecord();
+	//add user's record to group participants list + link path ownage
+	await req.groupRepository
+		.addParticipant(userRecord)
+		.addPathOwnage(groupPathRecord)
+		.saveRecord();
 
 	return new SuccessResponse("Group created", {
 		group: req.groupRepository.getRecord([EGROUP_KEYS.ID, EGROUP_KEYS.NAME]),

@@ -94,7 +94,7 @@ async function test() {
 	const privelege500Record = privelege500Repository.getRecord();
 	if (!privelege500Record) throw new Error();
 
-	await groupRepository.addUser(userRecord).addPathOwnage(groupPathRecord).saveRecord();
+	await groupRepository.addParticipant(userRecord).addPathOwnage(groupPathRecord).saveRecord();
 	await userPrivelegeRepository
 		.addPrivelege100(privelege100Record)
 		.addPrivelege500(privelege500Record)

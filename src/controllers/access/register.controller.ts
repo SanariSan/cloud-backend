@@ -6,11 +6,12 @@ import { EUSER_KEYS } from "../../database";
 import bcrypt from "bcrypt";
 
 export const Register = async (req: PreparedRequest, res: Response, next: NextFunction) => {
+	//get user record if exists, throw err cuz of register
 	await req.userRepository.findByEmail(req.body.email);
-
 	const userRecord = req.userRepository.getRecord();
 	if (userRecord) throw new BadRequestError("User already registered");
 
+	//create new user obj
 	const newUser = {
 		name: req.body.name,
 		email: req.body.email,
