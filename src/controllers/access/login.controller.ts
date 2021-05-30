@@ -5,7 +5,7 @@ import { EUSER_RELATIONS, EUSER_KEYS } from "../../database";
 import { PreparedRequest } from "../../types";
 import bcrypt from "bcrypt";
 
-export const Login = async (req: PreparedRequest, res: Response, next: NextFunction) => {
+export const AccessLogin = async (req: PreparedRequest, res: Response, next: NextFunction) => {
 	//get user's record if exists
 	await req.userRepository.findByEmail(req.body.email, [EUSER_RELATIONS.KEYSTORE]);
 	const userRecord = req.userRepository.getRecord();

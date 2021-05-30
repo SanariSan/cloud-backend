@@ -11,6 +11,7 @@
 		"drop-logs-prod": "rm -rf ./logs-prod",
 		"launch-prod": "cross-env NODE_ENV=production node ./dist/app.js",
 		"launch-dev": "cross-env NODE_ENV=development node ./dist/app.js",
+		"launch-test-api": "cross-env NODE_ENV=development node ./dist/test-api/test.test-api.js",
 		"prettier": "prettier -w --config ./.prettierrc.json ."
 	},
 	"dependencies": {

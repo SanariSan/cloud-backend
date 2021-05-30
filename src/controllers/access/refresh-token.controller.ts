@@ -1,10 +1,10 @@
 import { Response, NextFunction } from "express";
-import { AuthFailureError, JWT, TokenRefreshResponse } from "../../core";
+import { AuthFailureError, JWT, SuccessResponse } from "../../core";
 import { EUSER_RELATIONS } from "../../database";
 import { ProtectedRequest } from "../../types";
 import { getToken, validateTokenData, setNewTokenPair } from "../../helpers";
 
-export const Refresh = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const AccessRefresh = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const accessTokenPayload = await JWT.validateNoExp(getToken(req.headers.authorization));
 	validateTokenData(accessTokenPayload);
 	const refreshTokenPayload = await JWT.validate(req.body.refreshToken);
@@ -30,7 +30,5 @@ export const Refresh = async (req: ProtectedRequest, res: Response, next: NextFu
 	//create fresh new keystore, assign to user
 	const tokens = await setNewTokenPair(req.userRepository, req.keystoreRepository);
 
-	return new TokenRefreshResponse("Token Issued", tokens.accessToken, tokens.refreshToken).send(
-		res,
-	);
+	return new SuccessResponse("Token Issued", { tokens }).send(res);
 };

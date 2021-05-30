@@ -4,7 +4,11 @@ import { AuthFailureError, SuccessMsgResponse } from "../../core";
 import bcrypt from "bcrypt";
 
 // req.body === {oldPassword: string, newPassword: string, }
-export const ChangePassword = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const AccessChangePassword = async (
+	req: ProtectedRequest,
+	res: Response,
+	next: NextFunction,
+) => {
 	//get user record if exists
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
@@ -23,8 +27,9 @@ export const ChangePassword = async (req: ProtectedRequest, res: Response, next:
 	//remove all keystore records if any exists, relation to user's records removes automatically
 	await req.keystoreRepository.findByIds(userKeystoresIds);
 	const keystoreRecords = req.keystoreRepository.getRecords();
-	if (keystoreRecords && keystoreRecords.some((el) => el))
-		await req.keystoreRepository.removeRecords().then((_) => _.saveRecord());
+
+	if (keystoreRecords && keystoreRecords.length !== 0)
+		await req.keystoreRepository.removeRecords();
 
 	return new SuccessMsgResponse("Password changed, login again").send(res);
 };

@@ -2,12 +2,12 @@ import { Router } from "express";
 import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
 import { Validate, ValidationSource } from "../../../../helpers";
 import {
-	Create,
-	SearchByName,
-	SearchByEmail,
-	Join,
-	Leave,
-	ChangePassword,
+	GroupCreate,
+	GroupSearchByName,
+	GroupSearchByEmail,
+	GroupJoin,
+	GroupLeave,
+	GroupChangePassword,
 } from "../../../../controllers/group";
 import { Schema } from "./group.schema";
 
@@ -19,23 +19,27 @@ GroupRouter.post(
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 );
-GroupRouter.post("/create", Validate(Schema.create, ValidationSource.BODY), AsyncHandle(Create));
-GroupRouter.post("/join", Validate(Schema.join, ValidationSource.BODY), AsyncHandle(Join));
-GroupRouter.post("/leave", Validate(Schema.leave, ValidationSource.BODY), AsyncHandle(Leave));
+GroupRouter.post(
+	"/create",
+	Validate(Schema.create, ValidationSource.BODY),
+	AsyncHandle(GroupCreate),
+);
+GroupRouter.post("/join", Validate(Schema.join, ValidationSource.BODY), AsyncHandle(GroupJoin));
+GroupRouter.post("/leave", Validate(Schema.leave, ValidationSource.BODY), AsyncHandle(GroupLeave));
 GroupRouter.post(
 	"/change-password",
 	Validate(Schema.changePassword, ValidationSource.BODY),
-	AsyncHandle(ChangePassword),
+	AsyncHandle(GroupChangePassword),
 );
 GroupRouter.post(
 	"/search-by-name",
 	Validate(Schema.searchByName, ValidationSource.BODY),
-	AsyncHandle(SearchByName),
+	AsyncHandle(GroupSearchByName),
 );
 GroupRouter.post(
 	"/search-by-email",
 	Validate(Schema.searchByEmail, ValidationSource.BODY),
-	AsyncHandle(SearchByEmail),
+	AsyncHandle(GroupSearchByEmail),
 );
 
 export { GroupRouter };
