@@ -1,83 +1,114 @@
 import { Response } from "express";
+import { ObjectLiteral } from "typeorm";
 import { ResponseStatus, StatusCode, THttpCall } from "./types.type";
 
-abstract class ApiResponse {
+//-------------------------------
+//Abstract parent
+
+abstract class ApiResponseAbstract {
 	protected abstract statusCode: StatusCode;
 	protected abstract status?: ResponseStatus;
 	protected abstract message: string;
+	protected abstract body:
+		| string
+		| { statusCode: StatusCode; message: string; data: ObjectLiteral }
+		| any;
 
 	protected constructor() {}
 
-	protected abstract prepare<T extends ApiResponse>(res: Response, newResponseData: T): THttpCall;
+	protected abstract setStatus(res: Response): this;
+	protected abstract sanitize(): this;
+	protected abstract finish(res: Response): THttpCall;
+	protected abstract chainCaller(res: Response): THttpCall;
 	public abstract send(res: Response): THttpCall;
-	protected static sanitize<T extends ApiResponse>(newResponseData: T): T {
-		const clone: T = <T>{};
-		Object.assign(clone, newResponseData);
-		//response body now has statusCode, status, message from ApiResponse + internal fields of instance class
-		//so we want to delete all the fields we don't want to send to the client
-		delete clone.status;
-		return clone;
+}
+
+//------------------------------
+//Parents for response classes
+
+class ApiResponse extends ApiResponseAbstract {
+	protected statusCode: StatusCode;
+	protected status?: ResponseStatus;
+	protected message: string;
+	protected body: any;
+
+	protected constructor(statusCode, status, message) {
+		super();
+
+		this.statusCode = statusCode;
+		this.status = status;
+		this.message = message;
+		this.body = {};
+	}
+
+	protected setStatus(res: Response): this {
+		res.status(<number>this.status);
+		return this;
+	}
+
+	//response body now has statusCode, status, message from ApiResponse + internal fields of child class
+	//so we want to clone fields to body and delete all that we don't want to send to the client
+	protected sanitize() {
+		Object.assign(this.body, this);
+		//avoiding circular dependency since this has body in it, so we are getting ref*
+		delete this.body.body;
+		//this field only needs to be used in setStatus, not including into body
+		delete this.body.status;
+
+		return this;
+	}
+
+	protected finish(res: Response): THttpCall {
+		return res.send(this.body);
+	}
+
+	protected chainCaller(res: Response): THttpCall {
+		return this.setStatus(res).sanitize().finish(res);
+	}
+
+	public send(res: Response): THttpCall {
+		return this.chainCaller(res);
 	}
 }
 
 class SingleApiResponse extends ApiResponse {
-	protected statusCode: StatusCode;
-	protected status?: ResponseStatus;
-	protected message: string;
-
 	protected constructor(statusCode, status, message) {
-		super();
-
-		this.statusCode = statusCode;
-		this.status = status;
-		this.message = message;
+		super(statusCode, status, message);
 	}
 
-	protected prepare<T extends ApiResponse>(res: Response, newResponseData: T): THttpCall {
-		return res.status(<number>this.status).json(ApiResponse.sanitize<T>(newResponseData));
-	}
-
-	public send(res: Response): THttpCall {
-		return this.prepare<ApiResponse>(res, this);
+	protected finish(res: Response): THttpCall {
+		return res.json(this.body);
 	}
 }
 
 class StreamApiResponse extends ApiResponse {
-	protected statusCode: StatusCode;
-	protected status?: ResponseStatus;
-	protected message: string;
+	protected lastPiece?: boolean;
 
-	protected constructor(statusCode, status, message) {
-		super();
+	protected constructor(statusCode, status, message, lastPiece) {
+		super(statusCode, status, message);
 
-		this.statusCode = statusCode;
-		this.status = status;
-		this.message = message;
+		this.lastPiece = lastPiece;
 	}
 
-	protected prepare<T extends ApiResponse>(res: Response, newResponseData: T): THttpCall {
-		res.status(<number>this.status);
-		//@ts-ignore
-		if (!newResponseData.last) {
-			res.write(StreamApiResponse.sanitize<T>(newResponseData));
+	protected sanitize(): this {
+		this.body = this.message;
+
+		return this;
+	}
+
+	protected finish(res: Response): THttpCall {
+		if (!this.lastPiece) {
+			res.write(this.body);
 		} else {
 			res.end();
 		}
 
 		return res;
 	}
-
-	public send(res: Response): THttpCall {
-		return this.prepare<ApiResponse>(res, this);
-	}
-
-	protected static sanitize<T extends ApiResponse>(newResponseData: T): T {
-		// const clone: T = <T>{};
-		// Object.assign(clone, newResponseData);
-		//@ts-ignore
-		return newResponseData.data;
-	}
 }
+
+//-------------------------------
+//Error response childs
 
 export class AuthFailureResponse extends SingleApiResponse {
 	constructor(message = "Authentication Failure") {
@@ -86,17 +117,21 @@ export class AuthFailureResponse extends SingleApiResponse {
 }
 
 export class NotFoundResponse extends SingleApiResponse {
-	public url?: string;
+	protected url?: string;
 
 	constructor(message = "Not Found") {
 		super(StatusCode.FAILURE, ResponseStatus.NOT_FOUND, message);
 	}
 
-	//reimplementing send method to include url field from express res obj
-	public send(res: Response): THttpCall {
+	protected addFields(res: Response): this {
 		// including path we could not find (if invoked for path)
 		if (res.req) this.url = res.req.originalUrl;
-		return super.prepare<NotFoundResponse>(res, this);
+		return this;
+	}
+
+	//reimplementing send method to modify this object
+	public send(res: Response): THttpCall {
+		return this.addFields(res).chainCaller(res);
 	}
 }
 
@@ -112,40 +147,14 @@ export class InternalErrorResponse extends SingleApiResponse {
 	}
 }
 
-//not used
-// export class FailureMsgResponse extends SingleApiResponse {
-//     constructor(message: string) {
-//         super(StatusCode.FAILURE, ResponseStatus.SUCCESS, message);
-//     }
-// }
-
 export class AccessTokenErrorResponse extends SingleApiResponse {
 	constructor(message = "Access token invalid") {
 		super(StatusCode.INVALID_ACCESS_TOKEN, ResponseStatus.UNAUTHORIZED, message);
 	}
-
-	//reimplementing send method to include unusual header
-	public send(res: Response): THttpCall {
-		res.setHeader("instruction", "refresh_token");
-		return super.prepare<AccessTokenErrorResponse>(res, this);
-	}
 }
 
-export class TokenRefreshResponse extends SingleApiResponse {
-	private accessToken: string;
-	private refreshToken: string;
-
-	constructor(message: string, accessToken, refreshToken) {
-		super(StatusCode.SUCCESS, ResponseStatus.SUCCESS, message);
-		this.accessToken = accessToken;
-		this.refreshToken = refreshToken;
-	}
-
-	//reimplementing send method to pass new fields types (tokens) to generic
-	public send(res: Response): THttpCall {
-		return super.prepare<TokenRefreshResponse>(res, this);
-	}
-}
+//-------------------------------
+//Success response childs
 
 export class SuccessMsgResponse extends SingleApiResponse {
 	constructor(message: string) {
@@ -160,23 +169,15 @@ export class SuccessResponse<T> extends SingleApiResponse {
 		super(StatusCode.SUCCESS, ResponseStatus.SUCCESS, message);
 		this.data = data;
 	}
-
-	//reimplementing send method to pass new field type (data) to generic
-	public send(res: Response): THttpCall {
-		return super.prepare<SuccessResponse<T>>(res, this);
-	}
 }
 
-export class StreamResponse<T> extends StreamApiResponse {
-	private data: T;
-
-	constructor(message: string, data, last: Boolean = false) {
-		super(StatusCode.SUCCESS, last ? ResponseStatus.SUCCESS : ResponseStatus.CHUNK, message);
-		this.data = data;
-	}
-
-	//reimplementing send method to pass new field type (data) to generic
-	public send(res: Response): THttpCall {
-		return super.prepare<StreamResponse<T>>(res, this);
+export class StreamResponse extends StreamApiResponse {
+	constructor(message: string, lastPiece: Boolean = false) {
+		super(
+			StatusCode.SUCCESS,
+			lastPiece ? ResponseStatus.SUCCESS : ResponseStatus.CHUNK,
+			message,
+			lastPiece,
+		);
 	}
 }
