@@ -116,6 +116,12 @@ export class AuthFailureResponse extends SingleApiResponse {
 	}
 }
 
+export class ForbiddenResponse extends SingleApiResponse {
+	constructor(message = "Forbidden") {
+		super(StatusCode.FAILURE, ResponseStatus.FORBIDDEN, message);
+	}
+}
+
 export class NotFoundResponse extends SingleApiResponse {
 	protected url?: string;
 

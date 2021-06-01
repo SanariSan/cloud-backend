@@ -5,6 +5,7 @@ import {
 	InternalErrorResponse,
 	NotFoundResponse,
 	BadRequestResponse,
+	ForbiddenResponse,
 } from "./api-response.core";
 import { Logger } from "./logger.core";
 import { Response } from "express";
@@ -25,6 +26,9 @@ export class ApiError extends Error {
 			case ErrorType.UNAUTHORIZED:
 				Logger.error(err.message); //add fields from res such as pwd, token, etc...
 				return new AuthFailureResponse(err.message).send(res);
+			case ErrorType.FORBIDDEN:
+				Logger.error(err.message);
+				return new ForbiddenResponse(err.message).send(res);
 			case ErrorType.ACCESS_TOKEN:
 				Logger.error(err.message);
 				return new AccessTokenErrorResponse(err.message).send(res);
@@ -53,6 +57,12 @@ export class ApiError extends Error {
 export class AuthFailureError extends ApiError {
 	constructor(message = "Invalid Credentials") {
 		super(ErrorType.UNAUTHORIZED, message);
+	}
+}
+
+export class AuthorizationError extends ApiError {
+	constructor(message = "No permission") {
+		super(ErrorType.FORBIDDEN, message);
 	}
 }
 

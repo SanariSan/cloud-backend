@@ -23,7 +23,7 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
 		password: await bcrypt.hash(req.body.password, 12),
 	};
 	const newGroupPath: IGroupPathManualInput = {
-		pathName: userRecord.email,
+		pathName: await bcrypt.hash(userRecord.email, 12),
 		sizeUsed: 0,
 		sizeMax: config.get("privelege.defaultStorageSizeGb"),
 	};

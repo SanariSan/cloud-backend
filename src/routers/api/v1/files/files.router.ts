@@ -3,6 +3,7 @@ import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware"
 import { Validate, ValidationSource } from "../../../../helpers";
 import {} from "../../../../controllers/files";
 import { Schema } from "./files.schema";
+import { CheckGroupPermission } from "../../../../middleware/authorization.controller";
 
 const FilesRouter = Router();
 
@@ -11,6 +12,13 @@ const FilesRouter = Router();
 // 	Validate(Schema.auth, ValidationSource.HEADER),
 // 	AsyncHandle(StickRepos),
 // 	AsyncHandle(Authentificate),
+// 	AsyncHandle(CheckGroupPermission),
+// );
+
+// FilesRouter.post(
+// 	"/browse",
+// 	Validate(Schema.browse, ValidationSource.BODY),
+// 	AsyncHandle(FilesBrowse),
 // );
 
 // FilesRouter.post(
