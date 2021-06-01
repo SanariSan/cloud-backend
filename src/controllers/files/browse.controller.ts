@@ -9,6 +9,8 @@ export const FilesBrowse = async (req: ProtectedRequest, res: Response, next: Ne
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
+	//call (groupId, )
+
 	//get group record if exists (always true because of check above)
 	await req.groupRepository.findById(userRecord.groupOwnage.id);
 	const groupRecord = req.groupRepository.getRecord();
