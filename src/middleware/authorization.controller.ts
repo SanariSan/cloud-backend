@@ -11,10 +11,12 @@ const CheckGroupPermission = async (
 	if (!userRecord) throw new Error();
 
 	if (
-		req.body.groupId !== userRecord.groupOwnage ||
+		!req.params ||
+		!req.params.groupId ||
+		isNaN(parseInt(req.params.groupId)) ||
 		!userRecord.groupsParticipate ||
 		!userRecord.groupsParticipate.length ||
-		!userRecord.groupsParticipate.includes(req.body.groupId)
+		!userRecord.groupsParticipate.some((el) => el.id === parseInt(req.params.groupId))
 	) {
 		throw new AuthorizationError();
 	}

@@ -145,47 +145,47 @@ async function init() {
 		throw new Error();
 	});
 
-	await logoutUsers().catch((err: AxiosError) => {
-		const { status, statusText, data } = <AxiosResponse>err.response;
+	// await logoutUsers().catch((err: AxiosError) => {
+	// 	const { status, statusText, data } = <AxiosResponse>err.response;
 
-		if (logRes) console.log({ status, statusText, data });
-		throw new Error();
-	});
+	// 	if (logRes) console.log({ status, statusText, data });
+	// 	throw new Error();
+	// });
 
-	await loginUsers().catch((err: AxiosError) => {
-		const { status, statusText, data } = <AxiosResponse>err.response;
+	// await loginUsers().catch((err: AxiosError) => {
+	// 	const { status, statusText, data } = <AxiosResponse>err.response;
 
-		if (logRes) console.log({ status, statusText, data });
-		throw new Error();
-	});
+	// 	if (logRes) console.log({ status, statusText, data });
+	// 	throw new Error();
+	// });
 
-	await loginUsers().catch((err: AxiosError) => {
-		const { status, statusText, data } = <AxiosResponse>err.response;
+	// await loginUsers().catch((err: AxiosError) => {
+	// 	const { status, statusText, data } = <AxiosResponse>err.response;
 
-		if (logRes) console.log({ status, statusText, data });
-		throw new Error();
-	});
+	// 	if (logRes) console.log({ status, statusText, data });
+	// 	throw new Error();
+	// });
 
-	await refreshUsers().catch((err: AxiosError) => {
-		const { status, statusText, data } = <AxiosResponse>err.response;
+	// await refreshUsers().catch((err: AxiosError) => {
+	// 	const { status, statusText, data } = <AxiosResponse>err.response;
 
-		if (logRes) console.log({ status, statusText, data });
-		throw new Error();
-	});
+	// 	if (logRes) console.log({ status, statusText, data });
+	// 	throw new Error();
+	// });
 
-	await changePasswordUsers().catch((err: AxiosError) => {
-		const { status, statusText, data } = <AxiosResponse>err.response;
+	// await changePasswordUsers().catch((err: AxiosError) => {
+	// 	const { status, statusText, data } = <AxiosResponse>err.response;
 
-		if (logRes) console.log({ status, statusText, data });
-		throw new Error();
-	});
+	// 	if (logRes) console.log({ status, statusText, data });
+	// 	throw new Error();
+	// });
 
-	await loginUsers().catch((err: AxiosError) => {
-		const { status, statusText, data } = <AxiosResponse>err.response;
+	// await loginUsers().catch((err: AxiosError) => {
+	// 	const { status, statusText, data } = <AxiosResponse>err.response;
 
-		if (logRes) console.log({ status, statusText, data });
-		throw new Error();
-	});
+	// 	if (logRes) console.log({ status, statusText, data });
+	// 	throw new Error();
+	// });
 
 	console.dir(USERS.user1);
 	console.dir(USERS.user2);

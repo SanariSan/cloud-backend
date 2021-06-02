@@ -8,7 +8,11 @@ import {
 	IGroupPathManualInput,
 } from "../../database";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+import { promisify } from "util";
 import config from "config";
+import { createFolder } from "../../core";
+const asyncBytes = promisify(crypto.randomBytes);
 
 //req.body === {groupName: string, password: string}
 export const GroupCreate = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
@@ -23,7 +27,7 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
 		password: await bcrypt.hash(req.body.password, 12),
 	};
 	const newGroupPath: IGroupPathManualInput = {
-		pathName: await bcrypt.hash(userRecord.email, 12),
+		pathName: (await asyncBytes(12)).toString("hex"),
 		sizeUsed: 0,
 		sizeMax: config.get("privelege.defaultStorageSizeGb"),
 	};
@@ -44,9 +48,8 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
 	const userPrivelegeRecord = req.userPrivelegeRepository.getRecord();
 	if (!userPrivelegeRecord) throw new Error();
 
-	//XXXXXXXX!!!!!!!!!!!!?????XXXXXXXX
-	//await helper.fs = create directory(req.groupPathRepository.getRecord().pathName)
-	///???!!!!!!!!!!!!!!!!!!!!!
+	//create folder for this user
+	await createFolder({ userDir: "/", pathB: groupPathRecord.pathName });
 
 	//add all created info to relations listed below
 	await req.userRepository

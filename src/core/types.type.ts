@@ -33,11 +33,3 @@ export enum ErrorType {
 }
 
 export type THttpCall = Response | Boolean;
-
-export interface IFsFnArgs {
-	userDir: string;
-	pathA: string;
-	pathB: string;
-}
-
-export type TFsFn = (arg: IFsFnArgs) => any;

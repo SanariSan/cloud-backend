@@ -1,6 +1,6 @@
-import { BadRequestError, TFsFn, IFsFnArgs } from "../core";
+import { BadRequestError } from "../core";
 
-export const handleFs = (execution: TFsFn) => (arg: IFsFnArgs) =>
+export const handleFs = (execution: Function) => (arg: any) =>
 	execution(arg).catch((err) => {
 		if (err && err.code === "ENOENT") {
 			//not found

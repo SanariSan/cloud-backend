@@ -59,6 +59,7 @@ class ApiResponse extends ApiResponseAbstract {
 	}
 
 	protected finish(res: Response): THttpCall {
+		res.sendFile;
 		return res.send(this.body);
 	}
 

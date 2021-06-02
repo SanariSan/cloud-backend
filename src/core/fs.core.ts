@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import util from "util";
 import { BadRequestError } from "./api-error.core";
-import { IFsFnArgs } from "./types.type";
+import { ProtectedRequest } from "../types";
 
 //------------------------------
 
@@ -17,7 +17,15 @@ const storageDir = "/home/me/Code/REVIEW/ts-pg-express/storage";
 
 //-------------------------------
 
-export async function createFolder({ userDir, pathA, pathB }: IFsFnArgs) {
+export async function createFolder({
+	userDir,
+	pathA,
+	pathB,
+}: {
+	userDir: string;
+	pathA?: string;
+	pathB: string;
+}) {
 	//don't need existing path, because of recursive
 	const targetPath = path.join(storageDir, userDir, pathB);
 
@@ -26,7 +34,15 @@ export async function createFolder({ userDir, pathA, pathB }: IFsFnArgs) {
 	});
 }
 
-export async function readFolder({ userDir, pathA, pathB }: IFsFnArgs): Promise<any> {
+export async function readFolder({
+	userDir,
+	pathA,
+	pathB,
+}: {
+	userDir: string;
+	pathA: string;
+	pathB?: string;
+}): Promise<any> {
 	const existingPath = path.join(storageDir, userDir, pathA);
 	const output: {
 		files: Array<string>;
@@ -53,7 +69,15 @@ export async function readFolder({ userDir, pathA, pathB }: IFsFnArgs): Promise<
 	return output;
 }
 
-export async function renameFolder({ userDir, pathA, pathB }: IFsFnArgs) {
+export async function renameFolder({
+	userDir,
+	pathA,
+	pathB,
+}: {
+	userDir: string;
+	pathA: string;
+	pathB: string;
+}) {
 	const existingPath = path.join(storageDir, userDir, pathA);
 	const targetPath = path.join(existingPath, userDir, pathB);
 
@@ -67,7 +91,15 @@ export async function renameFolder({ userDir, pathA, pathB }: IFsFnArgs) {
 
 //------------------------------
 
-export async function deleteFileFolder({ userDir, pathA, pathB }: IFsFnArgs) {
+export async function deleteFileFolder({
+	userDir,
+	pathA,
+	pathB,
+}: {
+	userDir: string;
+	pathA: string;
+	pathB?: string;
+}) {
 	const existingPath = path.join(storageDir, userDir, pathA);
 
 	await rmAsync(existingPath, {
@@ -77,7 +109,41 @@ export async function deleteFileFolder({ userDir, pathA, pathB }: IFsFnArgs) {
 
 //------------------------------
 
-export async function createFile({ userDir, pathA, pathB }: IFsFnArgs) {}
-export async function readFile({ userDir, pathA, pathB }: IFsFnArgs) {}
-export async function renameFile({ userDir, pathA, pathB }: IFsFnArgs) {}
-export async function deleteFile({ userDir, pathA, pathB }: IFsFnArgs) {}
+export function createFile({
+	userDir,
+	pathA,
+	pathB,
+	req,
+}: {
+	userDir: string;
+	pathA: string;
+	pathB: string;
+	req: any;
+}) {
+	return new Promise((resolve, reject) => {
+		const writable = fs.createWriteStream(path.join(storageDir, userDir, pathA, pathB), {
+			highWaterMark: 1 * 1024,
+			encoding: "binary",
+			flags: "wx",
+		});
+
+		writable.on("error", (err) => {
+			if (err) reject(err);
+		});
+
+		req.on("data", (data) => {
+			console.log(data);
+			writable.write(data, (err) => {
+				if (err) reject(err);
+			});
+		});
+		req.on("close", () => {
+			console.log(true);
+			resolve(true);
+		});
+
+		// const read = fs.createReadStream(path.join(storageDir, userDir, pathA, pathB));
+	});
+}
+// export async function readFile({ userDir, pathA, pathB }: IFsFnArgs) {}
+// export async function renameFile({ userDir, pathA, pathB }: IFsFnArgs) {}
