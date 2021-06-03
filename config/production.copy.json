@@ -3,6 +3,7 @@
 	"corsUrl": "sitename.ru",
 	"apiVersion": "v1",
 	"logDirectory": "./logs-prod",
+	"storageDirectory": "path/to/storage",
 	"port": 3000,
 	"portServices": 3001,
 	"jwt": {

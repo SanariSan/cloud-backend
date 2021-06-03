@@ -1,19 +1,17 @@
 import path from "path";
 import fs from "fs";
 import util from "util";
-import { BadRequestError } from "./api-error.core";
-import { ProtectedRequest } from "../types";
+import config from "config";
 
 //------------------------------
 
-const accessAsync = util.promisify(fs.access);
+const storageDir = <string>config.get("storageDirectory");
+
 const renameAsync = util.promisify(fs.rename);
 const statAsync = util.promisify(fs.stat);
 const readdirAsync = util.promisify(fs.readdir);
 const mkdirAsync = util.promisify(fs.mkdir);
 const rmAsync = util.promisify(fs.rm);
-
-const storageDir = "/home/me/Code/REVIEW/ts-pg-express/storage";
 
 //-------------------------------
 
@@ -121,7 +119,8 @@ export function createFile({
 	req: any;
 }) {
 	return new Promise((resolve, reject) => {
-		const writable = fs.createWriteStream(path.join(storageDir, userDir, pathA, pathB), {
+		const existingPath = path.join(storageDir, userDir, pathA, pathB);
+		const writable = fs.createWriteStream(existingPath, {
 			highWaterMark: 1 * 1024,
 			encoding: "binary",
 			flags: "wx",
@@ -132,18 +131,28 @@ export function createFile({
 		});
 
 		req.on("data", (data) => {
-			console.log(data);
 			writable.write(data, (err) => {
 				if (err) reject(err);
 			});
 		});
-		req.on("close", () => {
-			console.log(true);
-			resolve(true);
-		});
 
-		// const read = fs.createReadStream(path.join(storageDir, userDir, pathA, pathB));
+		req.on("end", resolve);
 	});
 }
-// export async function readFile({ userDir, pathA, pathB }: IFsFnArgs) {}
+
+//------------------------------
+
+export async function checkExists({
+	userDir,
+	pathA,
+	pathB,
+}: {
+	userDir: string;
+	pathA: string;
+	pathB: string;
+}) {
+	const existingPath = path.join(storageDir, userDir, pathA, pathB);
+
+	return statAsync(existingPath);
+}
 // export async function renameFile({ userDir, pathA, pathB }: IFsFnArgs) {}

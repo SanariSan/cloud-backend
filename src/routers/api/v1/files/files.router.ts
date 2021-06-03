@@ -6,7 +6,7 @@ import {
 	CheckGroupPermission,
 } from "../../../../middleware";
 import { Validate, ValidationSource } from "../../../../helpers";
-import { FilesUpload } from "../../../../controllers/files";
+import { FilesDownload, FilesUpload } from "../../../../controllers/files";
 import { Schema } from "./files.schema";
 
 const FilesRouter = Router();
@@ -29,6 +29,11 @@ FilesRouter.post(
 	"/upload/:groupId-:path-:filename",
 	// Validate(Schema.create, ValidationSource.BODY),
 	AsyncHandle(FilesUpload),
+);
+FilesRouter.post(
+	"/download/:groupId-:path-:filename",
+	// Validate(Schema.create, ValidationSource.BODY),
+	AsyncHandle(FilesDownload),
 );
 // FilesRouter.post("/download", Validate(Schema.join, ValidationSource.BODY), AsyncHandle(GroupJoin));
 // FilesRouter.post("/rename", Validate(Schema.leave, ValidationSource.BODY), AsyncHandle(GroupLeave));

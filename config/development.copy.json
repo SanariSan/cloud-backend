@@ -3,6 +3,7 @@
 	"corsUrl": "localhost",
 	"apiVersion": "v1",
 	"logDirectory": "./logs-dev",
+	"storageDirectory": "path/to/storage",
 	"port": 3002,
 	"portServices": 3003,
 	"jwt": {

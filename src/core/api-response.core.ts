@@ -1,6 +1,10 @@
 import { Response } from "express";
 import { ObjectLiteral } from "typeorm";
 import { ResponseStatus, StatusCode, THttpCall } from "./types.type";
+import path from "path";
+import config from "config";
+
+const storageDir = <string>config.get("storageDirectory");
 
 //-------------------------------
 //Abstract parent
@@ -82,27 +86,21 @@ class SingleApiResponse extends ApiResponse {
 	}
 }
 
-class StreamApiResponse extends ApiResponse {
-	protected lastPiece?: boolean;
+class FileApiResponse extends ApiResponse {
+	protected data: {
+		filePath: string;
+		filename: string;
+	};
 
-	protected constructor(statusCode, status, message, lastPiece) {
+	protected constructor(statusCode, status, message, data) {
 		super(statusCode, status, message);
-
-		this.lastPiece = lastPiece;
-	}
-
-	protected sanitize(): this {
-		this.body = this.message;
-
-		return this;
+		this.data = data;
 	}
 
 	protected finish(res: Response): THttpCall {
-		if (!this.lastPiece) {
-			res.write(this.body);
-		} else {
-			res.end();
-		}
+		res.download(this.data.filePath, this.data.filename, (err) => {
+			if (err) throw err;
+		});
 
 		return res;
 	}
@@ -178,13 +176,27 @@ export class SuccessResponse<T> extends SingleApiResponse {
 	}
 }
 
-export class StreamResponse extends StreamApiResponse {
-	constructor(message: string, lastPiece: Boolean = false) {
-		super(
-			StatusCode.SUCCESS,
-			lastPiece ? ResponseStatus.SUCCESS : ResponseStatus.CHUNK,
-			message,
-			lastPiece,
-		);
+export class SendFileResponse extends FileApiResponse {
+	constructor({ filePath, filename, message: message = "OK" }) {
+		super(StatusCode.SUCCESS, ResponseStatus.SUCCESS, message, {
+			filePath: path.join(storageDir, filePath),
+			filename,
+		});
+	}
+
+	//reimplementing to skip unnececary steps
+	public send(res: Response): THttpCall {
+		return this.finish(res);
 	}
 }
+
+// export class StreamResponse extends StreamApiResponse {
+// 	constructor(message: string, lastPiece: Boolean = false) {s
+// 		super(
+// 			StatusCode.SUCCESS,
+// 			lastPiece ? ResponseStatus.SUCCESS : ResponseStatus.CHUNK,
+// 			message,
+// 			lastPiece,
+// 		);
+// 	}
+// }

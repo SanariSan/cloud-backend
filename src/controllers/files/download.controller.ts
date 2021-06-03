@@ -1,10 +1,11 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
-import { createFile, SuccessMsgResponse } from "../../core";
+import { checkExists, createFile, SendFileResponse, SuccessMsgResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database";
 import { handleFs } from "../../helpers";
+import path from "path";
 
-export const FilesUpload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const FilesDownload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
@@ -16,12 +17,14 @@ export const FilesUpload = async (req: ProtectedRequest, res: Response, next: Ne
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
 
-	await handleFs(createFile)({
+	await handleFs(checkExists)({
 		userDir: groupPathRecord.pathName,
 		pathA: req.params.path,
 		pathB: req.params.filename,
-		req,
 	});
 
-	return new SuccessMsgResponse(`File '${req.params.filename}' uploaded successfully`).send(res);
+	return new SendFileResponse({
+		filePath: path.join(groupPathRecord.pathName, req.params.path, req.params.filename),
+		filename: req.params.filename,
+	}).send(res);
 };
