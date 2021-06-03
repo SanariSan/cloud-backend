@@ -6,6 +6,7 @@ import {
 	NotFoundResponse,
 	BadRequestResponse,
 	ForbiddenResponse,
+	NoSpaceErrorResponse,
 } from "./api-response.core";
 import { Logger } from "./logger.core";
 import { Response } from "express";
@@ -20,35 +21,30 @@ export class ApiError extends Error {
 	}
 
 	public static handle<T extends ApiError>(err: T, res: Response): THttpCall {
+		Logger.error(err.message); //add fields from res such as pwd, token, etc...
+
 		switch (err.type) {
 			case ErrorType.BAD_TOKEN:
 			case ErrorType.TOKEN_EXPIRED:
 			case ErrorType.UNAUTHORIZED:
-				Logger.error(err.message); //add fields from res such as pwd, token, etc...
 				return new AuthFailureResponse(err.message).send(res);
 			case ErrorType.FORBIDDEN:
-				Logger.error(err.message);
 				return new ForbiddenResponse(err.message).send(res);
 			case ErrorType.ACCESS_TOKEN:
-				Logger.error(err.message);
 				return new AccessTokenErrorResponse(err.message).send(res);
 			case ErrorType.INTERNAL:
-				Logger.error(err.message);
 				return new InternalErrorResponse(err.message).send(res);
 			case ErrorType.NOT_FOUND:
 			case ErrorType.NO_ENTRY:
-				Logger.error(err.message);
 				return new NotFoundResponse(err.message).send(res);
 			case ErrorType.BAD_REQUEST:
-				Logger.error(err.message);
 				return new BadRequestResponse(err.message).send(res);
+			case ErrorType.NO_SPACE:
+				return new NoSpaceErrorResponse(err.message).send(res);
 			default: {
-				let message = err.message;
-				Logger.warn(message);
+				Logger.warn(err.message);
 
-				// Don't send failure message in production as it may contain sensitive data
-				if (environment === "production") message = "Something wrong happened.";
-				return new InternalErrorResponse(message).send(res);
+				return new InternalErrorResponse("Something went wrong.").send(res);
 			}
 		}
 	}
@@ -105,5 +101,11 @@ export class TokenExpiredError extends ApiError {
 export class AccessTokenError extends ApiError {
 	constructor(message = "Invalid access token") {
 		super(ErrorType.ACCESS_TOKEN, message);
+	}
+}
+
+export class NoSpaceError extends ApiError {
+	constructor(message = "Not enough free space") {
+		super(ErrorType.NO_SPACE, message);
 	}
 }

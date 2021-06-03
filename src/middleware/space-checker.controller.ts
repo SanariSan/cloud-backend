@@ -1,38 +1,13 @@
 import { ProtectedRequest } from "../types";
 import { EGROUP_RELATIONS } from "../database";
-import { InternalError, NoSpaceError, BadRequestError } from "../core";
+import { InternalError, NoSpaceError } from "../core";
 import getItemSize from "get-folder-size";
 import config from "config";
 import path from "path";
-import { NextFunction } from "express";
 
 const storageDir = <string>config.get("storageDirectory");
 
-export const handleFs = (execution: Function) => (arg: any) =>
-	execution(arg).catch((err) => {
-		if (err && err.code === "ENOENT") {
-			//not found
-			throw new BadRequestError("No such directory");
-		}
-		if (err && err.code === "ENOTDIR") {
-			//path to file, not dir
-			throw new BadRequestError("Expected directory, got file instead");
-		}
-		if (err && err.code === "EEXIST") {
-			//entity already exists
-			throw new BadRequestError(
-				"Object you are trying to create has already been created before",
-			);
-		}
-
-		throw err;
-	});
-
-export const UpdateSpace = async (
-	req: ProtectedRequest,
-	res: Response,
-	next: NextFunction,
-): Promise<any> => {
+const UpdateSpace = async (req: ProtectedRequest): Promise<any> => {
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
@@ -68,8 +43,9 @@ export const UpdateSpace = async (
 
 	await req.groupPathRepository.updateSizeUsed(dirSize).saveRecord();
 
-	// next();
-	// if (groupPathRecord.sizeUsed >= groupPathRecord.sizeMax) {
-	// 	throw new NoSpaceError();
-	// }
+	if (groupPathRecord.sizeUsed >= groupPathRecord.sizeMax) {
+		throw new NoSpaceError();
+	}
 };
+
+export { UpdateSpace };

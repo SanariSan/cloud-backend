@@ -158,6 +158,12 @@ export class AccessTokenErrorResponse extends SingleApiResponse {
 	}
 }
 
+export class NoSpaceErrorResponse extends SingleApiResponse {
+	constructor(message = "No free space") {
+		super(StatusCode.FAILURE, ResponseStatus.BAD_REQUEST, message);
+	}
+}
+
 //-------------------------------
 //Success response childs
 

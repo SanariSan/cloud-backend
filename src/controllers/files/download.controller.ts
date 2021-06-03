@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
-import { checkExists, createFile, SendFileResponse, SuccessMsgResponse } from "../../core";
+import { checkExists, SendFileResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database";
 import { handleFs } from "../../helpers";
 import path from "path";

@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
-import { createFile, SuccessMsgResponse } from "../../core";
+import { createFile, NoSpaceError, SuccessMsgResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database";
 import { handleFs } from "../../helpers";
 
@@ -15,6 +15,12 @@ export const FilesUpload = async (req: ProtectedRequest, res: Response, next: Ne
 	await req.groupPathRepository.findById(groupRecord.groupPath.id);
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
+
+	const sizeIncoming = parseInt(<string>req.headers["content-length"]);
+	const sizeIncomingGb = sizeIncoming / 1024 / 1024 / 1024;
+	if (sizeIncomingGb + groupPathRecord.sizeUsed > groupPathRecord.sizeMax) {
+		throw new NoSpaceError();
+	}
 
 	await handleFs(createFile)({
 		userDir: groupPathRecord.pathName,

@@ -10,7 +10,6 @@ export enum StatusCode {
 // Response codes to custom names map
 export enum ResponseStatus {
 	SUCCESS = 200,
-	CHUNK = 206,
 	BAD_REQUEST = 400,
 	UNAUTHORIZED = 401,
 	FORBIDDEN = 403,
@@ -30,6 +29,7 @@ export enum ErrorType {
 	NO_DATA = "NoDataError",
 	BAD_REQUEST = "BadRequestError",
 	FORBIDDEN = "ForbiddenError",
+	NO_SPACE = "NoFreeSpace",
 }
 
 export type THttpCall = Response | Boolean;
