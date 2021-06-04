@@ -1,8 +1,8 @@
-import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../types";
+import bcrypt from "bcrypt";
+import { NextFunction, Response } from "express";
 import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
 import { EGROUP_KEYS, EGROUP_RELATIONS } from "../../database/connection";
-import bcrypt from "bcrypt";
+import { ProtectedRequest } from "../../types";
 
 // req.body === {groupId: id, password: string, }
 export const GroupJoin = async (req: ProtectedRequest, res: Response, next: NextFunction) => {

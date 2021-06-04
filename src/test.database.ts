@@ -4,18 +4,17 @@ import {
 	EUSER_RELATIONS,
 	IGroupManualInput,
 	IGroupPathManualInput,
-	IUserManualInput,
 	IKeystoreManualInput,
+	IUserManualInput,
 } from "./database/connection";
-
 import {
-	KeystoreRepository,
-	UserRepository,
-	GroupRepository,
-	UserPrivelegeRepository,
-	Privelege100Repository,
 	GroupPathRepository,
+	GroupRepository,
+	KeystoreRepository,
+	Privelege100Repository,
 	Privelege500Repository,
+	UserPrivelegeRepository,
+	UserRepository,
 } from "./database/repositories";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -114,14 +113,6 @@ async function test() {
 	await userRepository.findByIds([], [EUSER_RELATIONS.GROUP_OWNAGE]);
 	const userRecords = userRepository.getRecords();
 	if (!userRecords) throw new Error();
-
-	// console.log(userRecords);
-
-	// console.log("_________");
-	// const usersWithTargetGroupRecords = userRecords
-	//     .filter(el => el.groupOwnage)
-	//     .filter(el => el.groupOwnage.name === "Group1");
-	// console.log(usersWithTargetGroupRecords);
 }
 
 export { test };

@@ -1,6 +1,6 @@
+import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { Request, Response, NextFunction } from "express";
-import { Logger, BadRequestError } from "../core";
+import { BadRequestError, Logger } from "../core";
 import { ValidationSource } from "./types.helper.type";
 
 export const JoiUrlValidate = () =>

@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
-import { Validate, ValidationSource } from "../../../../helpers";
 import {
+	GroupChangePassword,
 	GroupCreate,
-	GroupSearchByName,
-	GroupSearchByEmail,
 	GroupJoin,
 	GroupLeave,
-	GroupChangePassword,
+	GroupSearchByEmail,
+	GroupSearchByName,
 } from "../../../../controllers/group";
+import { Validate, ValidationSource } from "../../../../helpers";
+import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
 import { Schema } from "./group.schema";
 
 const GroupRouter = Router();

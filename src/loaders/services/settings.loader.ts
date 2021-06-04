@@ -1,5 +1,5 @@
-import cors from "cors";
 import config from "config";
+import cors from "cors";
 import express from "express";
 
 function settingsServices(app) {

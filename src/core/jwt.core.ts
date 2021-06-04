@@ -1,8 +1,8 @@
-import { sign, verify } from "jsonwebtoken";
-import { InternalError, BadTokenError, TokenExpiredError } from "./api-error.core";
-import { Logger } from "./logger.core";
 import config from "config";
+import { sign, verify } from "jsonwebtoken";
 import util from "util";
+import { BadTokenError, InternalError, TokenExpiredError } from "./api-error.core";
+import { Logger } from "./logger.core";
 
 export class JWT {
 	//create token with the payload attached

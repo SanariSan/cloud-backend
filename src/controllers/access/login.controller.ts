@@ -1,9 +1,9 @@
-import { Response, NextFunction } from "express";
-import { SuccessResponse, BadRequestError, AuthFailureError } from "../../core";
-import { setNewTokenPair } from "../../helpers";
-import { EUSER_RELATIONS, EUSER_KEYS } from "../../database/connection";
-import { PreparedRequest } from "../../types";
 import bcrypt from "bcrypt";
+import { NextFunction, Response } from "express";
+import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
+import { EUSER_KEYS, EUSER_RELATIONS } from "../../database/connection";
+import { setNewTokenPair } from "../../helpers";
+import { PreparedRequest } from "../../types";
 
 export const AccessLogin = async (req: PreparedRequest, res: Response, next: NextFunction) => {
 	//get user's record if exists

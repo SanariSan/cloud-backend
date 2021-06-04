@@ -1,12 +1,12 @@
-import { AxiosResponse, AxiosError } from "axios";
-import { CallAccessRegister } from "./access";
-import { USERS } from "./credentials.const";
+import { AxiosError, AxiosResponse } from "axios";
 import {
+	CallAccessChangePassword,
 	CallAccessLogin,
 	CallAccessLogout,
 	CallAccessRefresh,
-	CallAccessChangePassword,
+	CallAccessRegister,
 } from "./access";
+import { USERS } from "./credentials.const";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

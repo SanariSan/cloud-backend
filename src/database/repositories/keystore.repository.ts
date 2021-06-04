@@ -1,11 +1,11 @@
+import { Logger } from "../../core";
 import {
 	DBManager,
+	EKEYSTORE_KEYS,
+	EKEYSTORE_RELATIONS,
 	ENTITIES,
 	IKeystoreManualInput,
-	EKEYSTORE_RELATIONS,
-	EKEYSTORE_KEYS,
 } from "../connection";
-import { Logger } from "../../core";
 import { Keystore } from "../models";
 import { GenericRepository } from "./generic.repository";
 

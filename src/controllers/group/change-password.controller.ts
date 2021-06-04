@@ -1,7 +1,7 @@
-import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../types";
-import { AuthFailureError, BadRequestError, SuccessMsgResponse } from "../../core";
 import bcrypt from "bcrypt";
+import { NextFunction, Response } from "express";
+import { AuthFailureError, BadRequestError, SuccessMsgResponse } from "../../core";
+import { ProtectedRequest } from "../../types";
 
 // req.body === {oldPassword: string, newPassword: string, }
 export const GroupChangePassword = async (

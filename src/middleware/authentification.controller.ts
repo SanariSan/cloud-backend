@@ -1,8 +1,8 @@
-import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../types";
-import { JWT, AuthFailureError, AccessTokenError, TokenExpiredError } from "../core";
-import { getToken, validateTokenData } from "../helpers";
+import { NextFunction, Response } from "express";
+import { AccessTokenError, AuthFailureError, JWT, TokenExpiredError } from "../core";
 import { EUSER_RELATIONS } from "../database/connection";
+import { getToken, validateTokenData } from "../helpers";
+import { ProtectedRequest } from "../types";
 
 const Authentificate = async (
 	req: ProtectedRequest,

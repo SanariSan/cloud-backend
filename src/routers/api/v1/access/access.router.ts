@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { Validate, ValidationSource } from "../../../../helpers";
-import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
 import {
+	AccessChangePassword,
 	AccessLogin,
 	AccessLogout,
 	AccessRefresh,
 	AccessRegister,
-	AccessChangePassword,
 } from "../../../../controllers/access";
+import { Validate, ValidationSource } from "../../../../helpers";
+import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
 import { Schema } from "./access.schema";
 
 const AccessRouter = Router();

@@ -1,8 +1,8 @@
-import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../../types";
+import { NextFunction, Response } from "express";
 import { BadRequestError, SuccessMsgResponse } from "../../../core";
-import { calculateCurrentMaxStorageSize } from "../../../helpers";
 import { EGROUP_RELATIONS, EUSER_PRIVELEGE_RELATIONS } from "../../../database/connection";
+import { calculateCurrentMaxStorageSize } from "../../../helpers";
+import { ProtectedRequest } from "../../../types";
 
 // req.body === { someUserInfo }
 export const Add500 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {

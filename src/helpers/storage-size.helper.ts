@@ -1,6 +1,6 @@
-import { UserPrivelegeRepository, UserRepository } from "../database/repositories";
-import { EUSER_PRIVELEGE_RELATIONS } from "../database/connection";
 import config from "config";
+import { EUSER_PRIVELEGE_RELATIONS } from "../database/connection";
+import { UserPrivelegeRepository, UserRepository } from "../database/repositories";
 
 const defaultSizeMax = <number>config.get("privelege.defaultStorageSizeGb");
 

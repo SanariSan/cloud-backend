@@ -1,8 +1,8 @@
-import { Tokens } from "../types";
-import { JWT, JwtPayload, AuthFailureError, InternalError } from "../core";
-import { KeystoreRepository, UserRepository } from "../database/repositories";
-import crypto from "crypto";
 import config from "config";
+import crypto from "crypto";
+import { AuthFailureError, InternalError, JWT, JwtPayload } from "../core";
+import { KeystoreRepository, UserRepository } from "../database/repositories";
+import { Tokens } from "../types";
 
 const { accessTokenValidDays, refreshTokenValidDays, issuer, audience } = config.get("jwt");
 

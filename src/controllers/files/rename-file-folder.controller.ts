@@ -1,8 +1,8 @@
-import { Response, NextFunction } from "express";
+import { NextFunction, Response } from "express";
 import { renameFileFolder } from "../../core";
 import { EGROUP_RELATIONS } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
 import { handleFs } from "../../helpers";
+import { ProtectedRequest } from "../../types";
 
 // req.params === groupId: string, path: string, filename: string
 export const FoldersFilesRename = async (

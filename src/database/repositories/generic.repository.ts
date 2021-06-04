@@ -1,6 +1,6 @@
 import { Connection, DeleteResult, Repository } from "typeorm";
-import { TModelsKeys, TEntities, TModels, DBManager, TModelsRelationsKeys } from "../connection";
 import { Logger } from "../../core";
+import { DBManager, TEntities, TModels, TModelsKeys, TModelsRelationsKeys } from "../connection";
 
 abstract class GenericRepositoryAbstract<
 	M extends TModels,

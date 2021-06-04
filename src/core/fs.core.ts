@@ -1,9 +1,9 @@
+import config from "config";
 import { Request } from "express";
+import fs from "fs";
 // import { checkMalicious } from "../helpers";
 import path from "path";
-import fs from "fs";
 import util from "util";
-import config from "config";
 
 //------------------------------
 

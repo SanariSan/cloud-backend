@@ -1,11 +1,11 @@
-import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../types";
-import { EGROUP_RELATIONS } from "../database/connection";
-import { InternalError } from "../core";
-import { calculateCurrentMaxStorageSize } from "../helpers";
-import getItemSize from "get-folder-size";
 import config from "config";
+import { NextFunction, Response } from "express";
+import getItemSize from "get-folder-size";
 import path from "path";
+import { InternalError } from "../core";
+import { EGROUP_RELATIONS } from "../database/connection";
+import { calculateCurrentMaxStorageSize } from "../helpers";
+import { ProtectedRequest } from "../types";
 
 const storageDir = <string>config.get("storageDirectory");
 

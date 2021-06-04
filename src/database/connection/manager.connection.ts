@@ -1,8 +1,8 @@
-import { createConnection, Connection, ConnectionOptions } from "typeorm";
-import { Logger } from "../../core";
-import { TEntities } from "./";
-import * as Entities from "../models";
 import config from "config";
+import { Connection, ConnectionOptions, createConnection } from "typeorm";
+import { Logger } from "../../core";
+import * as Entities from "../models";
+import { TEntities } from "./";
 
 export class DBManager {
 	private openedConnection?: Connection;

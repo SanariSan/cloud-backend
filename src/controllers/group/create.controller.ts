@@ -1,16 +1,16 @@
-import { Response, NextFunction } from "express";
-import { ProtectedRequest } from "../../types";
-import { BadRequestError, SuccessResponse, createFolder } from "../../core";
+import bcrypt from "bcrypt";
+import config from "config";
+import crypto from "crypto";
+import { NextFunction, Response } from "express";
+import util from "util";
+import { BadRequestError, createFolder, SuccessResponse } from "../../core";
 import {
 	EGROUP_KEYS,
 	EGROUP_PATH_KEYS,
 	IGroupManualInput,
 	IGroupPathManualInput,
 } from "../../database/connection";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-import config from "config";
-import util from "util";
+import { ProtectedRequest } from "../../types";
 
 const asyncBytes = util.promisify(crypto.randomBytes);
 

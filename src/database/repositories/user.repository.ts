@@ -1,8 +1,8 @@
 import { Logger } from "../../core";
-import { User, Keystore, Group, UserPrivelege } from "../models";
-import { IUserManualInput, ENTITIES, EUSER_KEYS, DBManager, EUSER_RELATIONS } from "../connection";
-import { GenericRepository } from "./generic.repository";
+import { DBManager, ENTITIES, EUSER_KEYS, EUSER_RELATIONS, IUserManualInput } from "../connection";
+import { Group, Keystore, User, UserPrivelege } from "../models";
 import { IGroup } from "../types/igroup.type";
+import { GenericRepository } from "./generic.repository";
 
 class UserRepository extends GenericRepository<User, EUSER_KEYS, EUSER_RELATIONS> {
 	constructor(dbManager: DBManager) {

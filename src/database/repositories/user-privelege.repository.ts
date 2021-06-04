@@ -1,10 +1,10 @@
+import { Logger } from "../../core";
 import {
 	DBManager,
 	ENTITIES,
 	EUSER_PRIVELEGE_KEYS,
 	EUSER_PRIVELEGE_RELATIONS,
 } from "../connection";
-import { Logger } from "../../core";
 import { Privelege100, Privelege500, UserPrivelege } from "../models";
 import { GenericRepository } from "./generic.repository";
 

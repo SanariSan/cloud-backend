@@ -1,13 +1,4 @@
 import { Router } from "express";
-import { Validate, ValidationSource } from "../../../../helpers";
-import { UpdateSpace } from "../../../../middleware";
-import { Schema } from "./files.schema";
-import {
-	AsyncHandle,
-	Authentificate,
-	StickRepos,
-	CheckGroupPermission,
-} from "../../../../middleware";
 import {
 	FilesDownload,
 	FilesUpload,
@@ -16,6 +7,15 @@ import {
 	FoldersFilesDelete,
 	FoldersFilesRename,
 } from "../../../../controllers/files";
+import { Validate, ValidationSource } from "../../../../helpers";
+import {
+	AsyncHandle,
+	Authentificate,
+	CheckGroupPermission,
+	StickRepos,
+	UpdateSpace,
+} from "../../../../middleware";
+import { Schema } from "./files.schema";
 
 const FilesRouter = Router();
 

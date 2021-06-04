@@ -1,14 +1,14 @@
+import config from "config";
+import { Logger } from "../../core";
 import {
 	DBManager,
 	ENTITIES,
-	IPrivelege100ManualInput,
-	EPRIVELEGE_100_RELATIONS,
 	EPRIVELEGE_100_KEYS,
+	EPRIVELEGE_100_RELATIONS,
+	IPrivelege100ManualInput,
 } from "../connection";
-import { Logger } from "../../core";
 import { Privelege100 } from "../models";
 import { GenericRepository } from "./generic.repository";
-import config from "config";
 
 class Privelege100Repository extends GenericRepository<
 	Privelege100,

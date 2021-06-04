@@ -1,14 +1,14 @@
+import { Logger } from "../../core";
 import {
 	DBManager,
-	ENTITIES,
-	IGroupManualInput,
 	EGROUP_KEYS,
 	EGROUP_RELATIONS,
+	ENTITIES,
+	IGroupManualInput,
 } from "../connection";
-import { Logger } from "../../core";
 import { Group, GroupPath, User } from "../models";
-import { GenericRepository } from "./generic.repository";
 import { IUser } from "../types/iuser.type";
+import { GenericRepository } from "./generic.repository";
 
 class GroupRepository extends GenericRepository<Group, EGROUP_KEYS, EGROUP_RELATIONS> {
 	constructor(dbManager: DBManager) {

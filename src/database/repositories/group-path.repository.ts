@@ -1,11 +1,11 @@
+import { Logger } from "../../core";
 import {
 	DBManager,
-	ENTITIES,
-	EGROUP_PATH_RELATIONS,
-	IGroupPathManualInput,
 	EGROUP_PATH_KEYS,
+	EGROUP_PATH_RELATIONS,
+	ENTITIES,
+	IGroupPathManualInput,
 } from "../connection";
-import { Logger } from "../../core";
 import { GroupPath } from "../models";
 import { GenericRepository } from "./generic.repository";
 

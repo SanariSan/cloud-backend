@@ -1,11 +1,10 @@
-import "reflect-metadata";
-import express from "express";
 import config from "config";
+import express from "express";
+import "reflect-metadata";
 import { Logger } from "./core";
-import { settings, routers, errorHandler } from "./loaders/standart";
-import { routersServices, settingsServices, errorHandlerServices } from "./loaders/services";
 import { initializeDb } from "./initialization.database";
-import { test } from "./test.database";
+import { errorHandlerServices, routersServices, settingsServices } from "./loaders/services";
+import { errorHandler, routers, settings } from "./loaders/standart";
 
 process.on("uncaughtException", (e: Error) => {
 	console.log("Uncaught Exception");

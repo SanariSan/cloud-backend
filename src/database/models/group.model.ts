@@ -7,9 +7,9 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
+import { IGroupPath } from "../types/igroup-path.type";
 import { IGroup } from "../types/igroup.type";
 import { IUser } from "../types/iuser.type";
-import { IGroupPath } from "../types/igroup-path.type";
 
 @Entity()
 export class Group implements IGroup {

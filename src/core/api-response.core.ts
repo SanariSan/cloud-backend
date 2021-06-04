@@ -1,8 +1,8 @@
+import config from "config";
 import { Response } from "express";
+import path from "path";
 import { ObjectLiteral } from "typeorm";
 import { ResponseStatus, StatusCode, THttpCall } from "./types.type";
-import path from "path";
-import config from "config";
 
 const storageDir = <string>config.get("storageDirectory");
 

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { PreparedRequest, ProtectedRequest } from "../types";
 
 type AsyncRouterFunction = (
@@ -8,10 +8,12 @@ type AsyncRouterFunction = (
 ) => Promise<any>;
 
 //explicit fn params accepting from enclosure (original) => (here) => {execute original with its' params}
-export const AsyncHandle = (execution: AsyncRouterFunction) => (
-	req: Request | PreparedRequest | ProtectedRequest | any,
-	res: Response,
-	next: NextFunction,
-) => {
-	execution(req, res, next).catch(next);
-};
+export const AsyncHandle =
+	(execution: AsyncRouterFunction) =>
+	(
+		req: Request | PreparedRequest | ProtectedRequest | any,
+		res: Response,
+		next: NextFunction,
+	) => {
+		execution(req, res, next).catch(next);
+	};

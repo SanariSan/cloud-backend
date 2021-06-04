@@ -1,9 +1,9 @@
-import { Response, NextFunction } from "express";
+import { NextFunction, Response } from "express";
+import path from "path";
 import { checkExists, SendFileResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
 import { handleFs } from "../../helpers";
-import path from "path";
+import { ProtectedRequest } from "../../types";
 
 // req.params === groupId: string, path: string, filename: string
 export const FilesDownload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {

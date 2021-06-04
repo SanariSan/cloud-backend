@@ -7,10 +7,10 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { IUser } from "../types/iuser.type";
 import { IGroup } from "../types/igroup.type";
-import { IUserPrivelege } from "../types/iuserPrivelege.type";
 import { IKeystore } from "../types/ikeystore.type";
+import { IUser } from "../types/iuser.type";
+import { IUserPrivelege } from "../types/iuserPrivelege.type";
 
 @Entity()
 export class User implements IUser {
