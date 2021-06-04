@@ -1,11 +1,15 @@
 import { Response, NextFunction } from "express";
+import { deleteFileFolder } from "../../core";
+import { EGROUP_RELATIONS } from "../../database/connection";
 import { ProtectedRequest } from "../../types";
-import { checkExists, SendFileResponse } from "../../core";
-import { EGROUP_RELATIONS } from "../../database";
 import { handleFs } from "../../helpers";
-import path from "path";
 
-export const FilesDownload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+// req.params === groupId: string, path: string, filename: string
+export const FoldersFilesDelete = async (
+	req: ProtectedRequest,
+	res: Response,
+	next: NextFunction,
+) => {
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
@@ -17,14 +21,12 @@ export const FilesDownload = async (req: ProtectedRequest, res: Response, next: 
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
 
-	await handleFs(checkExists)({
+	//mark untracked
+	await req.groupPathRepository.setTracked(false).saveRecord();
+
+	await handleFs(deleteFileFolder)({
 		userDir: groupPathRecord.pathName,
 		pathA: req.params.path,
 		pathB: req.params.filename,
 	});
-
-	return new SendFileResponse({
-		filePath: path.join(groupPathRecord.pathName, req.params.path, req.params.filename),
-		filename: req.params.filename,
-	}).send(res);
 };

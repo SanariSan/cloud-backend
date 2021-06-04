@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 import { Logger, BadRequestError } from "../core";
-import { ValidationSource } from "./";
+import { ValidationSource } from "./types.helper.type";
 
 export const JoiUrlValidate = () =>
 	Joi.string().custom((value: string, helpers) => {

@@ -8,6 +8,7 @@ import {
 import { Logger } from "../../core";
 import { Group, GroupPath, User } from "../models";
 import { GenericRepository } from "./generic.repository";
+import { IUser } from "../types/iuser.type";
 
 class GroupRepository extends GenericRepository<Group, EGROUP_KEYS, EGROUP_RELATIONS> {
 	constructor(dbManager: DBManager) {
@@ -53,7 +54,7 @@ class GroupRepository extends GenericRepository<Group, EGROUP_KEYS, EGROUP_RELAT
 			if (this.record) {
 				this.record.usersParticipate = this.lastOperationResult =
 					this.record.usersParticipate.filter(
-						(existingUser: User) => existingUser.id !== user.id,
+						(existingUser: IUser) => existingUser.id !== user.id,
 					);
 
 				Logger.debug(`${this.removeParticipant.name}`);

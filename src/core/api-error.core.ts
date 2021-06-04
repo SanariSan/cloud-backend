@@ -1,3 +1,4 @@
+import { Response } from "express";
 //importing all errors responses
 import {
 	AuthFailureResponse,
@@ -9,11 +10,7 @@ import {
 	NoSpaceErrorResponse,
 } from "./api-response.core";
 import { Logger } from "./logger.core";
-import { Response } from "express";
 import { ErrorType, THttpCall } from "./types.type";
-import config from "config";
-
-const environment = config.get("environment");
 
 export class ApiError extends Error {
 	constructor(public type: ErrorType, public message: string = "error") {

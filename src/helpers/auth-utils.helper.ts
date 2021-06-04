@@ -1,6 +1,6 @@
 import { Tokens } from "../types";
 import { JWT, JwtPayload, AuthFailureError, InternalError } from "../core";
-import { KeystoreRepository, UserRepository } from "../database";
+import { KeystoreRepository, UserRepository } from "../database/repositories";
 import crypto from "crypto";
 import config from "config";
 

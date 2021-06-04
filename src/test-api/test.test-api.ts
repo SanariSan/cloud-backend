@@ -1,5 +1,6 @@
 import { AxiosResponse, AxiosError } from "axios";
-import { CallAccessRegister, USERS } from "./";
+import { CallAccessRegister } from "./access";
+import { USERS } from "./credentials.const";
 import {
 	CallAccessLogin,
 	CallAccessLogout,

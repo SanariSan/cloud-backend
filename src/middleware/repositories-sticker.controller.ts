@@ -1,16 +1,15 @@
 import { Response, NextFunction } from "express";
 import { PreparedRequest } from "../types";
+import { DBManager, ENTITIES } from "../database/connection";
 import {
 	UserRepository,
 	KeystoreRepository,
-	DBManager,
-	ENTITIES,
 	GroupRepository,
 	UserPrivelegeRepository,
 	GroupPathRepository,
 	Privelege100Repository,
 	Privelege500Repository,
-} from "../database";
+} from "../database/repositories";
 
 const StickRepos = async (
 	req: PreparedRequest,

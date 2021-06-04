@@ -1,13 +1,8 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../../types";
 import { BadRequestError, SuccessMsgResponse } from "../../../core";
-import {
-	calculateCurrentStorageSize,
-	returnSomeResponseToPaymentService,
-	validatePaymentServiceToken,
-} from "../../../helpers";
-import config from "config";
-import { EGROUP_RELATIONS, EUSER_PRIVELEGE_RELATIONS } from "../../../database";
+import { calculateCurrentMaxStorageSize } from "../../../helpers";
+import { EGROUP_RELATIONS, EUSER_PRIVELEGE_RELATIONS } from "../../../database/connection";
 
 // req.body === { someUserInfo }
 export const Add500 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
@@ -43,12 +38,11 @@ export const Add500 = async (req: ProtectedRequest, res: Response, next: NextFun
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
 
-	const defaultSizeMax = <number>config.get("privelege.defaultStorageSizeGb");
-	const updatedSizeMax = await calculateCurrentStorageSize(
+	const updatedSizeMax = await calculateCurrentMaxStorageSize(
 		req.userRepository,
 		req.userPrivelegeRepository,
 	);
-	await req.groupPathRepository.updateSizeMax(defaultSizeMax, updatedSizeMax).saveRecord();
+	await req.groupPathRepository.updateSizeMax(updatedSizeMax).setTracked(false).saveRecord();
 
 	return new SuccessMsgResponse("Success").send(res);
 };

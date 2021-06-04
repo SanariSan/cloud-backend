@@ -1,10 +1,12 @@
 import { Response, NextFunction } from "express";
+import { checkExists, SendFileResponse } from "../../core";
+import { EGROUP_RELATIONS } from "../../database/connection";
 import { ProtectedRequest } from "../../types";
-import { createFile, NoSpaceError, SuccessMsgResponse } from "../../core";
-import { EGROUP_RELATIONS } from "../../database";
 import { handleFs } from "../../helpers";
+import path from "path";
 
-export const FilesUpload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+// req.params === groupId: string, path: string, filename: string
+export const FilesDownload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
@@ -16,18 +18,17 @@ export const FilesUpload = async (req: ProtectedRequest, res: Response, next: Ne
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
 
-	const sizeIncoming = parseInt(<string>req.headers["content-length"]);
-	const sizeIncomingGb = sizeIncoming / 1024 / 1024 / 1024;
-	if (sizeIncomingGb + groupPathRecord.sizeUsed > groupPathRecord.sizeMax) {
-		throw new NoSpaceError();
-	}
-
-	await handleFs(createFile)({
+	await handleFs(checkExists)({
 		userDir: groupPathRecord.pathName,
 		pathA: req.params.path,
 		pathB: req.params.filename,
-		req,
 	});
 
-	return new SuccessMsgResponse(`File '${req.params.filename}' uploaded successfully`).send(res);
+	//mark to calculate size later
+	await req.groupPathRepository.setTracked(false).saveRecord();
+
+	return new SendFileResponse({
+		filePath: path.join(groupPathRecord.pathName, req.params.path, req.params.filename),
+		filename: req.params.filename,
+	}).send(res);
 };

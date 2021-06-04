@@ -1,8 +1,8 @@
-import { promisify } from "util";
 import { sign, verify } from "jsonwebtoken";
 import { InternalError, BadTokenError, TokenExpiredError } from "./api-error.core";
 import { Logger } from "./logger.core";
 import config from "config";
+import util from "util";
 
 export class JWT {
 	//create token with the payload attached
@@ -10,7 +10,7 @@ export class JWT {
 		const secret = config.get("jwt.secret");
 		if (!secret) throw new InternalError("Token generation failure");
 		// @ts-ignore
-		return await promisify(sign)({ ...payload }, secret, {
+		return await util.promisify(sign)({ ...payload }, secret, {
 			algorithm: "HS256",
 		});
 	}
@@ -20,7 +20,7 @@ export class JWT {
 		const secret = config.get("jwt.secret");
 		try {
 			// @ts-ignore
-			return (await promisify(verify)(token, secret, {
+			return (await util.promisify(verify)(token, secret, {
 				algorithm: "HS256",
 			})) as JwtPayload;
 		} catch (e) {
@@ -38,7 +38,7 @@ export class JWT {
 
 		try {
 			// @ts-ignore
-			return (await promisify(verify)(token, secret, {
+			return (await util.promisify(verify)(token, secret, {
 				ignoreExpiration: true,
 				algorithm: "HS256",
 			})) as JwtPayload;

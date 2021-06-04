@@ -1,18 +1,18 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
-import { BadRequestError, SuccessResponse } from "../../core";
+import { BadRequestError, SuccessResponse, createFolder } from "../../core";
 import {
 	EGROUP_KEYS,
 	EGROUP_PATH_KEYS,
 	IGroupManualInput,
 	IGroupPathManualInput,
-} from "../../database";
+} from "../../database/connection";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { promisify } from "util";
 import config from "config";
-import { createFolder } from "../../core";
-const asyncBytes = promisify(crypto.randomBytes);
+import util from "util";
+
+const asyncBytes = util.promisify(crypto.randomBytes);
 
 //req.body === {groupName: string, password: string}
 export const GroupCreate = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
@@ -49,7 +49,10 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
 	if (!userPrivelegeRecord) throw new Error();
 
 	//create folder for this user
-	await createFolder({ userDir: "/", pathB: groupPathRecord.pathName });
+	await createFolder({ userDir: "/", pathA: "/", pathB: groupPathRecord.pathName });
+
+	//mark to calculate size later
+	await req.groupPathRepository.setTracked(false).saveRecord();
 
 	//add all created info to relations listed below
 	await req.userRepository

@@ -11,21 +11,9 @@ export const Schema = {
 		groupName: Joi.string().min(6).required(),
 		password: Joi.string().min(6).required(),
 	}),
-	join: Joi.object().keys({
-		groupId: Joi.number().required(),
-		password: Joi.string().min(6).required(),
-	}),
-	leave: Joi.object().keys({
-		groupId: Joi.number().required(),
-	}),
-	changePassword: Joi.object().keys({
-		oldPassword: Joi.string().min(6).required(),
-		newPassword: Joi.string().min(6).required(),
-	}),
-	searchByName: Joi.object().keys({
-		groupName: Joi.string().min(6).required(),
-	}),
-	searchByEmail: Joi.object().keys({
-		ownerEmail: Joi.string().email().required(),
+	params: Joi.object().keys({
+		groupId: Joi.string().min(1).required(),
+		path: Joi.string().min(1).required(),
+		filename: Joi.string().min(1).required(),
 	}),
 };

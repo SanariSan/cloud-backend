@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { AuthFailureError, JWT, SuccessResponse } from "../../core";
-import { EUSER_RELATIONS } from "../../database";
+import { EUSER_RELATIONS } from "../../database/connection";
 import { ProtectedRequest } from "../../types";
 import { getToken, validateTokenData, setNewTokenPair } from "../../helpers";
 

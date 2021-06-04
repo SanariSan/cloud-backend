@@ -1,8 +1,8 @@
 import { Response, NextFunction } from "express";
-import { setNewTokenPair } from "../../helpers";
 import { BadRequestError, SuccessResponse } from "../../core";
+import { EUSER_KEYS } from "../../database/connection";
 import { PreparedRequest } from "../../types";
-import { EUSER_KEYS } from "../../database";
+import { setNewTokenPair } from "../../helpers";
 import bcrypt from "bcrypt";
 
 export const AccessRegister = async (req: PreparedRequest, res: Response, next: NextFunction) => {

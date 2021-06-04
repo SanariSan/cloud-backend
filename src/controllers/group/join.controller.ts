@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
-import { EGROUP_KEYS, EGROUP_RELATIONS } from "../../database";
+import { EGROUP_KEYS, EGROUP_RELATIONS } from "../../database/connection";
 import bcrypt from "bcrypt";
 
 // req.body === {groupId: id, password: string, }

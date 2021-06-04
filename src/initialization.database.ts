@@ -1,6 +1,6 @@
 import { Connection } from "typeorm";
 import { Logger } from "./core";
-import { DBManager, ENTITIES } from "./database";
+import { DBManager, ENTITIES } from "./database/connection";
 
 async function initializeDb(): Promise<Connection> {
 	try {

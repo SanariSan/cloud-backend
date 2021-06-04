@@ -7,12 +7,13 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { Group } from "./group.model";
-import { Keystore } from "./keystore.model";
-import { UserPrivelege } from "./user-privelege.model";
+import { IUser } from "../types/iuser.type";
+import { IGroup } from "../types/igroup.type";
+import { IUserPrivelege } from "../types/iuserPrivelege.type";
+import { IKeystore } from "../types/ikeystore.type";
 
 @Entity()
-export class User {
+export class User implements IUser {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -29,14 +30,20 @@ export class User {
 	profilePicUrl!: string;
 
 	//ownage of only 1 group
-	@OneToOne((type) => Group)
+	@OneToOne("Group")
 	@JoinColumn({ name: "groupOwnageId" })
-	groupOwnage!: Group;
+	groupOwnage!: IGroup;
 
-	//ownage of only 1 group
-	@OneToOne((type) => UserPrivelege)
+	//but can join multiple groups
+	//with this column we can check all the groups this user in
+	@ManyToMany("Group", "usersParticipate")
+	@JoinColumn({ name: "groupParticipateId" })
+	groupsParticipate!: Array<IGroup>;
+
+	//ownage of only 1 priveleges list
+	@OneToOne("UserPrivelege")
 	@JoinColumn({ name: "userPrivelegeId" })
-	userPrivelege!: UserPrivelege;
+	userPrivelege!: IUserPrivelege;
 
 	@Column("text")
 	createdAt!: Date;
@@ -44,13 +51,6 @@ export class User {
 	@Column("text")
 	updatedAt!: Date;
 
-	@OneToMany((type) => Keystore, (keystore) => keystore.user)
-	keystore!: Array<Keystore>;
-
-	//but can join multiple groups
-	//with this column we can check all the groups this user in
-
-	@ManyToMany((type) => Group, (group) => group.usersParticipate)
-	@JoinColumn({ name: "groupParticipateId" })
-	groupsParticipate!: Array<Group>;
+	@OneToMany("Keystore", "user")
+	keystore!: Array<IKeystore>;
 }

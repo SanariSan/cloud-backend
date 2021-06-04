@@ -1,8 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.model";
+import { IKeystore } from "../types/ikeystore.type";
+import { IUser } from "../types/iuser.type";
 
 @Entity()
-export class Keystore {
+export class Keystore implements IKeystore {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -18,7 +19,7 @@ export class Keystore {
 	@Column("text")
 	updatedAt!: Date;
 
-	@ManyToOne((type) => User, (user) => user.keystore)
+	@ManyToOne("User", "keystore")
 	@JoinColumn({ name: "userId" })
-	user!: User;
+	user!: IUser;
 }

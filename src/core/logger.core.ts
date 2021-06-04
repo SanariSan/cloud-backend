@@ -1,6 +1,6 @@
+import { createLogger, transports, format } from "winston";
 import fs from "fs";
 import config from "config";
-import { createLogger, transports, format } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 /*

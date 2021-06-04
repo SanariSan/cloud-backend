@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../types";
 import { JWT, AuthFailureError, AccessTokenError, TokenExpiredError } from "../core";
 import { getToken, validateTokenData } from "../helpers";
-import { EUSER_RELATIONS } from "../database";
+import { EUSER_RELATIONS } from "../database/connection";
 
 const Authentificate = async (
 	req: ProtectedRequest,

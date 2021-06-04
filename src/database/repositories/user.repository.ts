@@ -2,6 +2,7 @@ import { Logger } from "../../core";
 import { User, Keystore, Group, UserPrivelege } from "../models";
 import { IUserManualInput, ENTITIES, EUSER_KEYS, DBManager, EUSER_RELATIONS } from "../connection";
 import { GenericRepository } from "./generic.repository";
+import { IGroup } from "../types/igroup.type";
 
 class UserRepository extends GenericRepository<User, EUSER_KEYS, EUSER_RELATIONS> {
 	constructor(dbManager: DBManager) {
@@ -84,7 +85,7 @@ class UserRepository extends GenericRepository<User, EUSER_KEYS, EUSER_RELATIONS
 			if (this.repository && this.record) {
 				this.record.groupsParticipate = this.lastOperationResult =
 					this.record.groupsParticipate.filter(
-						(existingGroup: Group) => existingGroup.id !== group.id,
+						(existingGroup: IGroup) => existingGroup.id !== group.id,
 					);
 
 				Logger.debug(`${this.removeGroupParticipance.name}`);

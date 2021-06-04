@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { NoEntryError, SuccessResponse } from "../../core";
-import { EUSER_RELATIONS } from "../../database";
+import { EUSER_RELATIONS } from "../../database/connection";
 
 // req.body.send === [{ownerId: id, groupId: id, groupName: string}, ...]
 // req.body === groupName

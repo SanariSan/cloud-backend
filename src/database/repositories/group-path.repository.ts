@@ -34,10 +34,10 @@ class GroupPathRepository extends GenericRepository<
 		}
 	}
 
-	public updateSizeMax(defaultSize: number, extraSize: number): this {
+	public updateSizeMax(newSize: number): this {
 		try {
 			if (this.record) {
-				this.lastOperationResult = this.record.sizeMax = defaultSize + extraSize;
+				this.lastOperationResult = this.record.sizeMax = newSize;
 
 				Logger.debug(`${this.updateSizeMax.name}`);
 			}
@@ -50,6 +50,22 @@ class GroupPathRepository extends GenericRepository<
 		}
 	}
 
+	public setTracked(state: boolean): this {
+		try {
+			if (this.record) {
+				this.lastOperationResult = this.record.tracked = state;
+
+				Logger.debug(`${this.setTracked.name}`);
+			}
+
+			return this;
+		} catch (err) {
+			this.lastOperationResult = `Error in ${this.setTracked.name}, ${err}`;
+			Logger.warn(this.lastOperationResult);
+			throw new Error(this.lastOperationResult);
+		}
+	}
+
 	public createGroupPath(groupPath: IGroupPathManualInput): this {
 		const now = new Date();
 		this.record = new GroupPath();
@@ -57,6 +73,7 @@ class GroupPathRepository extends GenericRepository<
 		this.record.pathName = groupPath.pathName;
 		this.record.sizeMax = groupPath.sizeMax;
 		this.record.sizeUsed = groupPath.sizeUsed;
+		this.record.tracked = true;
 		this.record.createdAt = now;
 		this.record.updatedAt = now;
 

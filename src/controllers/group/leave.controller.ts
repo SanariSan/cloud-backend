@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { BadRequestError, SuccessMsgResponse } from "../../core";
-import { EGROUP_RELATIONS } from "../../database";
+import { EGROUP_RELATIONS } from "../../database/connection";
 
 // req.body.send === string
 // req.body === groupId (group to leave form)

@@ -1,51 +1,40 @@
 import { Router } from "express";
+import { Validate, ValidationSource } from "../../../../helpers";
+import { UpdateSpace } from "../../../../middleware";
+import { Schema } from "./files.schema";
 import {
 	AsyncHandle,
 	Authentificate,
 	StickRepos,
 	CheckGroupPermission,
 } from "../../../../middleware";
-import { Validate, ValidationSource } from "../../../../helpers";
-import { FilesDownload, FilesUpload } from "../../../../controllers/files";
-import { Schema } from "./files.schema";
+import {
+	FilesDownload,
+	FilesUpload,
+	FoldersBrowse,
+	FoldersCreate,
+	FoldersFilesDelete,
+	FoldersFilesRename,
+} from "../../../../controllers/files";
 
 const FilesRouter = Router();
 
 FilesRouter.post(
 	"/*",
 	Validate(Schema.auth, ValidationSource.HEADER),
+	Validate(Schema.params, ValidationSource.PARAM),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
-	// AsyncHandle(CheckGroupPermission),
+	AsyncHandle(CheckGroupPermission),
+	AsyncHandle(UpdateSpace),
 );
 
-// FilesRouter.post(
-// 	"/browse",
-// 	Validate(Schema.browse, ValidationSource.BODY),
-// 	AsyncHandle(FilesBrowse),
-// );
-
-FilesRouter.post(
-	"/upload/:groupId-:path-:filename",
-	// Validate(Schema.create, ValidationSource.BODY),
-	AsyncHandle(FilesUpload),
-);
-FilesRouter.post(
-	"/download/:groupId-:path-:filename",
-	// Validate(Schema.create, ValidationSource.BODY),
-	AsyncHandle(FilesDownload),
-);
-// FilesRouter.post("/download", Validate(Schema.join, ValidationSource.BODY), AsyncHandle(GroupJoin));
-// FilesRouter.post("/rename", Validate(Schema.leave, ValidationSource.BODY), AsyncHandle(GroupLeave));
-// FilesRouter.post(
-// 	"/move",
-// 	Validate(Schema.changePassword, ValidationSource.BODY),
-// 	AsyncHandle(GroupChangePassword),
-// );
-// FilesRouter.post(
-// 	"/delete",
-// 	Validate(Schema.searchByName, ValidationSource.BODY),
-// 	AsyncHandle(GroupSearchByName),
-// );
+FilesRouter.get("/browse/:groupId-:path", AsyncHandle(FoldersBrowse));
+FilesRouter.get("/download/:groupId-:path-:filename", AsyncHandle(FilesDownload));
+FilesRouter.post("/upload/:groupId-:path-:filename", AsyncHandle(FilesUpload));
+FilesRouter.put("/create/:groupId-:path-:filename", AsyncHandle(FoldersCreate));
+FilesRouter.patch("/rename/:groupId-:path-:filename", AsyncHandle(FoldersFilesRename));
+FilesRouter.delete("/delete/:groupId-:path-:filename", AsyncHandle(FoldersFilesDelete));
+//add move
 
 export { FilesRouter };

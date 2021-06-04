@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { SuccessResponse, BadRequestError, AuthFailureError } from "../../core";
 import { setNewTokenPair } from "../../helpers";
-import { EUSER_RELATIONS, EUSER_KEYS } from "../../database";
+import { EUSER_RELATIONS, EUSER_KEYS } from "../../database/connection";
 import { PreparedRequest } from "../../types";
 import bcrypt from "bcrypt";
 

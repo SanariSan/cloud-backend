@@ -1,19 +1,22 @@
 import {
-	IUserManualInput,
-	KeystoreRepository,
-	IKeystoreManualInput,
-	UserRepository,
-	GroupRepository,
-	IGroupManualInput,
 	DBManager,
 	ENTITIES,
+	EUSER_RELATIONS,
+	IGroupManualInput,
 	IGroupPathManualInput,
+	IUserManualInput,
+	IKeystoreManualInput,
+} from "./database/connection";
+
+import {
+	KeystoreRepository,
+	UserRepository,
+	GroupRepository,
 	UserPrivelegeRepository,
 	Privelege100Repository,
 	GroupPathRepository,
 	Privelege500Repository,
-	EUSER_RELATIONS,
-} from "./database";
+} from "./database/repositories";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

@@ -1,8 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserPrivelege } from "./user-privelege.model";
+import { IPrivelege } from "../types/iprivelege.type";
+import { IUserPrivelege } from "../types/iuserPrivelege.type";
 
 @Entity()
-export class Privelege500 {
+export class Privelege500 implements IPrivelege {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -15,7 +16,7 @@ export class Privelege500 {
 	@Column("text")
 	updatedAt!: Date;
 
-	@ManyToOne((type) => UserPrivelege)
-	@JoinColumn({ name: "userPrivilegeId" })
-	userPrivilege!: Array<UserPrivelege>;
+	@ManyToOne("UserPrivelege")
+	@JoinColumn({ name: "userPrivelegeId" })
+	userPrivilege!: IUserPrivelege;
 }

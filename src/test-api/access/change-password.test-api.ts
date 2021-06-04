@@ -1,4 +1,4 @@
-import { axiosApiBase } from "../";
+import { axiosApiBase } from "../base-instance.test-api";
 
 export const CallAccessChangePassword = async (
 	{ oldPassword, newPassword },

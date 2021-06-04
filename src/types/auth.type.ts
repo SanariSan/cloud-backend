@@ -8,7 +8,7 @@ import {
 	Privelege500Repository,
 	UserPrivelegeRepository,
 	UserRepository,
-} from "../database";
+} from "../database/repositories";
 
 export interface PreparedRequest extends Request {
 	userRepository: UserRepository;

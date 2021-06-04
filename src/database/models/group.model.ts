@@ -7,11 +7,12 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { GroupPath } from "./group-path.model";
-import { User } from "./user.model";
+import { IGroup } from "../types/igroup.type";
+import { IUser } from "../types/iuser.type";
+import { IGroupPath } from "../types/igroup-path.type";
 
 @Entity()
-export class Group {
+export class Group implements IGroup {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -27,15 +28,14 @@ export class Group {
 	@Column("text")
 	updatedAt!: Date;
 
-	@OneToOne((type) => GroupPath)
+	@OneToOne("GroupPath")
 	@JoinColumn({ name: "groupPathId" })
-	groupPath!: GroupPath;
+	groupPath!: IGroupPath;
 
 	//list of all users Ids have access to this group
 	//with this columns we can check all users related to this particualar group
-
-	@ManyToMany((type) => User, (user) => user.groupsParticipate)
+	@ManyToMany("User", "groupsParticipate")
 	@JoinTable({ name: "groups_users" })
 	@JoinColumn({ name: "userParticipateId" })
-	usersParticipate!: Array<User>;
+	usersParticipate!: Array<IUser>;
 }

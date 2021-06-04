@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { ProtectedRequest } from "../../types";
 import { SuccessResponse } from "../../core";
-import { EGROUP_PATH_KEYS, EGROUP_RELATIONS, EUSER_KEYS } from "../../database";
+import { EGROUP_PATH_KEYS, EGROUP_RELATIONS, EUSER_KEYS } from "../../database/connection";
 
 export const Profile1 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const groupsUserIn = req.userRepository.getRecord();

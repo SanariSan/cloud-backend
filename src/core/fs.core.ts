@@ -1,3 +1,5 @@
+import { Request } from "express";
+// import { checkMalicious } from "../helpers";
 import path from "path";
 import fs from "fs";
 import util from "util";
@@ -15,32 +17,40 @@ const rmAsync = util.promisify(fs.rm);
 
 //-------------------------------
 
+const UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
+const checkMalicious = (filePath) => {
+	if (UP_PATH_REGEXP.test(filePath)) throw new Error("Bad path");
+};
+
 export async function createFolder({
 	userDir,
 	pathA,
 	pathB,
 }: {
 	userDir: string;
-	pathA?: string;
+	pathA: string;
 	pathB: string;
 }) {
-	//don't need existing path, because of recursive
+	checkMalicious(pathA);
+	checkMalicious(pathB);
+
+	const existingPath = path.join(storageDir, userDir, pathA);
 	const targetPath = path.join(storageDir, userDir, pathB);
 
-	await mkdirAsync(targetPath, {
-		recursive: true,
-	});
+	const statObjContaining = await statAsync(existingPath);
+	const statObjNew = await statAsync(targetPath).catch((err) => void 0);
+
+	if (statObjContaining && !statObjNew) {
+		await mkdirAsync(targetPath);
+	}
 }
 
-export async function readFolder({
-	userDir,
-	pathA,
-	pathB,
-}: {
-	userDir: string;
-	pathA: string;
-	pathB?: string;
-}): Promise<any> {
+export async function readFolder({ userDir, pathA }: { userDir: string; pathA: string }): Promise<{
+	files: Array<string>;
+	folders: Array<string>;
+}> {
+	checkMalicious(pathA);
+
 	const existingPath = path.join(storageDir, userDir, pathA);
 	const output: {
 		files: Array<string>;
@@ -67,7 +77,9 @@ export async function readFolder({
 	return output;
 }
 
-export async function renameFolder({
+//------------------------------
+
+export async function renameFileFolder({
 	userDir,
 	pathA,
 	pathB,
@@ -76,8 +88,11 @@ export async function renameFolder({
 	pathA: string;
 	pathB: string;
 }) {
+	checkMalicious(pathA);
+	checkMalicious(pathB);
+
 	const existingPath = path.join(storageDir, userDir, pathA);
-	const targetPath = path.join(existingPath, userDir, pathB);
+	const targetPath = path.join(storageDir, userDir, pathB);
 
 	const statObjOld = await statAsync(existingPath);
 	const statObjNew = await statAsync(targetPath).catch((err) => void 0);
@@ -87,17 +102,9 @@ export async function renameFolder({
 	}
 }
 
-//------------------------------
+export async function deleteFileFolder({ userDir, pathA }: { userDir: string; pathA: string }) {
+	checkMalicious(pathA);
 
-export async function deleteFileFolder({
-	userDir,
-	pathA,
-	pathB,
-}: {
-	userDir: string;
-	pathA: string;
-	pathB?: string;
-}) {
 	const existingPath = path.join(storageDir, userDir, pathA);
 
 	await rmAsync(existingPath, {
@@ -116,8 +123,11 @@ export function createFile({
 	userDir: string;
 	pathA: string;
 	pathB: string;
-	req: any;
+	req: Request;
 }) {
+	checkMalicious(pathA);
+	checkMalicious(pathB);
+
 	return new Promise((resolve, reject) => {
 		const existingPath = path.join(storageDir, userDir, pathA, pathB);
 		const writable = fs.createWriteStream(existingPath, {
@@ -151,8 +161,10 @@ export async function checkExists({
 	pathA: string;
 	pathB: string;
 }) {
+	checkMalicious(pathA);
+	checkMalicious(pathB);
+
 	const existingPath = path.join(storageDir, userDir, pathA, pathB);
 
 	return statAsync(existingPath);
 }
-// export async function renameFile({ userDir, pathA, pathB }: IFsFnArgs) {}
