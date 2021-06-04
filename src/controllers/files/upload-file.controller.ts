@@ -18,8 +18,8 @@ export const FilesUpload = async (req: ProtectedRequest, res: Response, next: Ne
 	if (!groupPathRecord) throw new Error();
 
 	const sizeIncoming = parseInt(<string>req.headers["content-length"]);
-	const sizeIncomingGb = sizeIncoming / 1024 / 1024 / 1024;
-	if (sizeIncomingGb + groupPathRecord.sizeUsed > groupPathRecord.sizeMax) {
+	const sizeIncomingMb = sizeIncoming / 1000 / 1000;
+	if (sizeIncomingMb + groupPathRecord.sizeUsed > groupPathRecord.sizeMax) {
 		throw new NoSpaceError();
 	}
 

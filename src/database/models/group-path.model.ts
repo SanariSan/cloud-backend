@@ -9,10 +9,10 @@ export class GroupPath implements IGroupPath {
 	@Column("text")
 	pathName!: string;
 
-	@Column("double")
+	@Column("float8")
 	sizeMax!: number;
 
-	@Column("double")
+	@Column("float8")
 	sizeUsed!: number;
 
 	@Column("boolean")

@@ -16,7 +16,7 @@ async function initializeDb(): Promise<Connection> {
 			.createConnection()
 			.then((_) => _.connection);
 
-		// await connection.dropDatabase();
+		await connection.dropDatabase();
 		await connection.synchronize();
 
 		return connection;

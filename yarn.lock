@@ -137,13 +137,6 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/get-folder-size@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/get-folder-size/-/get-folder-size-3.0.0.tgz#d8c7f51028c2628aedfdf058ceebbce6d7535c94"
-  integrity sha512-h2y9/Z34T5G12bS4ntpC1wFMqUdnw9PC5MaU7rOZEFqwKyqv8W1tmRKSZzvfZR5f6c8xgXHRko3X0BFJhdUkHA==
-  dependencies:
-    "@types/node" "*"
-
 "@types/jsonwebtoken@^8.5.1":
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#56958cb2d80f6d74352bd2e501a018e2506a8a84"
@@ -1045,11 +1038,6 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-gar@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/gar/-/gar-1.0.4.tgz#f777bc7db425c0572fdeb52676172ca1ae9888b8"
-  integrity sha512-w4n9cPWyP7aHxKxYHFQMegj7WIAsL/YX/C4Bs5Rr8s1H9M1rNtRWRsw+ovYMkXDQ5S4ZbYHsHAPmevPjPgw44w==
-
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -1076,13 +1064,6 @@ get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
-
-get-folder-size@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/get-folder-size/-/get-folder-size-3.1.0.tgz#96d39f7e1a0b2e30d13958e05373ebfa32bdfaa4"
-  integrity sha512-/I7q+x1HCd22IXP4+kp2Wkz8+au7VfNwNyMfM4Z0gwaTMs+dJ1ShXUWDGSWXi+rDU59MI/j7NBP7+kd7zejnPw==
-  dependencies:
-    gar "^1.0.4"
 
 get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.2"

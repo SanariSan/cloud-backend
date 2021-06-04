@@ -1,10 +1,9 @@
 import config from "config";
 import { NextFunction, Response } from "express";
-import getItemSize from "get-folder-size";
 import path from "path";
 import { InternalError } from "../core";
 import { EGROUP_RELATIONS } from "../database/connection";
-import { calculateCurrentMaxStorageSize } from "../helpers";
+import { calculateCurrentMaxStorageSize, getItemsSize } from "../helpers";
 import { ProtectedRequest } from "../types";
 
 const storageDir = <string>config.get("storageDirectory");
@@ -56,11 +55,9 @@ export const UpdateSpace = async (
 	while (true) {
 		let err = false;
 
-		dirSize = await getItemSize
-			.strict(path.join(storageDir, groupPathRecord.pathName))
-			.catch((e) => {
-				err = true;
-			});
+		dirSize = await getItemsSize(path.join(storageDir, groupPathRecord.pathName)).catch((e) => {
+			err = true;
+		});
 
 		if (err === false) {
 			break;
