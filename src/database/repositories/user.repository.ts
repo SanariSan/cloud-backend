@@ -142,7 +142,7 @@ class UserRepository extends GenericRepository<User, EUSER_KEYS, EUSER_RELATIONS
 		this.record.name = user.name;
 		this.record.email = user.email;
 		this.record.password = user.password;
-		this.record.profilePicUrl = user.profilePicUrl;
+		this.record.profilePicUrl = user.profilePicUrl || null;
 		this.record.keystore = [];
 		this.record.groupsParticipate = [];
 		this.record.createdAt = now;

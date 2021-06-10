@@ -27,7 +27,7 @@ export class User implements IUser {
 	password!: string;
 
 	@Column({ type: "text", nullable: true })
-	profilePicUrl!: string;
+	profilePicUrl!: string | null;
 
 	//ownage of only 1 group
 	@OneToOne("Group")

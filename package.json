@@ -15,6 +15,13 @@
 		"prettier": "prettier -w --config ./.prettierrc.json ."
 	},
 	"dependencies": {
+		"@types/bcrypt": "^5.0.0",
+		"@types/config": "^0.0.38",
+		"@types/cors": "^2.8.10",
+		"@types/express": "^4.17.12",
+		"@types/jsonwebtoken": "^8.5.1",
+		"@types/node": "^15.12.2",
+		"axios": "^0.21.1",
 		"bcrypt": "^5.0.1",
 		"bcryptjs": "^2.4.3",
 		"config": "^3.3.6",
@@ -33,12 +40,6 @@
 		"winston-daily-rotate-file": "^4.5.5"
 	},
 	"devDependencies": {
-		"@types/bcrypt": "^5.0.0",
-		"@types/config": "^0.0.38",
-		"@types/cors": "^2.8.10",
-		"@types/express": "^4.17.11",
-		"@types/jsonwebtoken": "^8.5.1",
-		"axios": "^0.21.1",
 		"madge": "^4.0.2",
 		"prettier": "^2.3.0"
 	}
