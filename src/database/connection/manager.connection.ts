@@ -14,7 +14,9 @@ export class DBManager {
 	private connectionAutoCloseTimeout?: NodeJS.Timeout;
 	private authOptions?: ConnectionOptions = config.get("db.auth");
 	private defaultOptions = {
-		// synchronize: true,
+		ssl: {
+			rejectUnauthorized: false,
+		},
 	};
 
 	constructor(entities: Array<TEntities>, additionalOptions?: ConnectionOptions) {
