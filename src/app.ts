@@ -5,6 +5,7 @@ import { Logger } from "./core";
 import { initializeDb } from "./initialization.database";
 import { errorHandlerServices, routersServices, settingsServices } from "./loaders/services";
 import { errorHandler, routers, settings } from "./loaders/standart";
+import path from "path";
 
 process.on("uncaughtException", (e: Error) => {
 	console.log("Uncaught Exception");
@@ -23,7 +24,13 @@ async function initializeApp() {
 
 	settings(app);
 	routers(app);
-	if (config.get("environment") === "development") routersServices(app);
+	// if (config.get("environment") === "development")
+	routersServices(app);
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.join("../../", "cloud-front-build/index.html"));
+	});
+
 	errorHandler(app);
 
 	app.listen(config.get("port"), () => {
@@ -54,7 +61,7 @@ async function initializeAppServices() {
 async function init() {
 	initializeApp();
 
-	if (config.get("environment") === "production") initializeAppServices();
+	// if (config.get("environment") === "production") initializeAppServices();
 }
 
 init();
