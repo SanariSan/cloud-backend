@@ -1,4 +1,3 @@
-import config from "config";
 import { NextFunction, Response } from "express";
 import path from "path";
 import { InternalError } from "../core";
@@ -6,7 +5,7 @@ import { EGROUP_RELATIONS } from "../database/connection";
 import { calculateCurrentMaxStorageSize, getItemsSize } from "../helpers";
 import { ProtectedRequest } from "../types";
 
-const storageDir = <string>config.get("storageDirectory");
+const storageDir = <string>process.env.STORAGE_DIRECTORY;
 
 export const UpdateSpace = async (
 	req: ProtectedRequest,

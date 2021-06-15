@@ -8,3 +8,5 @@ logs*
 .vscode/**/*
 storage/**/*
 !storage/null
+*.env*
+!.env.copy

@@ -1,4 +1,3 @@
-import config from "config";
 import { sign, verify } from "jsonwebtoken";
 import util from "util";
 import { BadTokenError, InternalError, TokenExpiredError } from "./api-error.core";
@@ -7,7 +6,7 @@ import { Logger } from "./logger.core";
 export class JWT {
 	//create token with the payload attached
 	public static async encode(payload: JwtPayload): Promise<string> {
-		const secret = config.get("jwt.secret");
+		const secret = <string>process.env.SECRET;
 		if (!secret) throw new InternalError("Token generation failure");
 		// @ts-ignore
 		return await util.promisify(sign)({ ...payload }, secret, {
@@ -17,7 +16,7 @@ export class JWT {
 
 	//get payload only if valid
 	public static async validate(token: string): Promise<JwtPayload> {
-		const secret = config.get("jwt.secret");
+		const secret = <string>process.env.SECRET;
 		try {
 			// @ts-ignore
 			return (await util.promisify(verify)(token, secret, {
@@ -34,7 +33,7 @@ export class JWT {
 
 	// get payload even if expired
 	public static async validateNoExp(token: string): Promise<JwtPayload> {
-		const secret = config.get("jwt.secret");
+		const secret = <string>process.env.SECRET;
 
 		try {
 			// @ts-ignore

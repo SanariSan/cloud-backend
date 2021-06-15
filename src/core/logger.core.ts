@@ -1,4 +1,3 @@
-import config from "config";
 import fs from "fs";
 import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
@@ -13,9 +12,8 @@ import DailyRotateFile from "winston-daily-rotate-file";
   silly: 6
 */
 
-const environment = <string>config.get("environment");
-const logLevel = environment === "development" ? "debug" : "warn";
-const logDirectory = <string>config.get("logDirectory");
+const logLevel = <string>process.env.NODE_ENV === "development" ? "debug" : "warn";
+const logDirectory = <string>process.env.LOG_DIRECTORY;
 
 if (!fs.existsSync(<string>logDirectory)) {
 	fs.mkdirSync(<string>logDirectory);

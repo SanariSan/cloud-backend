@@ -1,10 +1,9 @@
-import config from "config";
 import { Response } from "express";
 import path from "path";
 import { ObjectLiteral } from "typeorm";
 import { ResponseStatus, StatusCode, THttpCall } from "./types.type";
 
-const storageDir = <string>config.get("storageDirectory");
+const storageDir = <string>process.env.STORAGE_DIRECTORY;
 
 //-------------------------------
 //Abstract parent

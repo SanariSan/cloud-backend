@@ -1,8 +1,7 @@
-import config from "config";
 import * as apiBranches from "../../routers/api";
 
 function routers(app) {
-	const apiVersion = <string>config.get("apiVersion");
+	const apiVersion = <string>process.env.API_VERSION;
 	app.use(`/${apiVersion}`, apiBranches[apiVersion.toUpperCase()]);
 }
 

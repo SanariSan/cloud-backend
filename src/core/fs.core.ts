@@ -1,4 +1,3 @@
-import config from "config";
 import { Request } from "express";
 import fs from "fs";
 // import { checkMalicious } from "../helpers";
@@ -7,7 +6,7 @@ import util from "util";
 
 //------------------------------
 
-const storageDir = <string>config.get("storageDirectory");
+const storageDir = <string>process.env.STORAGE_DIRECTORY;
 
 const renameAsync = util.promisify(fs.rename);
 const statAsync = util.promisify(fs.stat);
