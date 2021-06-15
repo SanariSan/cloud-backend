@@ -27,7 +27,7 @@ async function initializeApp() {
 	routersServices(app);
 
 	app.get("*", (req, res) => {
-		res.sendFile(path.join("../../", "cloud-front-build/index.html"));
+		res.sendFile(path.resolve("../", "cloud-front-build/index.html"));
 	});
 
 	errorHandler(app);
