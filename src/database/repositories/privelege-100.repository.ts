@@ -1,4 +1,3 @@
-import config from "config";
 import { Logger } from "../../core";
 import {
 	DBManager,
@@ -22,7 +21,7 @@ class Privelege100Repository extends GenericRepository<
 	public createPrivelege100(privelege100?: IPrivelege100ManualInput): this {
 		const expDays = privelege100
 			? privelege100.expiresIn
-			: <number>config.get("privelege.lifetimeDays100_default");
+			: parseInt(<string>process.env.LIFETIME_DAYS_100_DEFAULT);
 		const expMs = expDays * 24 * 60 * 60 * 1000;
 
 		const now = new Date();

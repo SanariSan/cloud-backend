@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import config from "config";
 import crypto from "crypto";
 import { NextFunction, Response } from "express";
 import util from "util";
@@ -29,7 +28,7 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
 	const newGroupPath: IGroupPathManualInput = {
 		pathName: (await asyncBytes(12)).toString("hex"),
 		sizeUsed: 0,
-		sizeMax: config.get("privelege.defaultStorageSizeGb"),
+		sizeMax: parseInt(<string>process.env.DEFAULT_STORAGE_SIZE_GB),
 	};
 
 	//create group record

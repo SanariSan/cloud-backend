@@ -3,7 +3,7 @@ import express from "express";
 import path from "path";
 
 function settings(app) {
-	// const corsUrl = <string>config.get("corsUrl");
+	// const corsUrl = <string>process.env.CORS_URL;
 
 	// app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 	app.use(cors());

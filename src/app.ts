@@ -1,11 +1,10 @@
-import config from "config";
 import express from "express";
+import path from "path";
 import "reflect-metadata";
 import { Logger } from "./core";
 import { initializeDb } from "./initialization.database";
 import { errorHandlerServices, routersServices, settingsServices } from "./loaders/services";
 import { errorHandler, routers, settings } from "./loaders/standart";
-import path from "path";
 
 process.on("uncaughtException", (e: Error) => {
 	console.log("Uncaught Exception");
@@ -17,14 +16,14 @@ process.on("unhandledRejection", (e: Error) => {
 });
 
 async function initializeApp() {
-	await initializeDb();
+	await initializeDb({ dropDb: true });
 	// await test();
 
 	const app = express();
 
 	settings(app);
 	routers(app);
-	// if (config.get("environment") === "development")
+	// if (process.env.ENVIRONMENT === "development")
 	routersServices(app);
 
 	app.get("*", (req, res) => {
@@ -33,8 +32,8 @@ async function initializeApp() {
 
 	errorHandler(app);
 
-	app.listen(config.get("port"), () => {
-		Logger.warn(`server running on port : ${config.get("port")}`);
+	app.listen(process.env.PORT, () => {
+		Logger.warn(`server running on port : ${process.env.PORT}`);
 	}).on("error", (e: any) => {
 		console.log("App listen handler");
 		Logger.warn(e);
@@ -49,8 +48,8 @@ async function initializeAppServices() {
 	errorHandlerServices(appServices);
 
 	appServices
-		.listen(config.get("portServices"), () => {
-			Logger.warn(`server for services running on port : ${config.get("portServices")}`);
+		.listen(process.env.PORT_SERVICES, () => {
+			Logger.warn(`server for services running on port : ${process.env.PORT_SERVICES}`);
 		})
 		.on("error", (e: any) => {
 			console.log("App services listen handler");
@@ -61,7 +60,7 @@ async function initializeAppServices() {
 async function init() {
 	initializeApp();
 
-	// if (config.get("environment") === "production") initializeAppServices();
+	// if (process.env.ENVIRONMENT === "production") initializeAppServices();
 }
 
 init();

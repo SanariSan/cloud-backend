@@ -1,5 +1,5 @@
-import config from "config";
 import { Connection, ConnectionOptions, createConnection } from "typeorm";
+import { PostgresConnectionCredentialsOptions } from "typeorm/driver/postgres/PostgresConnectionCredentialsOptions";
 import { Logger } from "../../core";
 import * as Entities from "../models";
 import { TEntities } from "./";
@@ -7,12 +7,18 @@ import { TEntities } from "./";
 export class DBManager {
 	private openedConnection?: Connection;
 	private entities: Array<TEntities>;
-	private additionalOptions?: ConnectionOptions;
+	private additionalOptions?: Partial<ConnectionOptions>;
 	private connectionName: string;
-	private connectionLifespanSecs: number = config.get("db.options.connectionLifespanSecs");
+	private connectionLifespanSecs: number = parseInt(<string>process.env.CONNECTION_LIFESPAN_SECS);
 	private connectionLifespanMs: number = this.connectionLifespanSecs * 1000;
 	private connectionAutoCloseTimeout?: NodeJS.Timeout;
-	private authOptions?: ConnectionOptions = config.get("db.auth");
+	private authOptions?: PostgresConnectionCredentialsOptions = {
+		host: <string>process.env.HOST,
+		port: parseInt(<string>process.env.DB_PORT),
+		username: <string>process.env.DB_USERNAME,
+		password: <string>process.env.DB_PASSWORD,
+		database: <string>process.env.DB_DATABASE,
+	};
 	private defaultOptions = {
 		ssl: {
 			rejectUnauthorized: false,
@@ -38,6 +44,8 @@ export class DBManager {
 			...this.additionalOptions,
 			entities: filteredEntities,
 		};
+
+		console.log(options);
 
 		this.openedConnection = await createConnection(options);
 

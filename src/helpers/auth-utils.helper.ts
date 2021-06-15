@@ -1,10 +1,14 @@
-import config from "config";
 import crypto from "crypto";
 import { AuthFailureError, InternalError, JWT, JwtPayload } from "../core";
 import { KeystoreRepository, UserRepository } from "../database/repositories";
 import { Tokens } from "../types";
 
-const { accessTokenValidDays, refreshTokenValidDays, issuer, audience } = config.get("jwt");
+const { accessTokenValidDays, refreshTokenValidDays, issuer, audience } = {
+	accessTokenValidDays: parseInt(<string>process.env.ACCESS_TOKEN_VALID_DAYS),
+	refreshTokenValidDays: parseInt(<string>process.env.REFRESH_TOKEN_VALID_DAYS),
+	issuer: <string>process.env.ISSUER,
+	audience: <string>process.env.AUDIENCE,
+};
 
 async function createTokens(
 	userId: number,

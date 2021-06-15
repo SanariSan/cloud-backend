@@ -10,9 +10,9 @@
 		"drop-build": "rm -rf ./dist",
 		"drop-logs-dev": "rm -rf ./logs-dev",
 		"drop-logs-prod": "rm -rf ./logs-prod",
-		"launch-prod": "cross-env NODE_ENV=production node ./dist/app.js",
-		"launch-dev": "cross-env NODE_ENV=development node ./dist/app.js",
-		"launch-test-api": "cross-env NODE_ENV=development node ./dist/test-api/test.test-api.js",
+		"launch-prod": "cross-env NODE_ENV=production node -r dotenv/config ./dist/app.js",
+		"launch-dev": "cross-env NODE_ENV=development node -r dotenv/config ./dist/app.js",
+		"launch-test-api": "cross-env NODE_ENV=development node -r dotenv/config ./dist/test-api/test.test-api.js",
 		"prettier": "prettier -w --config ./.prettierrc.json ."
 	},
 	"dependencies": {
@@ -25,9 +25,9 @@
 		"axios": "^0.21.1",
 		"bcrypt": "^5.0.1",
 		"bcryptjs": "^2.4.3",
-		"config": "^3.3.6",
 		"cors": "^2.8.5",
 		"cross-env": "^7.0.3",
+		"dotenv": "^10.0.0",
 		"express": "^4.17.1",
 		"express-validator": "^6.10.1",
 		"joi": "^17.4.0",

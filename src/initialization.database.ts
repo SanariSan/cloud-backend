@@ -2,7 +2,7 @@ import { Connection } from "typeorm";
 import { Logger } from "./core";
 import { DBManager, ENTITIES } from "./database/connection";
 
-async function initializeDb(): Promise<Connection> {
+async function initializeDb({ dropDb }): Promise<Connection> {
 	try {
 		const connection: Connection = await new DBManager([
 			ENTITIES.USER,
@@ -16,12 +16,17 @@ async function initializeDb(): Promise<Connection> {
 			.createConnection()
 			.then((_) => _.connection);
 
-		await connection.dropDatabase();
+		if (dropDb) {
+			for (let i = 0; i < 10; i++) {
+				await connection.dropDatabase().catch((e) => Logger.warn("DROP ERR", e));
+			}
+		}
+
 		await connection.synchronize();
 
 		return connection;
 	} catch (err) {
-		Logger.warn("PROBLEMS WITH DATABASE SYNC", err);
+		Logger.warn("PROBLEMS WITH DATABASE INITIALIZATION", err);
 		throw new Error(err);
 	}
 }

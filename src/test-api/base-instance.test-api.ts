@@ -1,8 +1,7 @@
 import axios from "axios";
-import config from "config";
 
 const host = "http://localhost";
-const port = config.get("port");
+const port = parseInt(<string>process.env.PORT);
 
 const axiosApiBase = axios.create({
 	baseURL: `${host}:${port}/v1`,
