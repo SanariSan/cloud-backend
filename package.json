@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "yarn build && yarn launch-dev",
-		"start-prod": "yarn build && yarn launch-prod",
+		"start-prod": "yarn install && yarn build && yarn launch-prod",
 		"build": "yarn drop-build && yarn drop-logs-dev && tsc",
 		"drop-build": "rm -rf ./dist",
 		"drop-logs-dev": "rm -rf ./logs-dev",
