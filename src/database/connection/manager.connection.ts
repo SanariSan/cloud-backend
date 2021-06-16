@@ -13,7 +13,7 @@ export class DBManager {
 	private connectionLifespanMs: number = this.connectionLifespanSecs * 1000;
 	private connectionAutoCloseTimeout?: NodeJS.Timeout;
 	private authOptions?: PostgresConnectionCredentialsOptions = {
-		host: <string>process.env.HOST,
+		host: <string>process.env.DB_HOST,
 		port: parseInt(<string>process.env.DB_PORT),
 		username: <string>process.env.DB_USERNAME,
 		password: <string>process.env.DB_PASSWORD,
