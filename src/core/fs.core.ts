@@ -105,10 +105,13 @@ export async function deleteFileFolder({ userDir, pathA }: { userDir: string; pa
 	checkMalicious(pathA);
 
 	const existingPath = path.join(storageDir, userDir, pathA);
+	const statObj = await statAsync(existingPath).catch((err) => void 0);
 
-	await rmAsync(existingPath, {
-		recursive: true,
-	});
+	if (statObj) {
+		await rmAsync(existingPath, {
+			recursive: true,
+		});
+	}
 }
 
 //------------------------------
