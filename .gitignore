@@ -9,4 +9,4 @@ logs*
 storage/**/*
 !storage/null
 *.env*
-!.env.copy
+!.env
