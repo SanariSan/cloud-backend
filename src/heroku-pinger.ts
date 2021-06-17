@@ -1,7 +1,7 @@
-import fetch from "node-fetch";
+import axios from "axios";
 
 function ping() {
-	fetch("https://storeton.herokuapp.com").catch(() => {});
+	axios.get("https://storeton.herokuapp.com").catch(() => {});
 }
 
 export function scheduledPing() {
