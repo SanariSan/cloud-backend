@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import "reflect-metadata";
 import { Logger } from "./core";
-import { scheduledPing } from "./heroku-pinger";
 import { initializeDb } from "./initialization.database";
 import { errorHandlerServices, routersServices, settingsServices } from "./loaders/services";
 import { errorHandler, routers, settings } from "./loaders/standart";
@@ -62,7 +61,6 @@ async function initializeAppServices() {
 async function init() {
 	initializeApp();
 
-	if (process.env.ENVIRONMENT === "production") scheduledPing();
 	// if (process.env.ENVIRONMENT === "production") initializeAppServices();
 }
 
