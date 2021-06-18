@@ -22,14 +22,27 @@ const FilesRouter = Router();
 FilesRouter.post(
 	"/*",
 	Validate(Schema.auth, ValidationSource.HEADER),
-	Validate(Schema.params, ValidationSource.PARAM),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 	AsyncHandle(CheckGroupPermission),
 	AsyncHandle(UpdateSpace),
 );
 
-FilesRouter.get("/browse/:groupId-:path", AsyncHandle(FoldersBrowse));
+FilesRouter.get(
+	"/browse/:groupId-:path",
+	Validate(Schema.paramsBrowse, ValidationSource.PARAM),
+	AsyncHandle(FoldersBrowse),
+);
+
+FilesRouter.post(
+	"/*",
+	Validate(Schema.paramsActions, ValidationSource.PARAM),
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(CheckGroupPermission),
+	AsyncHandle(UpdateSpace),
+);
+
 FilesRouter.get("/download/:groupId-:path-:filename", AsyncHandle(FilesDownload));
 FilesRouter.post("/upload/:groupId-:path-:filename", AsyncHandle(FilesUpload));
 FilesRouter.put("/create/:groupId-:path-:filename", AsyncHandle(FoldersCreate));

@@ -18,7 +18,7 @@ export class User implements IUser {
 	id!: number;
 
 	@Column("text")
-	name!: string;
+	name!: string | null;
 
 	@Column("text")
 	email!: string;

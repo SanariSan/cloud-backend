@@ -13,9 +13,7 @@ export const AccessRegister = async (req: PreparedRequest, res: Response, next: 
 
 	//create new user obj
 	const newUser = {
-		name: req.body.name,
 		email: req.body.email,
-		profilePicUrl: req.body.profilePicUrl,
 		password: await bcrypt.hash(req.body.password, 12),
 	};
 	await req.userRepository.createUser(newUser).saveRecord();

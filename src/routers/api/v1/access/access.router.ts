@@ -25,16 +25,16 @@ AccessRouter.post(
 	AsyncHandle(AccessLogin),
 );
 
-AccessRouter.put("/*", Validate(Schema.auth, ValidationSource.HEADER));
-
 AccessRouter.put(
 	"/refresh",
+	Validate(Schema.auth, ValidationSource.HEADER),
 	Validate(Schema.refresh, ValidationSource.BODY),
 	AsyncHandle(StickRepos),
 	AsyncHandle(AccessRefresh),
 );
 AccessRouter.post(
 	"/change-password",
+	Validate(Schema.auth, ValidationSource.HEADER),
 	Validate(Schema.changePassword, ValidationSource.BODY),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
@@ -42,6 +42,7 @@ AccessRouter.post(
 );
 AccessRouter.delete(
 	"/logout",
+	Validate(Schema.auth, ValidationSource.HEADER),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 	AsyncHandle(AccessLogout),

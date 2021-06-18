@@ -1,8 +1,6 @@
 export interface IUserManualInput {
-	name: string;
 	email: string;
 	password: string;
-	profilePicUrl: string;
 }
 
 //-----------------------------------------

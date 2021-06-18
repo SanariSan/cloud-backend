@@ -11,7 +11,11 @@ export const Schema = {
 		groupName: Joi.string().min(6).required(),
 		password: Joi.string().min(6).required(),
 	}),
-	params: Joi.object().keys({
+	paramsBrowse: Joi.object().keys({
+		groupId: Joi.string().min(1).required(),
+		path: Joi.string().min(1).required(),
+	}),
+	paramsActions: Joi.object().keys({
 		groupId: Joi.string().min(1).required(),
 		path: Joi.string().min(1).required(),
 		filename: Joi.string().min(1).required(),

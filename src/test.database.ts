@@ -31,9 +31,7 @@ async function test() {
 	]).createConnection();
 
 	const newUserData: IUserManualInput = {
-		name: "test",
 		email: "test@mail.ru",
-		profilePicUrl: "test_url",
 		password: "test_hash",
 	};
 	const newKeystoreData: IKeystoreManualInput = {
