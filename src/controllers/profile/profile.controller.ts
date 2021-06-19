@@ -3,7 +3,7 @@ import { SuccessResponse } from "../../core";
 import { EGROUP_PATH_KEYS, EGROUP_RELATIONS, EUSER_KEYS } from "../../database/connection";
 import { ProtectedRequest } from "../../types";
 
-export const Profile1 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const ProfileInfo = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const groupsUserIn = req.userRepository.getRecord();
 	if (!groupsUserIn) throw new Error();
 

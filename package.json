@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "yarn build && yarn launch-dev",
 		"start-prod": "yarn build && yarn launch-prod",
-		"build": "yarn build-win",
+		"build": "yarn build-linux",
 		"build-linux": "yarn drop-build && yarn drop-logs-dev && tsc",
 		"drop-build": "rm -rf ./dist",
 		"drop-logs-dev": "rm -rf ./logs-dev",

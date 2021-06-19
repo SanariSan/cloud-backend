@@ -10,7 +10,7 @@ const CheckGroupPermission = async (
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
-	if (req.body) {
+	if (req.body && Object.keys(req.body).length !== 0) {
 		if (
 			!req.body.groupId ||
 			isNaN(parseInt(req.body.groupId)) ||
