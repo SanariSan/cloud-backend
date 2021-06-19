@@ -32,7 +32,6 @@ export class ApiError extends Error {
 			case ErrorType.INTERNAL:
 				return new InternalErrorResponse(err.message).send(res);
 			case ErrorType.NOT_FOUND:
-			case ErrorType.NO_ENTRY:
 				return new NotFoundResponse(err.message).send(res);
 			case ErrorType.BAD_REQUEST:
 				return new BadRequestResponse(err.message).send(res);
@@ -74,12 +73,6 @@ export class BadRequestError extends ApiError {
 export class NotFoundError extends ApiError {
 	constructor(message = "Not Found") {
 		super(ErrorType.NOT_FOUND, message);
-	}
-}
-//for user info/songo info
-export class NoEntryError extends ApiError {
-	constructor(message = "Entry don't exists") {
-		super(ErrorType.NO_ENTRY, message);
 	}
 }
 
