@@ -17,7 +17,7 @@ export class User implements IUser {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
-	@Column("text")
+	@Column({ type: "text", nullable: true })
 	name!: string | null;
 
 	@Column("text")

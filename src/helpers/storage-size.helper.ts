@@ -1,7 +1,7 @@
 import { EUSER_PRIVELEGE_RELATIONS } from "../database/connection";
 import { UserPrivelegeRepository, UserRepository } from "../database/repositories";
 
-const defaultSizeMax = parseInt(<string>process.env.DEFAULT_STORAGE_SIZE_GB);
+const defaultSizeMax = parseInt(<string>process.env.DEFAULT_STORAGE_SIZE_MB);
 
 export async function calculateCurrentMaxStorageSize(
 	userRepository: UserRepository,

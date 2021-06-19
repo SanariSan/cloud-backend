@@ -28,7 +28,7 @@ export const GroupCreate = async (req: ProtectedRequest, res: Response, next: Ne
 	const newGroupPath: IGroupPathManualInput = {
 		pathName: (await asyncBytes(12)).toString("hex"),
 		sizeUsed: 0,
-		sizeMax: parseInt(<string>process.env.DEFAULT_STORAGE_SIZE_GB),
+		sizeMax: parseInt(<string>process.env.DEFAULT_STORAGE_SIZE_MB),
 	};
 
 	//create group record
