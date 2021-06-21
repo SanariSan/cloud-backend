@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { createFolder } from "../../core";
+import { createFolder, SuccessMsgResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database/connection";
 import { handleFs } from "../../helpers";
 import { ProtectedRequest } from "../../types";
@@ -25,4 +25,6 @@ export const FoldersCreate = async (req: ProtectedRequest, res: Response, next: 
 		pathA: req.params.path,
 		pathB: req.params.filename,
 	});
+
+	return new SuccessMsgResponse("Success").send(res);
 };

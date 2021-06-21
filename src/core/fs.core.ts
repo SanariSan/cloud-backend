@@ -33,8 +33,15 @@ export async function createFolder({
 	checkMalicious(pathA);
 	checkMalicious(pathB);
 
+	console.log(userDir);
+	console.log(pathA);
+	console.log(pathB);
+
 	const existingPath = path.join(storageDir, userDir, pathA);
-	const targetPath = path.join(storageDir, userDir, pathB);
+	const targetPath = path.join(storageDir, userDir, pathA, pathB);
+
+	console.log(existingPath);
+	console.log(targetPath);
 
 	const statObjContaining = await statAsync(existingPath);
 	const statObjNew = await statAsync(targetPath).catch((err) => void 0);
