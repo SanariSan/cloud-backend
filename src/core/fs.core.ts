@@ -99,8 +99,13 @@ export async function renameFileFolder({
 	const existingPath = path.join(storageDir, userDir, pathA);
 	const targetPath = path.join(storageDir, userDir, pathB);
 
+	console.log(existingPath);
+	console.log(targetPath);
+
 	const statObjOld = await statAsync(existingPath);
 	const statObjNew = await statAsync(targetPath).catch((err) => void 0);
+
+	console.log(true);
 
 	if (statObjOld && !statObjNew) {
 		await renameAsync(existingPath, targetPath);

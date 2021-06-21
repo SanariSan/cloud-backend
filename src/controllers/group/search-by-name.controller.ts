@@ -19,6 +19,7 @@ export const GroupSearchByName = async (
 	//get all existing users records, if any exist :_)
 	await req.userRepository.findByIds([], [EUSER_RELATIONS.GROUP_OWNAGE]);
 	const userRecords = req.userRepository.getRecords();
+	console.log(userRecords);
 	if (!userRecords || !userRecords.some((el) => el)) throw new InternalError();
 
 	//get users who own groups and whose group name matches search request/includes search request

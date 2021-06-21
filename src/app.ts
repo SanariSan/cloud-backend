@@ -16,7 +16,7 @@ process.on("unhandledRejection", (e: Error) => {
 });
 
 async function initializeApp() {
-	await initializeDb({ dropDb: true });
+	await initializeDb({ dropDb: false });
 	// await test();
 
 	const app = express();
