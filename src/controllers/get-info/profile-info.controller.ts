@@ -42,7 +42,7 @@ export const ProfileInfo = async (req: ProtectedRequest, res: Response, next: Ne
 		groupOwnage: userRecord.groupOwnage
 			? req.groupRepository.getRecord([EGROUP_KEYS.ID])
 			: null,
-		storageSize: groupPathRecord
+		storageInfo: groupPathRecord
 			? req.groupPathRepository.getRecord([
 					EGROUP_PATH_KEYS.SIZE_USED,
 					EGROUP_PATH_KEYS.SIZE_MAX,

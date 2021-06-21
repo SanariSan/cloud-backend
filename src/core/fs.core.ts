@@ -49,7 +49,6 @@ export async function readFolder({ userDir, pathA }: { userDir: string; pathA: s
 	folders: Array<string>;
 }> {
 	checkMalicious(pathA);
-
 	const existingPath = path.join(storageDir, userDir, pathA);
 	const output: {
 		files: Array<string>;

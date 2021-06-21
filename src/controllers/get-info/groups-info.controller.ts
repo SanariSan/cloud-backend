@@ -29,7 +29,7 @@ export const GroupInfo = async (req: ProtectedRequest, res: Response, next: Next
 
 	return new SuccessResponse("Groups found", {
 		groupInfo: req.groupRepository.getRecord([EGROUP_KEYS.ID, EGROUP_KEYS.NAME]),
-		storageSize: req.groupPathRepository.getRecord([
+		storageInfo: req.groupPathRepository.getRecord([
 			EGROUP_PATH_KEYS.SIZE_USED,
 			EGROUP_PATH_KEYS.SIZE_MAX,
 		]),

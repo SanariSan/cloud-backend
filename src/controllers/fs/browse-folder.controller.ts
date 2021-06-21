@@ -23,5 +23,5 @@ export const FoldersBrowse = async (req: ProtectedRequest, res: Response, next: 
 		pathA: req.params.path,
 	});
 
-	return new SuccessResponse("Directory content", dirEntites);
+	return new SuccessResponse("Directory content", dirEntites).send(res);
 };
