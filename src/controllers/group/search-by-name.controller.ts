@@ -12,6 +12,8 @@ export const GroupSearchByName = async (
 ) => {
 	let result: Array<{
 		ownerId: number;
+		ownerName: string | null;
+		ownerEmail: string;
 		groupId: number;
 		groupName: string;
 	}> = [];
@@ -35,6 +37,8 @@ export const GroupSearchByName = async (
 	if (filteredUsers.length !== 0)
 		result = filteredUsers.map((el) => ({
 			ownerId: el.id,
+			ownerName: el.name,
+			ownerEmail: el.email,
 			groupId: el.groupOwnage.id,
 			groupName: el.groupOwnage.name,
 		}));
