@@ -15,8 +15,9 @@ export const Schema = {
 		groupId: Joi.number().required(),
 		password: Joi.string().min(6).required(),
 	}),
-	leave: Joi.object().keys({
+	kick: Joi.object().keys({
 		groupId: Joi.number().required(),
+		userId: Joi.number().required(),
 	}),
 	changePassword: Joi.object().keys({
 		oldPassword: Joi.string().min(6).required(),

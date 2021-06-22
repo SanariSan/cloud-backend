@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Response } from "express";
-import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
+import { BadRequestError, SuccessResponse } from "../../core";
 import { EUSER_KEYS, EUSER_RELATIONS } from "../../database/connection";
 import { setNewTokenPair } from "../../helpers";
 import { PreparedRequest } from "../../types";
@@ -13,7 +13,7 @@ export const AccessLogin = async (req: PreparedRequest, res: Response, next: Nex
 
 	//compare pass
 	const matchPass: boolean = await bcrypt.compare(req.body.password, userRecord.password);
-	if (!matchPass) throw new AuthFailureError("Wrong password");
+	if (!matchPass) throw new BadRequestError("Wrong password");
 
 	//create new keystore, save it and assign relation to user's record
 	const tokens = await setNewTokenPair(req.userRepository, req.keystoreRepository);

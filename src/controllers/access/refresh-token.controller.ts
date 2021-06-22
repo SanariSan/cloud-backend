@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { AuthFailureError, JWT, SuccessResponse } from "../../core";
+import { AuthFailureError, BadRequestError, JWT, SuccessResponse } from "../../core";
 import { EUSER_RELATIONS } from "../../database/connection";
 import { getToken, setNewTokenPair, validateTokenData } from "../../helpers";
 import { ProtectedRequest } from "../../types";
@@ -17,12 +17,12 @@ export const AccessRefresh = async (req: ProtectedRequest, res: Response, next: 
 	//get user's record if exists
 	await req.userRepository.findById(accessTokenPayload.sub, [EUSER_RELATIONS.KEYSTORE]);
 	const userRecord = req.userRepository.getRecord();
-	if (!userRecord) throw new AuthFailureError("User not registered");
+	if (!userRecord) throw new BadRequestError("User not registered");
 
 	//get keystore if exists (not needed further, just for the check)
 	await req.keystoreRepository.findByBothTokens(accessTokenPayload.prm, refreshTokenPayload.prm);
 	const keystoreRecord = req.keystoreRepository.getRecord();
-	if (!keystoreRecord) throw new AuthFailureError("Token pair not found");
+	if (!keystoreRecord) throw new BadRequestError("Token pair not found");
 
 	//delete old expired pair
 	await req.keystoreRepository.removeRecord();

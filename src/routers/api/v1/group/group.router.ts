@@ -3,10 +3,10 @@ import {
 	GroupChangePassword,
 	GroupCreate,
 	GroupJoin,
-	GroupLeave,
 	GroupSearchByEmail,
 	GroupSearchByName,
 } from "../../../../controllers/group";
+import { GroupKick } from "../../../../controllers/group/kick.controller";
 import { Validate, ValidationSource } from "../../../../helpers";
 import { AsyncHandle, Authentificate, StickRepos } from "../../../../middleware";
 import { Schema } from "./group.schema";
@@ -25,7 +25,7 @@ GroupRouter.post(
 	AsyncHandle(GroupCreate),
 );
 GroupRouter.post("/join", Validate(Schema.join, ValidationSource.BODY), AsyncHandle(GroupJoin));
-GroupRouter.post("/leave", Validate(Schema.leave, ValidationSource.BODY), AsyncHandle(GroupLeave));
+GroupRouter.post("/kick", Validate(Schema.kick, ValidationSource.BODY), AsyncHandle(GroupKick));
 GroupRouter.post(
 	"/change-password",
 	Validate(Schema.changePassword, ValidationSource.BODY),

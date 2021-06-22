@@ -23,6 +23,9 @@ export class DBManager {
 		ssl: {
 			rejectUnauthorized: false,
 		},
+		extra: {
+			connectionLimit: 100,
+		},
 	};
 
 	constructor(entities: Array<TEntities>, additionalOptions?: ConnectionOptions) {

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Response } from "express";
-import { AuthFailureError, BadRequestError, SuccessResponse } from "../../core";
+import { BadRequestError, SuccessResponse } from "../../core";
 import { EGROUP_KEYS, EGROUP_RELATIONS } from "../../database/connection";
 import { ProtectedRequest } from "../../types";
 
@@ -13,7 +13,7 @@ export const GroupJoin = async (req: ProtectedRequest, res: Response, next: Next
 
 	//check pass
 	const matchPass: boolean = await bcrypt.compare(req.body.password, groupRecord.password);
-	if (!matchPass) throw new AuthFailureError("Authentication failure");
+	if (!matchPass) throw new BadRequestError("Wrong password");
 
 	//get user record if exists
 	const userRecord = req.userRepository.getRecord();

@@ -15,7 +15,7 @@ class Privelege500Repository extends GenericRepository<
 	EPRIVELEGE_500_RELATIONS
 > {
 	constructor(dbManager: DBManager) {
-		super(ENTITIES.PRIVELEGE_100, dbManager);
+		super(ENTITIES.PRIVELEGE_500, dbManager);
 	}
 
 	public createPrivelege500(privelege500?: IPrivelege500ManualInput): this {
