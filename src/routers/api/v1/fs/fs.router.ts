@@ -22,7 +22,7 @@ const FilesRouter = Router();
 FilesRouter.get(
 	"/browse-folder/:groupId-:path",
 	Validate(Schema.auth, ValidationSource.HEADER),
-	Validate(Schema.paramsBrowse, ValidationSource.PARAM),
+	Validate(Schema.paramsShort, ValidationSource.PARAM),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 	AsyncHandle(CheckGroupPermission),
@@ -71,15 +71,14 @@ FilesRouter.patch(
 	AsyncHandle(FoldersFilesRename),
 );
 FilesRouter.delete(
-	"/delete-file-folder/:groupId-:path-:filename",
+	"/delete-file-folder/:groupId-:path",
 	Validate(Schema.auth, ValidationSource.HEADER),
-	Validate(Schema.paramsActions, ValidationSource.PARAM),
+	Validate(Schema.paramsShort, ValidationSource.PARAM),
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 	AsyncHandle(CheckGroupPermission),
 	AsyncHandle(UpdateSpace),
 	AsyncHandle(FoldersFilesDelete),
 );
-//add move
 
 export { FilesRouter };

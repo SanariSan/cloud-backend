@@ -4,13 +4,13 @@ import { Add100, Add500 } from "../../../services/controllers";
 
 const AddStoragePaymentRouter = Router();
 
-AddStoragePaymentRouter.use(
+AddStoragePaymentRouter.post(
 	"/add100",
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),
 	AsyncHandle(Add100),
 );
-AddStoragePaymentRouter.use(
+AddStoragePaymentRouter.post(
 	"/add500",
 	AsyncHandle(StickRepos),
 	AsyncHandle(Authentificate),

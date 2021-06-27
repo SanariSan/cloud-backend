@@ -13,6 +13,8 @@ export const GroupSearchByEmail = async (
 	//array just for compatibility with other search methods
 	let result: Array<{
 		ownerId: number;
+		ownerName: string | null;
+		ownerEmail: string;
 		groupId: number;
 		groupName: string;
 	}> = [];
@@ -27,6 +29,8 @@ export const GroupSearchByEmail = async (
 		result = [
 			{
 				ownerId: userRecord.id,
+				ownerName: userRecord.name,
+				ownerEmail: userRecord.email,
 				groupId: userRecord.groupOwnage.id,
 				groupName: userRecord.groupOwnage.name,
 			},

@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { deleteFileFolder } from "../../core";
+import { deleteFileFolder, SuccessMsgResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database/connection";
 import { handleFs } from "../../helpers";
 import { ProtectedRequest } from "../../types";
@@ -29,4 +29,6 @@ export const FoldersFilesDelete = async (
 		pathA: req.params.path,
 		pathB: req.params.filename,
 	});
+
+	return new SuccessMsgResponse("Success").send(res);
 };

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Response } from "express";
-import { AuthFailureError, SuccessMsgResponse } from "../../core";
+import { BadRequestError, SuccessMsgResponse } from "../../core";
 import { ProtectedRequest } from "../../types";
 
 // req.body === {oldPassword: string, newPassword: string, }
@@ -15,7 +15,7 @@ export const AccessChangePassword = async (
 
 	//compare sended password with existing one
 	const matchPass = await bcrypt.compare(req.body.oldPassword, userRecord.password);
-	if (!matchPass) throw new AuthFailureError("Wrong password");
+	if (!matchPass) throw new BadRequestError("Wrong password");
 
 	//set new password
 	const newPassword = await bcrypt.hash(req.body.newPassword, 12);

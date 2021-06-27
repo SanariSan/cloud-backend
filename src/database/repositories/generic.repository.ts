@@ -94,12 +94,14 @@ class GenericRepository<
 	public async findByIds(ids?: Array<number>, relations?: Array<R>): Promise<this> {
 		try {
 			if (this.repository) {
-				const idsSearch = ids && ids.length !== 0 ? ids : [];
+				const idsSearch = ids && ids.length !== 0 ? ids : void 0;
 				const optionsSearch = relations ? { relations } : undefined;
 
 				this.records = this.lastOperationResult = <Array<M | null>>(
 					this.convertToNull(
-						<Array<M>>await this.repository.findByIds(idsSearch, optionsSearch),
+						idsSearch
+							? <Array<M>>await this.repository.findByIds(idsSearch, optionsSearch)
+							: <Array<M>>await this.repository.find(optionsSearch),
 					)
 				);
 			}
