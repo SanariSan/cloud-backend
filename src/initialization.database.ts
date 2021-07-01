@@ -17,7 +17,7 @@ async function initializeDb({ dropDb }): Promise<Connection> {
 			.then((_) => _.connection);
 
 		if (dropDb) {
-			for (let i = 0; i < 10; i++) {
+			for (let i = 0; i < 3; i++) {
 				await connection.dropDatabase().catch((e) => Logger.warn("DROP ERR", e));
 			}
 		}

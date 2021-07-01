@@ -26,10 +26,11 @@ async function initializeApp() {
 	// if (process.env.ENVIRONMENT === "development")
 	routersServices(app);
 
-	app.get("/*", (req, res) => {
-		// res.sendFile("/home/me/Code/D/cloud-fullstack/cloud-front-build/index.html");
-		res.sendFile(path.resolve("../", "cloud-front-build/index.html"));
-	});
+	if (process.env.ENVIRONMENT === "production") {
+		app.get("/*", (req, res) => {
+			res.sendFile(path.resolve("../", "cloud-front-build/index.html"));
+		});
+	}
 
 	errorHandler(app);
 
