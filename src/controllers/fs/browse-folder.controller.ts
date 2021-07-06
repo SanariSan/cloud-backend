@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { readFolder, SuccessResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database/connection";
-import { handleFs } from "../../helpers";
+import { b64Encode, handleFs } from "../../helpers";
 import { ProtectedRequest } from "../../types";
 
 // req.params === groupId: string, path: string
@@ -18,10 +18,18 @@ export const FoldersBrowse = async (req: ProtectedRequest, res: Response, next: 
 	const groupPathRecord = req.groupPathRepository.getRecord();
 	if (!groupPathRecord) throw new Error();
 
-	const dirEntites = await handleFs(readFolder)({
+	const dirEntites: {
+		files: Array<string>;
+		folders: Array<string>;
+	} = await handleFs(readFolder)({
 		userDir: groupPathRecord.pathName,
 		pathA: req.params.path,
 	});
 
-	return new SuccessResponse("Directory content", dirEntites).send(res);
+	const decodedDirEntites = {
+		files: dirEntites.files.map(b64Encode),
+		folders: dirEntites.folders.map(b64Encode),
+	};
+
+	return new SuccessResponse("Directory content", decodedDirEntites).send(res);
 };

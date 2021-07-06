@@ -7,6 +7,6 @@ logs*
 **/*/production.json
 .vscode/**/*
 storage/**/*
-!storage/null
+*.http
 *.env*
 !.env.copy

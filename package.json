@@ -39,6 +39,7 @@
 		"express": "^4.17.1",
 		"express-validator": "^6.10.1",
 		"joi": "^17.4.0",
+		"js-base64": "^3.6.1",
 		"jsonwebtoken": "^8.5.1",
 		"nanoid": "^3.1.22",
 		"pg": "^8.6.0",

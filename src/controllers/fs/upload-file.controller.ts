@@ -33,5 +33,5 @@ export const FilesUpload = async (req: ProtectedRequest, res: Response, next: Ne
 	//mark to calculate size later
 	await req.groupPathRepository.setTracked(false).saveRecord();
 
-	return new SuccessMsgResponse(`File '${req.params.filename}' uploaded successfully`).send(res);
+	return new SuccessMsgResponse(`Success`).send(res);
 };

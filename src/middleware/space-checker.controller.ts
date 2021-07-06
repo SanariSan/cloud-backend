@@ -12,6 +12,7 @@ export const UpdateSpace = async (
 	res: Response,
 	next: NextFunction,
 ): Promise<any> => {
+	console.log(req.params);
 	const userRecord = req.userRepository.getRecord();
 	if (!userRecord) throw new Error();
 
@@ -19,8 +20,6 @@ export const UpdateSpace = async (
 
 	if (req.params && req.params.groupId) {
 		targetGroupId = req.params.groupId;
-	} else if (req.body && req.body.groupId) {
-		targetGroupId = req.body.groupId;
 	} else {
 		targetGroupId = userRecord.groupOwnage;
 	}
