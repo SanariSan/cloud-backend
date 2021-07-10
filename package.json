@@ -9,7 +9,7 @@
 		"start-prod-win": "yarn build-win && yarn launch-prod",
 		"--": "---",
 		"build-linux": "cp -rf .env.copy .env && yarn drop-build-linux && yarn drop-logs-dev-linux && tsc && mkdir -p ./storage",
-		"drop-build": "rm -rf ./dist",
+		"drop-build-linux": "rm -rf ./dist",
 		"drop-logs-dev-linux": "rm -rf ./logs-dev",
 		"drop-logs-prod-linux": "rm -rf ./logs-prod",
 		"---": "---",
