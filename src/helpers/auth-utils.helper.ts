@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { AuthFailureError, InternalError, JWT, JwtPayload } from "../core";
 import { KeystoreRepository, UserRepository } from "../database/repositories";
-import { Tokens } from "../types";
+import { Tokens } from "../types-global";
 
 const { accessTokenValidDays, refreshTokenValidDays, issuer, audience } = {
 	accessTokenValidDays: parseInt(<string>process.env.ACCESS_TOKEN_VALID_DAYS),

@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { SuccessResponse } from "../../core";
 import { EGROUP_KEYS, EGROUP_PATH_KEYS, EGROUP_RELATIONS } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 // req.body.send === {groupInfo: {id, name}, storageSize: {sizeUsed, sizeMax}}
 // req.body === id: groupId

@@ -48,8 +48,6 @@ export class DBManager {
 			entities: filteredEntities,
 		};
 
-		console.log(options);
-
 		this.openedConnection = await createConnection(options);
 
 		// Logger.debug(`Connection options ${JSON.stringify(options)} with entities ${JSON.stringify(this.entities)}`);

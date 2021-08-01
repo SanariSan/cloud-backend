@@ -3,7 +3,7 @@ import { NextFunction, Response } from "express";
 import { BadRequestError, SuccessResponse } from "../../core";
 import { EUSER_KEYS } from "../../database/connection";
 import { setNewTokenPair } from "../../helpers";
-import { PreparedRequest } from "../../types";
+import { PreparedRequest } from "../../types-global";
 
 export const AccessRegister = async (req: PreparedRequest, res: Response, next: NextFunction) => {
 	//get user record if exists, throw err cuz of register

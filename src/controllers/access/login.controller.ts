@@ -3,7 +3,7 @@ import { NextFunction, Response } from "express";
 import { BadRequestError, SuccessResponse } from "../../core";
 import { EUSER_KEYS, EUSER_RELATIONS } from "../../database/connection";
 import { setNewTokenPair } from "../../helpers";
-import { PreparedRequest } from "../../types";
+import { PreparedRequest } from "../../types-global";
 
 export const AccessLogin = async (req: PreparedRequest, res: Response, next: NextFunction) => {
 	//get user's record if exists

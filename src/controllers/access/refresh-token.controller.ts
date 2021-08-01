@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import { AuthFailureError, BadRequestError, JWT, SuccessResponse } from "../../core";
 import { EUSER_RELATIONS } from "../../database/connection";
 import { getToken, setNewTokenPair, validateTokenData } from "../../helpers";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 export const AccessRefresh = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const accessTokenPayload = await JWT.validateNoExp(getToken(req.headers.authorization));

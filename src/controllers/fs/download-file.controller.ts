@@ -3,7 +3,7 @@ import path from "path";
 import { checkExists, SendFileResponse } from "../../core";
 import { EGROUP_RELATIONS } from "../../database/connection";
 import { handleFs } from "../../helpers";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 // req.params === groupId: string, path: string, filename: string
 export const FilesDownload = async (req: ProtectedRequest, res: Response, next: NextFunction) => {

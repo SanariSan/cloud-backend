@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Response } from "express";
 import { BadRequestError, SuccessMsgResponse } from "../../core";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 // req.body === {oldPassword: string, newPassword: string, }
 export const GroupChangePassword = async (

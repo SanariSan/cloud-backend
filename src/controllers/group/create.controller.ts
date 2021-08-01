@@ -9,7 +9,7 @@ import {
 	IGroupManualInput,
 	IGroupPathManualInput,
 } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 const asyncBytes = util.promisify(crypto.randomBytes);
 

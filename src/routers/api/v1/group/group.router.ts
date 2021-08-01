@@ -1,5 +1,7 @@
 import { Router } from "express";
 import {
+	AddSpace100,
+	AddSpace500,
 	GroupChangePassword,
 	GroupCreate,
 	GroupJoin,
@@ -40,6 +42,18 @@ GroupRouter.post(
 	"/search-by-email",
 	Validate(Schema.searchByEmail, ValidationSource.BODY),
 	AsyncHandle(GroupSearchByEmail),
+);
+GroupRouter.post(
+	"/add100",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(AddSpace100),
+);
+GroupRouter.post(
+	"/add500",
+	AsyncHandle(StickRepos),
+	AsyncHandle(Authentificate),
+	AsyncHandle(AddSpace500),
 );
 
 export { GroupRouter };

@@ -1,4 +1,4 @@
-import * as apiBranches from "../../routers/api";
+import * as apiBranches from "../routers/api";
 
 function routers(app) {
 	const apiVersion = <string>process.env.API_VERSION;

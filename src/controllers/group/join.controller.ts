@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { NextFunction, Response } from "express";
 import { BadRequestError, SuccessResponse } from "../../core";
 import { EGROUP_KEYS, EGROUP_RELATIONS } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 // req.body === {groupId: id, password: string, }
 export const GroupJoin = async (req: ProtectedRequest, res: Response, next: NextFunction) => {

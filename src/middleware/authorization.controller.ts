@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { AuthorizationError } from "../core";
-import { ProtectedRequest } from "../types";
+import { ProtectedRequest } from "../types-global";
 
 const CheckGroupPermission = async (
 	req: ProtectedRequest,

@@ -1,11 +1,11 @@
 import { NextFunction, Response } from "express";
-import { BadRequestError, SuccessMsgResponse } from "../../../core";
-import { EGROUP_RELATIONS, EUSER_PRIVELEGE_RELATIONS } from "../../../database/connection";
-import { calculateCurrentMaxStorageSize } from "../../../helpers";
-import { ProtectedRequest } from "../../../types";
+import { BadRequestError, SuccessMsgResponse } from "../../core";
+import { EGROUP_RELATIONS, EUSER_PRIVELEGE_RELATIONS } from "../../database/connection";
+import { calculateCurrentMaxStorageSize } from "../../helpers";
+import { ProtectedRequest } from "../../types-global";
 
 // req.body === { someUserInfo }
-export const Add500 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
+export const AddSpace500 = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	//no actual payment logic implemented, just showcase purpose
 	// if (!validatePaymentServiceToken(req.body.token)) throw new Error();
 	// returnSomeResponseToPaymentService("someData");

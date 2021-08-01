@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { PreparedRequest, ProtectedRequest } from "../types";
+import { PreparedRequest, ProtectedRequest } from "../types-global";
 
 type AsyncRouterFunction = (
 	req: Request | PreparedRequest | ProtectedRequest | any,

@@ -9,7 +9,7 @@ import {
 	UserPrivelegeRepository,
 	UserRepository,
 } from "../database/repositories";
-import { PreparedRequest } from "../types";
+import { PreparedRequest } from "../types-global";
 
 const StickRepos = async (
 	req: PreparedRequest,

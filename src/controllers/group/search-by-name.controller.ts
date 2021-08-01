@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { InternalError, Logger, SuccessResponse } from "../../core";
 import { EUSER_RELATIONS } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 // req.body.send === [{ownerId: id, groupId: id, groupName: string}, ...]
 // req.body === groupName

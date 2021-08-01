@@ -6,7 +6,7 @@ import {
 	EGROUP_RELATIONS,
 	EUSER_KEYS,
 } from "../../database/connection";
-import { ProtectedRequest } from "../../types";
+import { ProtectedRequest } from "../../types-global";
 
 export const ProfileInfo = async (req: ProtectedRequest, res: Response, next: NextFunction) => {
 	const userRecord = req.userRepository.getRecord();

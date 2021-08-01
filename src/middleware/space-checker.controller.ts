@@ -3,7 +3,7 @@ import path from "path";
 import { InternalError } from "../core";
 import { EGROUP_RELATIONS } from "../database/connection";
 import { calculateCurrentMaxStorageSize, getItemsSize } from "../helpers";
-import { ProtectedRequest } from "../types";
+import { ProtectedRequest } from "../types-global";
 
 const storageDir = <string>process.env.STORAGE_DIRECTORY;
 
