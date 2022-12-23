@@ -1,0 +1,61 @@
+version: "3.7"
+
+volumes:
+    cloud_backend_postgres_pgdata:
+        external: true
+services:
+    postgres:
+        image: sanarisan/cloud_backend_postgres:1
+        restart: unless-stopped
+        build:
+            context: ./
+            dockerfile: ./docker/postgres.Dockerfile
+            shm_size: 512mb
+        shm_size: 512mb
+        environment:
+            POSTGRES_USER: "${DB_USERNAME}"
+            POSTGRES_PASSWORD: "${DB_PASSWORD}"
+            POSTGRES_DB: "${DB_DATABASE}"
+        networks:
+            - default
+        volumes:
+            - cloud_backend_postgres_pgdata:/var/lib/postgresql/data
+        ports:
+            - "${DB_PORT}:5432"
+    app:
+        image: sanarisan/cloud_backend_server:1
+        restart: unless-stopped
+        build:
+            context: ./
+            dockerfile: ./docker/app.Dockerfile
+        stop_signal: SIGINT
+        stop_grace_period: 60s
+        networks:
+            - default
+        depends_on:
+            - postgres
+        # ports:
+        #     - "${PORT}:80"
+        environment:
+            HOST: "${HOST}"
+            PORT: "${PORT}"
+            PORT_FRONT: "${PORT_FRONT}"
+            CORS_URL: "${CORS_URL}"
+            API_VERSION: "${API_VERSION}"
+            LOG_DIRECTORY: "${LOG_DIRECTORY}"
+            STORAGE_DIRECTORY: "${STORAGE_DIRECTORY}"
+            ACCESS_TOKEN_VALID_DAYS: "${ACCESS_TOKEN_VALID_DAYS}"
+            REFRESH_TOKEN_VALID_DAYS: "${REFRESH_TOKEN_VALID_DAYS}"
+            ISSUER: "${ISSUER}"
+            AUDIENCE: "${AUDIENCE}"
+            SECRET: "${SECRET}"
+            DB_HOST: "${DB_HOST}"
+            DB_PORT: "${DB_PORT}"
+            DB_USERNAME: "${DB_USERNAME}"
+            DB_PASSWORD: "${DB_PASSWORD}"
+            DB_DATABASE: "${DB_DATABASE}"
+            DROP_ON_RESTART: "${DROP_ON_RESTART}"
+            CONNECTION_LIFESPAN_SECS: "${CONNECTION_LIFESPAN_SECS}"
+            DEFAULT_STORAGE_SIZE_MB: "${DEFAULT_STORAGE_SIZE_MB}"
+            LIFETIME_DAYS_100_DEFAULT: "${LIFETIME_DAYS_100_DEFAULT}"
+            LIFETIME_DAYS_500_DEFAULT: "${LIFETIME_DAYS_500_DEFAULT}"

@@ -20,9 +20,7 @@ export class DBManager {
 		database: <string>process.env.DB_DATABASE,
 	};
 	private defaultOptions = {
-		ssl: {
-			rejectUnauthorized: false,
-		},
+		ssl: false,
 		extra: {
 			connectionLimit: 100,
 		},
