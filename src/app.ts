@@ -1,3 +1,5 @@
+console.dir(process.env, { depth: 5 });
+
 import express from "express";
 import path from "path";
 import "reflect-metadata";

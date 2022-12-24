@@ -20,9 +20,10 @@ jobs:
                   source: "."
                   target: "/root/code/cloud/cloud-backend"
 
-            - name: Dotenv Action
-              id: dotenv
-              uses: falti/dotenv-action@v1.0.2
+            # - name: Dotenv Action
+            #   id: dotenv
+            #   path: prod.env
+            #   uses: falti/dotenv-action@v1.0.2
 
             - name: Executing remote command
               uses: appleboy/ssh-action@master
@@ -32,30 +33,13 @@ jobs:
                   PORT: ${{ secrets.PORT }}
                   KEY: ${{ secrets.SSHKEY }}
                   script: >
-                      HOST=${{ steps.dotenv.outputs.HOST }}
-                      PORT=${{ steps.dotenv.outputs.PORT }}
-                      PORT_FRONT=${{ steps.dotenv.outputs.PORT_FRONT }}
-                      CORS_URL=${{ steps.dotenv.outputs.CORS_URL }}
-                      API_VERSION=${{ steps.dotenv.outputs.API_VERSION }}
-                      LOG_DIRECTORY=${{ steps.dotenv.outputs.LOG_DIRECTORY }}
-                      STORAGE_DIRECTORY=${{ steps.dotenv.outputs.STORAGE_DIRECTORY }}
-                      ACCESS_TOKEN_VALID_DAYS=${{ steps.dotenv.outputs.ACCESS_TOKEN_VALID_DAYS }}
-                      REFRESH_TOKEN_VALID_DAYS=${{ steps.dotenv.outputs.REFRESH_TOKEN_VALID_DAYS }}
-                      ISSUER=${{ steps.dotenv.outputs.ISSUER }}
-                      AUDIENCE=${{ steps.dotenv.outputs.AUDIENCE }}
-                      SECRET=${{ steps.dotenv.outputs.SECRET }}
-                      DB_HOST=${{ steps.dotenv.outputs.DB_HOST }}
-                      DB_PORT=${{ steps.dotenv.outputs.DB_PORT }}
-                      DB_USERNAME=${{ steps.dotenv.outputs.DB_USERNAME }}
-                      DB_PASSWORD=${{ steps.dotenv.outputs.DB_PASSWORD }}
-                      DB_DATABASE=${{ steps.dotenv.outputs.DB_DATABASE }}
-                      DROP_ON_RESTART=${{ steps.dotenv.outputs.DROP_ON_RESTART }}
-                      CONNECTION_LIFESPAN_SECS=${{ steps.dotenv.outputs.CONNECTION_LIFESPAN_SECS }}
-                      DEFAULT_STORAGE_SIZE_MB=${{ steps.dotenv.outputs.DEFAULT_STORAGE_SIZE_MB }}
-                      LIFETIME_DAYS_100_DEFAULT=${{ steps.dotenv.outputs.LIFETIME_DAYS_100_DEFAULT }}
-                      LIFETIME_DAYS_500_DEFAULT=${{ steps.dotenv.outputs.LIFETIME_DAYS_500_DEFAULT }}
-                      VIRTUAL_HOST=${{ steps.dotenv.outputs.VIRTUAL_HOST }}
-                      LETSENCRYPT_HOST=${{ steps.dotenv.outputs.LETSENCRYPT_HOST }}
                       cd /root/code/cloud/cloud-backend &&
-                      docker compose down ||
+                      cp prod.env .env &&
+                      docker compose down > /dev/null 2>&1 &&
+                      CORS_URL=${{ secrets.CORS_URL }}
+                      SECRET=${{ secrets.JWT_SECRET }}
+                      DB_USERNAME=${{ secrets.DB_USERNAME }}
+                      DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                      VIRTUAL_HOST=${{ secrets.VIRTUAL_HOST }}
+                      LETSENCRYPT_HOST=${{ secrets.LETSENCRYPT_HOST }}
                       docker compose up --build --detach --always-recreate-deps --force-recreate

@@ -5,6 +5,7 @@ volumes:
         external: true
 services:
     postgres:
+        container_name: "${DB_HOST}"
         image: sanarisan/cloud_backend_postgres:1
         restart: unless-stopped
         build:
@@ -33,9 +34,9 @@ services:
         networks:
             - default
         depends_on:
-            - postgres
-        # ports:
-        #     - "${PORT}:80"
+            - "${DB_HOST}"
+        env_file:
+            - .env
         environment:
             HOST: "${HOST}"
             PORT: "${PORT}"
@@ -59,3 +60,5 @@ services:
             DEFAULT_STORAGE_SIZE_MB: "${DEFAULT_STORAGE_SIZE_MB}"
             LIFETIME_DAYS_100_DEFAULT: "${LIFETIME_DAYS_100_DEFAULT}"
             LIFETIME_DAYS_500_DEFAULT: "${LIFETIME_DAYS_500_DEFAULT}"
+            VIRTUAL_HOST: "${VIRTUAL_HOST}"
+            LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
