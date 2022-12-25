@@ -2,7 +2,7 @@ version: "3.7"
 
 volumes:
     cloud_backend_postgres_pgdata:
-        external: true
+        external: false
 services:
     postgres:
         container_name: "${DB_HOST}"

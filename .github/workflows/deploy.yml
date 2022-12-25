@@ -42,4 +42,5 @@ jobs:
                       DB_PASSWORD=${{ secrets.DB_PASSWORD }}
                       VIRTUAL_HOST=${{ secrets.VIRTUAL_HOST }}
                       LETSENCRYPT_HOST=${{ secrets.LETSENCRYPT_HOST }}
-                      docker compose up --build --detach --always-recreate-deps --force-recreate
+                      docker compose build --no-cache &&
+                      docker compose up --detach --always-recreate-deps --force-recreate
