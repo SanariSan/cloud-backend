@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import Joi from "joi";
+import Joi, { isError } from "joi";
 import { BadRequestError, Logger } from "../core";
 import { ValidationSource } from "./types.helper.type";
 
@@ -26,11 +26,13 @@ export const Validate =
 
 			return next();
 		} catch (err) {
-			const { details } = err;
-			const message = details.map((el, i) => `${el.message.replace(/"/g, "")}`).join(";");
+			let message = (err as Error).message;
+			if (isError(err)) {
+				const { details } = err;
+				message = details.map((el, i) => `${el.message.replace(/"/g, "")}`).join(";");
 
-			Logger.debug(details);
-
+				Logger.debug(details);
+			}
 			next(new BadRequestError(message));
 		}
 	};

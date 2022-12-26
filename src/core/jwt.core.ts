@@ -24,7 +24,7 @@ export class JWT {
 			})) as JwtPayload;
 		} catch (e) {
 			Logger.debug(e);
-			if (e && e.name === "TokenExpiredError") throw new TokenExpiredError();
+			if ((e as Error)?.name === "TokenExpiredError") throw new TokenExpiredError();
 
 			// any other error with token except expired
 			throw new BadTokenError();

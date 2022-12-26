@@ -26,7 +26,7 @@ async function initializeDb(): Promise<any> {
 		await connection.synchronize();
 	} catch (err) {
 		Logger.warn("PROBLEMS WITH DATABASE INITIALIZATION", err);
-		throw new Error(err);
+		throw err;
 	}
 }
 

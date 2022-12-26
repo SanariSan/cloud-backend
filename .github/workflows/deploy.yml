@@ -35,12 +35,12 @@ jobs:
                   script: >
                       cd /root/code/cloud/cloud-backend &&
                       cp prod.env .env &&
-                      docker compose down > /dev/null 2>&1 &&
+                      docker-compose down > /dev/null 2>&1 &&
+                      docker-compose build --no-cache &&
                       CORS_URL=${{ secrets.CORS_URL }}
                       SECRET=${{ secrets.JWT_SECRET }}
                       DB_USERNAME=${{ secrets.DB_USERNAME }}
                       DB_PASSWORD=${{ secrets.DB_PASSWORD }}
                       VIRTUAL_HOST=${{ secrets.VIRTUAL_HOST }}
                       LETSENCRYPT_HOST=${{ secrets.LETSENCRYPT_HOST }}
-                      docker compose build --no-cache &&
-                      docker compose up --detach --always-recreate-deps --force-recreate
+                      docker-compose up --detach --always-recreate-deps --force-recreate
