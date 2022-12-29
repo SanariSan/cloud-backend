@@ -20,11 +20,6 @@ jobs:
                   source: "."
                   target: "/root/code/cloud/cloud-backend"
 
-            # - name: Dotenv Action
-            #   id: dotenv
-            #   path: prod.env
-            #   uses: falti/dotenv-action@v1.0.2
-
             - name: Executing remote command
               uses: appleboy/ssh-action@master
               with:
@@ -35,8 +30,12 @@ jobs:
                   script: >
                       cd /root/code/cloud/cloud-backend &&
                       cp prod.env .env &&
+
                       docker-compose down > /dev/null 2>&1 &&
+                      DB_USERNAME=${{ secrets.DB_USERNAME }}
+                      DB_PASSWORD=${{ secrets.DB_PASSWORD }}
                       docker-compose build --no-cache &&
+
                       CORS_URL=${{ secrets.CORS_URL }}
                       SECRET=${{ secrets.JWT_SECRET }}
                       DB_USERNAME=${{ secrets.DB_USERNAME }}

@@ -31,7 +31,6 @@ CMD [ \
     "NODE_ENV=production", \
     "HOST=${HOST}", \
     "PORT=${PORT}", \
-    "PORT_FRONT=${PORT_FRONT}", \
     "CORS_URL=${CORS_URL}", \
     "API_VERSION=${API_VERSION}", \
     "LOG_DIRECTORY=${LOG_DIRECTORY}", \

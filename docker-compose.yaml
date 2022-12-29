@@ -3,6 +3,12 @@ version: "3.7"
 volumes:
     cloud_backend_postgres_pgdata:
         external: false
+    cloud-front-build:
+        external: true
+networks:
+    inbound:
+        name: inbound
+        external: true
 services:
     postgres:
         container_name: "${DB_HOST}"
@@ -31,8 +37,13 @@ services:
             dockerfile: ./docker/app.Dockerfile
         stop_signal: SIGINT
         stop_grace_period: 60s
+        volumes:
+            - type: volume
+              source: cloud-front-build
+              target: /home/node/proj/cloud-front-build
         networks:
             - default
+            - inbound
         depends_on:
             - "${DB_HOST}"
         env_file:
@@ -40,7 +51,6 @@ services:
         environment:
             HOST: "${HOST}"
             PORT: "${PORT}"
-            PORT_FRONT: "${PORT_FRONT}"
             CORS_URL: "${CORS_URL}"
             API_VERSION: "${API_VERSION}"
             LOG_DIRECTORY: "${LOG_DIRECTORY}"
