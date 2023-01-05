@@ -5,6 +5,7 @@ import path from "path";
 function settings(app) {
 	app.use(
 		cors({
+			// origin: true,
 			origin:
 				process.env.NODE_ENV === "production" ? `https://${process.env.CORS_URL}` : true,
 			credentials: true,

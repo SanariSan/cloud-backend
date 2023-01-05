@@ -12,3 +12,5 @@ storage/**/*
 !*.env
 !.env.copy
 .env
+
+cloud-front-build/**/*

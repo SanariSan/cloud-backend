@@ -3,6 +3,10 @@ version: "3.7"
 volumes:
     cloud_backend_postgres_pgdata:
         external: false
+    cloud_backend_logs:
+        external: false
+    cloud_backend_storage:
+        external: false
     cloud-front-build:
         external: true
 networks:
@@ -10,25 +14,6 @@ networks:
         name: inbound
         external: true
 services:
-    postgres:
-        container_name: "${DB_HOST}"
-        image: sanarisan/cloud_backend_postgres:1
-        restart: unless-stopped
-        build:
-            context: ./
-            dockerfile: ./docker/postgres.Dockerfile
-            shm_size: 512mb
-        shm_size: 512mb
-        environment:
-            POSTGRES_USER: "${DB_USERNAME}"
-            POSTGRES_PASSWORD: "${DB_PASSWORD}"
-            POSTGRES_DB: "${DB_DATABASE}"
-        networks:
-            - default
-        volumes:
-            - cloud_backend_postgres_pgdata:/var/lib/postgresql/data
-        ports:
-            - "${DB_PORT}:5432"
     app:
         image: sanarisan/cloud_backend_server:1
         restart: unless-stopped
@@ -41,6 +26,8 @@ services:
             - type: volume
               source: cloud-front-build
               target: /home/node/proj/cloud-front-build
+            - ./logs:/home/node/proj/logs
+            - ./storage:/home/node/proj/storage
         networks:
             - default
             - inbound
@@ -72,3 +59,24 @@ services:
             LIFETIME_DAYS_500_DEFAULT: "${LIFETIME_DAYS_500_DEFAULT}"
             VIRTUAL_HOST: "${VIRTUAL_HOST}"
             LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
+    postgres:
+        container_name: "${DB_HOST}"
+        image: sanarisan/cloud_backend_postgres:1
+        restart: unless-stopped
+        build:
+            context: ./
+            dockerfile: ./docker/postgres.Dockerfile
+            shm_size: 512mb
+        shm_size: 512mb
+        environment:
+            POSTGRES_USER: "${DB_USERNAME}"
+            POSTGRES_PASSWORD: "${DB_PASSWORD}"
+            POSTGRES_DB: "${DB_DATABASE}"
+            VIRTUAL_HOST: "jshgdfhkjsdfhgjshgdfkjhsdl"
+            LETSENCRYPT_HOST: "jshgdfhkjsdfhgjshgdfkjhsdl"
+        networks:
+            - default
+        volumes:
+            - cloud_backend_postgres_pgdata:/var/lib/postgresql/data
+        ports:
+            - "${DB_PORT}:5432"
