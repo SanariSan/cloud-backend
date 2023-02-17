@@ -1,0 +1,82 @@
+version: "3.7"
+
+volumes:
+    cloud_backend_postgres_pgdata:
+        external: false
+    cloud_backend_logs:
+        external: false
+    cloud_backend_storage:
+        external: false
+    cloud-front-build:
+        external: true
+networks:
+    inbound:
+        name: inbound
+        external: true
+services:
+    app:
+        image: sanarisan/cloud_backend_server:1
+        restart: unless-stopped
+        build:
+            context: ./
+            dockerfile: ./docker/app.Dockerfile
+        stop_signal: SIGINT
+        stop_grace_period: 60s
+        volumes:
+            - type: volume
+              source: cloud-front-build
+              target: /home/node/proj/cloud-front-build
+            - ./logs:/home/node/proj/logs
+            - ./storage:/home/node/proj/storage
+        networks:
+            - default
+            - inbound
+        depends_on:
+            - "${DB_HOST}"
+        env_file:
+            - .env
+        environment:
+            HOST: "${HOST}"
+            PORT: "${PORT}"
+            CORS_URL: "${CORS_URL}"
+            API_VERSION: "${API_VERSION}"
+            LOG_DIRECTORY: "${LOG_DIRECTORY}"
+            STORAGE_DIRECTORY: "${STORAGE_DIRECTORY}"
+            ACCESS_TOKEN_VALID_DAYS: "${ACCESS_TOKEN_VALID_DAYS}"
+            REFRESH_TOKEN_VALID_DAYS: "${REFRESH_TOKEN_VALID_DAYS}"
+            ISSUER: "${ISSUER}"
+            AUDIENCE: "${AUDIENCE}"
+            SECRET: "${SECRET}"
+            DB_HOST: "${DB_HOST}"
+            DB_PORT: "${DB_PORT}"
+            DB_USERNAME: "${DB_USERNAME}"
+            DB_PASSWORD: "${DB_PASSWORD}"
+            DB_DATABASE: "${DB_DATABASE}"
+            DROP_ON_RESTART: "${DROP_ON_RESTART}"
+            CONNECTION_LIFESPAN_SECS: "${CONNECTION_LIFESPAN_SECS}"
+            DEFAULT_STORAGE_SIZE_MB: "${DEFAULT_STORAGE_SIZE_MB}"
+            LIFETIME_DAYS_100_DEFAULT: "${LIFETIME_DAYS_100_DEFAULT}"
+            LIFETIME_DAYS_500_DEFAULT: "${LIFETIME_DAYS_500_DEFAULT}"
+            VIRTUAL_HOST: "${VIRTUAL_HOST}"
+            LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
+    postgres:
+        container_name: "${DB_HOST}"
+        image: sanarisan/cloud_backend_postgres:1
+        restart: unless-stopped
+        build:
+            context: ./
+            dockerfile: ./docker/postgres.Dockerfile
+            shm_size: 512mb
+        shm_size: 512mb
+        environment:
+            POSTGRES_USER: "${DB_USERNAME}"
+            POSTGRES_PASSWORD: "${DB_PASSWORD}"
+            POSTGRES_DB: "${DB_DATABASE}"
+            VIRTUAL_HOST: "jshgdfhkjsdfhgjshgdfkjhsdl"
+            LETSENCRYPT_HOST: "jshgdfhkjsdfhgjshgdfkjhsdl"
+        networks:
+            - default
+        volumes:
+            - cloud_backend_postgres_pgdata:/var/lib/postgresql/data
+        ports:
+            - "${DB_PORT}:5432"

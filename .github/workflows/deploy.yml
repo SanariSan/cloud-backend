@@ -1,0 +1,45 @@
+name: Deploy
+
+on: [push, workflow_dispatch]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v1
+
+            - name: Copy repository contents via scp
+              uses: appleboy/scp-action@master
+              env:
+                  HOST: ${{ secrets.HOST }}
+                  USERNAME: ${{ secrets.USERNAME }}
+                  PORT: ${{ secrets.PORT }}
+                  KEY: ${{ secrets.SSHKEY }}
+              with:
+                  source: "."
+                  target: "/root/code/cloud/cloud-backend"
+
+            - name: Executing remote command
+              uses: appleboy/ssh-action@master
+              with:
+                  HOST: ${{ secrets.HOST }}
+                  USERNAME: ${{ secrets.USERNAME }}
+                  PORT: ${{ secrets.PORT }}
+                  KEY: ${{ secrets.SSHKEY }}
+                  script: >
+                      cd /root/code/cloud/cloud-backend &&
+                      cp prod.env .env &&
+
+                      docker-compose down > /dev/null 2>&1 &&
+                      DB_USERNAME=${{ secrets.DB_USERNAME }}
+                      DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                      docker-compose build --no-cache &&
+
+                      CORS_URL=${{ secrets.CORS_URL }}
+                      SECRET=${{ secrets.JWT_SECRET }}
+                      DB_USERNAME=${{ secrets.DB_USERNAME }}
+                      DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                      VIRTUAL_HOST=${{ secrets.VIRTUAL_HOST }}
+                      LETSENCRYPT_HOST=${{ secrets.LETSENCRYPT_HOST }}
+                      docker-compose up --detach --always-recreate-deps --force-recreate

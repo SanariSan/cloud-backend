@@ -1,3 +1,5 @@
+console.dir(process.env, { depth: 5 });
+
 import express from "express";
 import path from "path";
 import "reflect-metadata";
@@ -25,11 +27,11 @@ async function initializeApp() {
 
 	if (process.env.NODE_ENV === "production") {
 		app.get("/*", (req, res) => {
-			res.sendFile(path.resolve("../", "cloud-front-build/index.html"));
+			res.sendFile(path.resolve("./", "cloud-front-build/index.html"));
 		});
 	}
 
-	app.listen(process.env.PORT, () => {
+	app.listen(Number(process.env.PORT), String(process.env.HOST), () => {
 		Logger.warn(`server running on port : ${process.env.PORT}`);
 	}).on("error", (e: any) => {
 		Logger.warn(e);

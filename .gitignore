@@ -9,5 +9,8 @@ logs*
 storage/**/*
 !storage/.gitkeep
 *.http
-*.env*
+!*.env
 !.env.copy
+.env
+
+cloud-front-build/**/*
