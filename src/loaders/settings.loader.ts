@@ -22,7 +22,7 @@ function settings(app) {
 				scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
 				connectSrc: ["*"],
 				styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
-				imgSrc: ["'self'"],
+				imgSrc: ["'self'", "'unsafe-inline'", "'data:'", "'blob:'"],
 			},
 		}),
 	);
