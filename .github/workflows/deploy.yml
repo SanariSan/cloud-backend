@@ -1,6 +1,9 @@
 name: Deploy
 
-on: [push, workflow_dispatch]
+on:
+    push:
+        branches:
+            - master
 
 jobs:
     build:
@@ -34,7 +37,7 @@ jobs:
                       docker-compose down > /dev/null 2>&1 &&
                       DB_USERNAME=${{ secrets.DB_USERNAME }}
                       DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-                      docker-compose build --no-cache &&
+                      docker-compose build &&
 
                       CORS_URL=${{ secrets.CORS_URL }}
                       SECRET=${{ secrets.JWT_SECRET }}
