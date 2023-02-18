@@ -15,6 +15,18 @@ function settings(app) {
 	);
 	app.enable("trust proxy");
 	app.use(helmet());
+	app.use(
+		helmet.contentSecurityPolicy({
+			directives: {
+				defaultSrc: ["'self'"],
+				scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+				connectSrc: ["*"],
+				styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+				imgSrc: ["'self'"],
+			},
+		}),
+	);
+
 	app.use(express.json({ limit: "100mb" }));
 	app.use(express.urlencoded({ limit: "100mb", extended: true }));
 	app.set("x-powered-by", false);
