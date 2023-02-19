@@ -35,6 +35,7 @@ jobs:
                       cp prod.env .env &&
 
                       docker-compose down > /dev/null 2>&1 &&
+                      docker run --rm -v vhost:/vhost_og busybox sh -c "{ echo 'client_max_body_size 500m;'; } > /vhost_og/${{ secrets.VIRTUAL_HOST }}" &&
                       DB_USERNAME=${{ secrets.DB_USERNAME }}
                       DB_PASSWORD=${{ secrets.DB_PASSWORD }}
                       docker-compose build &&
