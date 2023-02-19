@@ -1,15 +1,43 @@
-If running locally:
+# Cloud-backend
 
-1. Fill in .env.copy file
-2. Run yarn start
-* If running on windows - change 
-"build": "yarn build-linux ...
-to "build": "yarn build-win ...
+**Deployed project here 👉 https://storeton.nodejs.monster 👈**
 
-If deploying to heroku - look at ![Cloud Fullstack](https://github.com/SanariSan/cloud-fullstack) which is meant for deployment
+**Frontend here 👉 ![here](https://github.com/SanariSan/cloud-front) 👈**
+
+**Old heroku deployment 👉 ![here](https://github.com/SanariSan/cloud-fullstack) 👈**
+
+---
+
+## Table of Contents
+
+- [About](#about)
+- [Usage](#usage)
+
+## About <a name = "about"></a>
+
+Backend for cloud storage.
+ts, express, typeorm, postgres, docker, gh actions CI/CD
+
+## Getting Started <a name = "getting_started"></a>
+
+Fill in .env for local development
+
+Fill in .env.prod for deploy
++
+Fill in following GH_SECRETS for actions:
+
+- DB_USERNAME
+- DB_PASSWORD
+- CORS_URL
+- JWT_SECRET
+
+As for these I have nginx-proxy for ssl on vps
+- VIRTUAL_HOST
+- LETSENCRYPT_HOST
 
 
-# env variables go to docker-compose either from .env or from preceding parameters in cli
-# so with local development we can afford to write secrets to .env directly and run `docker-compose up`
-# while with deployment prepare prod.env file with common vars + github secrets that will be passed as
-# preceding parameters and since they are missing in .env file they will appear as intended
+## Usage <a name = "usage"></a>
+
+```
+docker-compose up --build
+```
