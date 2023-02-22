@@ -72,11 +72,10 @@ services:
             POSTGRES_USER: "${DB_USERNAME}"
             POSTGRES_PASSWORD: "${DB_PASSWORD}"
             POSTGRES_DB: "${DB_DATABASE}"
-            VIRTUAL_HOST: "jshgdfhkjsdfhgjshgdfkjhsdl"
-            LETSENCRYPT_HOST: "jshgdfhkjsdfhgjshgdfkjhsdl"
+            NETWORK_ACCESS": "internal"
         networks:
             - default
         volumes:
             - cloud_backend_postgres_pgdata:/var/lib/postgresql/data
-        ports:
-            - "${DB_PORT}:5432"
+        expose:
+            - "${DB_PORT}"
