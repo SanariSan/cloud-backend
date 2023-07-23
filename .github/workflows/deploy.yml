@@ -26,7 +26,7 @@ jobs:
                   target: "/home/${{ secrets.USERNAME }}/code/cloud/cloud-backend"
 
             - name: Executing remote command
-              uses: appleboy/ssh-action@v0.1.4
+              uses: appleboy/ssh-action@v0.1.8
               with:
                   HOST: ${{ secrets.HOST }}
                   USERNAME: ${{ secrets.USERNAME }}
